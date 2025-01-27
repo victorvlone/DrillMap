@@ -54,141 +54,6 @@
     </style>
   </head>
   <body>
-    <div class="container-map-mobile">
-      <div class="containerHeader">
-        <header class="header container">
-          <a href="index.html"
-            ><img class="header-img" src="images/DrillMapLogoBG.png" alt=""
-          /></a>
-          <ul>
-            <li>
-              <span class="material-symbols-outlined">help</span>
-            </li>
-            <li class="darkModeToggle">
-              <span class="material-symbols-outlined icon"> dark_mode </span>
-            </li>
-            <li><span class="material-symbols-outlined"> login </span></li>
-          </ul>
-        </header>
-        <nav class="search-bar-container">
-          <ul>
-            <div class="search-bar">
-              <div class="dropdown">
-                <div id="drop-text" class="dropdown-text">
-                  <span id="span">Bacias</span>
-                  <span id="iconOptions" class="material-symbols-outlined"
-                    >keyboard_arrow_down</span
-                  >
-                </div>
-                <ul id="list" class="dropdown-list">
-                  <li class="dropdown-list-item">Bacias</li>
-                  <li class="dropdown-list-item">Blocos</li>
-                  <li class="dropdown-list-item">Campos</li>
-                  <li class="dropdown-list-item">Poços</li>
-                </ul>
-              </div>
-
-              <div class="search-box">
-                <input
-                  type="text"
-                  class="search-input"
-                  placeholder="Procure por Bacias..."
-                />
-                <span id="filter-icon" class="material-symbols-outlined"
-                  >tune</span
-                >
-                <span class="material-symbols-outlined">search</span>
-              </div>
-            </div>
-          </ul>
-        </nav>
-      </div>
-
-      <section class="data container">
-        <div class="data__legend">
-          <p>Poço</p>
-          <p>Favorito</p>
-        </div>
-        <div class="data__list">
-          <span class="material-symbols-outlined"> arrow_drop_up </span>
-          <div class="list__items">
-            <div class="list__item">
-              <label for="estado">Estado</label>
-              <input type="text" />
-            </div>
-            <div class="list__item">
-              <label for="bacia">Bacia</label>
-              <input type="text" />
-            </div>
-            <div class="list__item">
-              <label for="bloco">Bloco</label>
-              <input type="text" />
-            </div>
-            <div class="list__item">
-              <label for="campo">Campo</label>
-              <input type="text" />
-            </div>
-            <div class="list__item">
-              <label for="poco">Poço</label>
-              <input type="text" />
-            </div>
-            <div class="list__item">
-              <label for="latitude">Cadastro</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="inicio">Inicio</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="termino">Termino</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="conclusao">Conclusão</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="lamina">Lamina dagua</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="reclassificacao">Reclassificação</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="tipo">Tipo</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="categoria">Categoria</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="longitude">Longitude</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="latitude">Latitude</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="fluido">Fluido P.</label>
-              <input type="text" />
-            </div>
-            <div class="list__item items__container">
-              <label for="situacao">Situação</label>
-              <input type="text" />
-            </div>
-          </div>
-          <div class="buttonsLong">
-            <button class="button savelong">salvar</button>
-            <button class="button detailslong">detalhes</button>
-          </div>
-        </div>
-      </section>
-    </div>
-
     <div class="container-map-desktop">
       <div class="containerHeader">
         <header class="header container">
@@ -214,10 +79,10 @@
                 </div>
 
                 <div class="search-box">
-                  <input
+                  <input id="search-input"
                     type="text"
                     class="search-input"
-                    placeholder="Procure por Bacias..."
+                    placeholder="Procure por Bacias..." autocomplete="off"
                   />
                   <span id="filter-icon" class="material-symbols-outlined"
                     >tune</span
@@ -314,90 +179,45 @@
         </div>
       </div>
 
-      <section class="data container">
-        <div class="data__legend">
-          <p>Poço</p>
-          <p>Favorito</p>
-        </div>
-        <div class="data__list">
-          <div class="list__items">
-            <div class="list__item">
-              <label for="estado">Estado</label>
-              <input type="text" id="estado" />
+      <div class="container-teste">
+        <div class="container-teste-img">
+          <div class="container-teste-buttoms">
+            <div class="container-teste-icon-nome">
+              <span class="material-symbols-outlined">
+                location_on
+                </span>
+                <div class="container-teste-nome">
+                  <p>1-AA-1-RN</p>
+                  <p>Bahia</p>
+                </div>
             </div>
-            <div class="list__item">
-              <label for="bacia">Bacia</label>
-              <input type="text" id="bacia" />
-            </div>
-            <div class="list__item">
-              <label for="bloco">Bloco</label>
-              <input type="text" id="bloco" />
-            </div>
-            <div class="list__item">
-              <label for="campo">Campo</label>
-              <input type="text" id="campo" />
-            </div>
-            <div class="list__item">
-              <label for="poco">Poço</label>
-              <input type="text" id="poco" />
-            </div>
-            <div class="list__item">
-              <label for="latitude">Cadastro</label>
-              <input type="text" id="cadastro" />
-            </div>
-            <div class="list__item items__container">
-              <label for="inicio">Inicio</label>
-              <input type="text" id="inicio" />
-            </div>
-            <div class="list__item items__container">
-              <label for="termino">Termino</label>
-              <input type="text" id="termino" />
-            </div>
-            <div class="list__item items__container">
-              <label for="conclusao">Conclusão</label>
-              <input type="text" id="conclusao" />
-            </div>
-            <div class="list__item items__container">
-              <label for="lamina">Lamina dagua</label>
-              <input type="text" id="lamina" />
-            </div>
-            <div class="list__item items__container">
-              <label for="reclassificacao">Reclassificação</label>
-              <input type="text" id="reclassificacao" />
-            </div>
-            <div class="list__item items__container">
-              <label for="tipo">Tipo</label>
-              <input type="text" id="tipo" />
-            </div>
-            <div class="list__item items__container">
-              <label for="categoria">Categoria</label>
-              <input type="text" id="categoria" />
-            </div>
-            <div class="list__item items__container">
-              <label for="longitude">Longitude</label>
-              <input type="text" id="longitude" />
-            </div>
-            <div class="list__item items__container">
-              <label for="latitude">Latitude</label>
-              <input type="text" id="latitude" />
-            </div>
-            <div class="list__item items__container">
-              <label for="fluido">Fluido P.</label>
-              <input type="text" id="fluido" />
-            </div>
-            <div class="list__item items__container">
-              <label for="situacao">Situação</label>
-              <input type="text" id="situacao" />
-            </div>
-            <div class="buttonsLong">
-              <button class="button savelong">salvar</button>
-              <button class="button detailslong">detalhes</button>
+            <div class="container-test-icons-save">
+              <span class="material-symbols-outlined">
+                bookmark
+              </span>
+              <span class="material-symbols-outlined">
+                article
+                </span>
             </div>
           </div>
-          <p class="toggle-details">Ver mais</p>
-        </div>
-      </section>
+        </div> 
+      </div>    
+
+    <div id="failed-search" class="failed-search">
+      <p>Não ha nenhuma Bacia com esse nome.</p>
+      <p>Tente pesquisar em outra categoria</p>
+      <button>OK!</button>
     </div>
+
+    <div class="filters-selected">
+      <div class="filter-selected">p</div>
+      <div class="filter-selected">p</div>
+      <div class="filter-selected">p</div>
+    </div>
+
+    <div class="filters hidden"></div>
+
+      
     <div id="map"></div>
 
     <script>

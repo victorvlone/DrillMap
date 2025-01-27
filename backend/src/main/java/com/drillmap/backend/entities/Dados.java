@@ -1,10 +1,17 @@
 package com.drillmap.backend.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,5 +82,22 @@ public class Dados {
 
     @Column(name = "poco_operador", length = 20)
     private String pocoOperador;
+    
+    @OneToMany(mappedBy = "dados", cascade = CascadeType.ALL)
+    @Builder.Default
+    @JsonIgnoreProperties("dados")
+    private List<Bacia> bacias = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dados", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Bloco> blocos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dados", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Campo> campos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dados", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Poco> pocos = new ArrayList<>();
 
 }

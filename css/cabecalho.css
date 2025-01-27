@@ -262,11 +262,7 @@ li {
   }
   #filter-icon{
     margin-right: .5rem;
-    opacity: 0;
-    transition: opacity .2s;
-  }
-  .search-box input:focus + #filter-icon{
-    opacity: 100%;
+    opacity: 1;
   }
   .search-box span {
     cursor: pointer;
@@ -290,6 +286,9 @@ li {
     text-decoration: none;
     color: #211b15;
   }
+  .darkModeToggle{
+    display: flex;
+  }
   .header__loginBtn {
     border: 2px solid #03a9f4;
     border-radius: 2rem;
@@ -299,6 +298,112 @@ li {
     background-color: #03a9f4;
     color: white;
     transition: background-coler 0.3s, color 0.3s;
+  }
+  .login-register-buttons, .icons-buttons{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .icons-buttons span{
+    cursor: pointer;
+  }
+  .icons-buttons > .notification-btn{
+    font-size: 26px;
+  }
+  .icons-buttons > .conta-btn{
+    font-size: 45px;
+  }
+  .conta-btn{
+    font-size: 100px;
+  }
+  .user-widget{
+    width: 137px;
+    height: 182px;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    top: 8.5rem;
+    right: 35rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.252);
+    visibility: hidden;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    display: flex;
+  }
+  .user-widget.show{
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .user-widget hr{
+    opacity: 20%;
+  }
+  .logout-btn, .config-btn, .save-btn{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  .logout-btn, .config-btn, .save-btn p{
+    font-size: 14px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+  }
+  .login-register-buttons{
+    display: flex;
+  }
+  .user-page{
+    width: 329px;
+    height: 239px;
+    position: absolute;
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    top: 8.5rem;
+    right: 32rem;
+    overflow:hidden;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.252);
+  }
+  .user-name-icon{
+    background-color: #f4f4f4;
+    height: 108px;
+    width: 100%;
+  }
+  .user-page h5{
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .container-dados{
+    width: 100%;
+  }
+  .user-email-senha{
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    padding-left: 30px;
+  }
+  .user-edit h3, .user-email-senha h3{
+    font-size: 14px;
+  }
+  .user-edit p, .user-email-senha p{
+    font-size: 12px;
+  }
+  .user-name-icon{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+  }
+  .user-name-icon > .material-symbols-outlined{
+    margin-left: 24px;
+    font-size: 70px;
   }
   .dark-mode {
     background-color: rgba(21, 26, 39, 1);

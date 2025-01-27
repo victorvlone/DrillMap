@@ -25,4 +25,9 @@ public class DadosController {
         return ResponseEntity.ok(dadosService.uploadDados(file));
     }
 
+    @PostMapping(value = "/update", consumes = {"multipart/form-data"})
+    public ResponseEntity<Integer> updateDados(@RequestPart("file")MultipartFile file) throws IOException{
+        return ResponseEntity.ok(dadosService.updateDados(file));
+    }
+
 }

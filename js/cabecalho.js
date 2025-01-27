@@ -31,7 +31,7 @@ let dropdownBtn = document.getElementById("drop-text");
 let list = document.getElementById("list");
 let icon = document.getElementById("iconOptions");
 let span = document.getElementById("span");
-let input = document.querySelectorAll(".search-input");
+let input = document.querySelector(".search-input");
 let listItems = document.querySelectorAll(".dropdown-list-item");
 
 dropdownBtn.onclick = function(){
@@ -47,17 +47,21 @@ dropdownBtn.onclick = function(){
 window.onclick = function (e) {
     if(e.target.id !== "drop-text" &&
        e.target.id !== "span" &&
-       e.target.id !== "icon"
+       e.target.id !== "iconOptions"
     ){
         list.classList.remove('show');
         icon.style.rotate = "0deg";
     }
 };
 
-for (item of listItems){
-    item.onclick=function(e){
-        span.innerText = e.target.innerText;
+for (let item of listItems){
+    item.onclick= function (e) {
+        const categoriaSelecionada = e.target.innerText;
 
-        input.placeholder = "Procure por " + e.target.innerText + "...";
+        span.innerText = categoriaSelecionada;
+        input.placeholder = "Procure por " + categoriaSelecionada + "...";
+
+        const evento = new CustomEvent ("categoriaSelecionada", { detail: categoriaSelecionada });
+        window.dispatchEvent(evento);
     };
 }
