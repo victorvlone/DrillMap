@@ -185,15 +185,46 @@ filterIcon.addEventListener("click", () => {
 });
 
 document.addEventListener("click", (event) => {
+  const filtersDiv = document.querySelector(".filters");
+  const subFiltersDiv = document.querySelector(".subFilters");
+  
+  const isClickInsideFilters = filtersDiv.contains(event.target);
+  const isClickInsideSubFilters = subFiltersDiv.contains(event.target);
+  const isClickFilterIcon = filterIcon.contains(event.target);
+
+  if (!isClickInsideFilters && !isClickInsideSubFilters && !isClickFilterIcon) {
+    if (filtersDiv.classList.contains("show")) {
+      filtersDiv.classList.remove("show");
+      setTimeout(() => {
+        filtersDiv.style.display = "none";
+      }, 300);
+    }
+
+    if (subFiltersDiv.classList.contains("show")) {
+      subFiltersDiv.classList.remove("show");
+      setTimeout(() => {
+        subFiltersDiv.style.display = "none";
+      }, 300);
+    }
+  }
+});
+
+filterIcon.addEventListener("click", (event) => {
+  event.stopPropagation(); 
   if (filtersDiv.classList.contains("show")) {
     filtersDiv.classList.remove("show");
     setTimeout(() => {
       filtersDiv.style.display = "none";
     }, 300);
+  } else {
+    filtersDiv.style.display = "flex";
+    setTimeout(() => {
+      filtersDiv.classList.add("show");
+    }, 10);
   }
 });
 
-const opcpesFiltros = {
+const opcoesFiltros = {
   Bacias: ["Nome", "Estado"],
   Blocos: ["Nome", "Estado"],
   Campos: ["Nome", "Estado"],
@@ -204,18 +235,75 @@ const opcpesFiltros = {
 function carregarFiltros(categoria) {
   filtersDiv.innerHTML = "";
 
-  if(opcpesFiltros[categoria]){
-    opcpesFiltros[categoria].forEach((filtro) => {
+  if(opcoesFiltros[categoria]){
+    opcoesFiltros[categoria].forEach((filtro) => {
       const p = document.createElement("p");
       p.textContent = filtro;
       p.addEventListener("click", () => {
         console.log(`filtro selecionado: ${filtro}`);
+        buscarComFiltros(categoria, filtro);
+
+        const subFiltersDiv = document.querySelector(".subFilters");
+
+        subFiltersDiv.classList.toggle("show");
       });
       filtersDiv.appendChild(p);
     });
   } else {
     filtersDiv.innerHTML = "<p>Nenhum filtro disponivel</p>";
   }
+}
+
+function buscarComFiltros(categoria, filtroSelecionado){
+
+  if(categoria == "Bacias"){
+    categoria = "bacia";
+  }
+  if(categoria == "Blocos"){
+    categoria = "bloco_exploratorio";
+  }
+  if(categoria == "Campos"){
+    categoria = "campo";
+  }
+  if(categoria == "Poços"){
+    categoria = "poco";
+  }
+
+  console.log(categoria);
+  const url = `http://localhost:8080/api/filtros?tabela=${encodeURIComponent(categoria)}&campo=${encodeURIComponent(filtroSelecionado)}`;
+  console.log(url);
+
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Erro ao buscar dados");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      mostrarFiltrosAdicionais(data, filtroSelecionado);
+    })
+    .catch((error) => {
+      console.error("Erro ao buscar filtros:", error);
+    });
+}
+
+function mostrarFiltrosAdicionais(filtros, filtroSelecionado) {
+  const subFiltersDiv = document.querySelector(".subFilters");
+  subFiltersDiv.innerHTML = "";
+
+  const filtrosUnicos = Array.from(new Set(filtros.map(filtro => filtro[filtroSelecionado])));
+  
+  filtrosUnicos.forEach((filtroValor) => {
+    const p = document.createElement("p");
+    p.textContent = filtroValor;
+    subFiltersDiv.appendChild(p);
+  });
+
+  subFiltersDiv.style.display = "flex"; // Garante que reapareça
+  setTimeout(() => {
+    subFiltersDiv.classList.add("show");
+  }, 10);
 }
 
 window.addEventListener("categoriaSelecionada", (event) => {
@@ -231,5 +319,5 @@ window.addEventListener("categoriaSelecionada", (event) => {
 })();
 
 filterIcon.addEventListener("click", () => {
-  filtersDiv.classList.toggle("hidden"); // Mostra/oculta os filtros
+  filtersDiv.classList.toggle("hidden"); 
 });

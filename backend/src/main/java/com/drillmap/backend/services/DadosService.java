@@ -138,6 +138,7 @@ public class DadosService {
                                                 .latitude(csvLine.getLatitude())
                                                 .longitude(csvLine.getLongitude())
                                                 .pocoOperador(csvLine.getPocoOperador())
+                                                .cadastro(csvLine.getCadastro())
                                                 .build();
 
                     Bacia bacia = new Bacia();
@@ -170,11 +171,11 @@ public class DadosService {
                     poco.setLatitude(csvLine.getLatitude());
                     poco.setLongitude(csvLine.getLongitude());
                     poco.setPocoOperador(csvLine.getPocoOperador());
+                    poco.setCadastro(csvLine.getCadastro());
+                    poco.setCadastro(csvLine.getCadastro());
                     poco.setCampo(campo);
                     poco.setDados(dados);
-                    dados.getPocos().add(poco);
-
-                    
+                    dados.getPocos().add(poco);     
 
                     return dados;
                 })
@@ -202,6 +203,7 @@ public class DadosService {
         dadoExistente.setLatitude(novoDado.getLatitude());
         dadoExistente.setLongitude(novoDado.getLongitude());
         dadoExistente.setPocoOperador(novoDado.getPocoOperador());
+        dadoExistente.setCadastro(novoDado.getCadastro());
 
     }
 
@@ -220,6 +222,7 @@ public class DadosService {
                !dadoExistente.getSituacao().equals(novoDado.getSituacao()) ||
                !dadoExistente.getLatitude().equals(novoDado.getLatitude()) ||
                !dadoExistente.getLongitude().equals(novoDado.getLongitude()) ||
-               !dadoExistente.getPocoOperador().equals(novoDado.getPocoOperador());
+               !dadoExistente.getPocoOperador().equals(novoDado.getPocoOperador()) ||
+               !dadoExistente.getCadastro().equals(novoDado.getCadastro());
     }
 }

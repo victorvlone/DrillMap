@@ -21,6 +21,7 @@ public class Poco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_poco")
     private Integer id;
 
     @Column(name = "inicio")
@@ -56,6 +57,9 @@ public class Poco {
     @Column(name = "poco_operador")
     private String pocoOperador;
 
+    @Column(name = "cadastro")
+    private String cadastro;
+
     @ManyToOne
     @JoinColumn(name = "dados_id_dados", nullable= false)
     private Dados dados;
@@ -66,7 +70,7 @@ public class Poco {
 
     public Poco(Campo campo, String categoria, String conclusao, 
         String inicio, String latitude, String longitude, String nome, String pocoOperador,
-        String reclassificacao, String situacao, String termino, String tipodePoco) {
+        String reclassificacao, String situacao, String termino, String tipodePoco, String cadastro) {
 
         this.campo = campo;
         this.categoria = categoria;
@@ -80,5 +84,6 @@ public class Poco {
         this.situacao = situacao;
         this.termino = termino;
         this.tipodePoco = tipodePoco;
+        this.cadastro = cadastro;
     }
 }

@@ -41,11 +41,13 @@ public class DadosCsvRpresentation {
     private String categoria;
     @CsvBindByName(column = "SITUACAO")
     private String situacao;
-    @CsvBindByName(column = "LATITUDE_BASE_4C")
+    @CsvBindByName(column = "LATITUDE_BASE_DD")
     private String Latitude;
-    @CsvBindByName(column = "LONGITUDE_BASE_4C")
+    @CsvBindByName(column = "LONGITUDE_BASE_DD")
     private String Longitude;
     @CsvBindByName(column = "POCO_OPERADOR")
     private String pocoOperador;
+    @CsvBindByName(column = "CADASTRO")
+    private String cadastro;
 
 }

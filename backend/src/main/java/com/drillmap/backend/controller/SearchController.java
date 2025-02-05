@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,9 @@ import com.drillmap.backend.repositories.PocoRepository;
 @RestController
 @RequestMapping("/api")
 public class SearchController {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private BaciaRepository baciaRepository;
@@ -122,5 +126,16 @@ public class SearchController {
                     return response;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filtros")
+    public  List<Map<String, Object>> buscarDados(
+        @RequestParam String tabela,
+        @RequestParam String campo,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "50") int size
+    ){
+        String query = String.format("SELECT %s FROM %s LIMIT %d OFFSET %d", campo, tabela, size, page * size);
+        return jdbcTemplate.queryForList(query);
     }
 }

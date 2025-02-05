@@ -82,6 +82,9 @@ public class Dados {
 
     @Column(name = "poco_operador", length = 20)
     private String pocoOperador;
+
+    @Column(name = "cadastro")
+    private String cadastro;
     
     @OneToMany(mappedBy = "dados", cascade = CascadeType.ALL)
     @Builder.Default

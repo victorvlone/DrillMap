@@ -25,6 +25,7 @@ public class Campo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_campo")
     private Integer id;
 
     @Column(name = "nome_campo")

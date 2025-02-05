@@ -18,7 +18,8 @@ public class PocoService {
                !existente.getTermino().equals(novo.getTermino()) ||
                !existente.getConclusao().equals(novo.getConclusao()) ||
                !existente.getReclassificacao().equals(novo.getReclassificacao()) ||
-               !existente.getPocoOperador().equals(novo.getPocoOperador());
+               !existente.getPocoOperador().equals(novo.getPocoOperador()) ||
+               !existente.getCadastro().equals(novo.getCadastro());
     }
 
     public void atualizarPoco(Poco existente, Dados novo){
@@ -33,6 +34,7 @@ public class PocoService {
         existente.setReclassificacao(novo.getReclassificacao()); 
         existente.setCategoria(novo.getCategoria());
         existente.setPocoOperador(novo.getPocoOperador());
+        existente.setCadastro(novo.getCadastro());
     }
     
 
