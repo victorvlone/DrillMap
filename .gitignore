@@ -37,3 +37,6 @@ keys.env
 
 # Ignorar configurações do Spring Boot
 application.properties
+
+#ignorar configuracoes do docker
+docker-compose.yml
