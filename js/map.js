@@ -51,20 +51,11 @@ function pesquisar() {
       return response.json();
     })
     .then((data) => {
-      const failedSearchdiv = document.getElementById("failed-search");
-      if(data.length === 0){
-        failedSearchdiv.classList.remove("hide");
-        failedSearchdiv.classList.add("show");
+      if (!data || data.length === 0) {
+        console.warn("Nenhum dado retornado da API");
+        return [];
       }
-      else{
-        console.log(data);
-
-        failedSearchdiv.classList.remove("show");
-        failedSearchdiv.classList.add("hide");
-        
-        return data;
-
-      }
+      return data;
     })
     .catch((error) => {
       console.error("Erro: ", error);
@@ -300,7 +291,7 @@ function mostrarFiltrosAdicionais(filtros, filtroSelecionado) {
     subFiltersDiv.appendChild(p);
   });
 
-  subFiltersDiv.style.display = "flex"; // Garante que reapareça
+  subFiltersDiv.style.display = "flex";
   setTimeout(() => {
     subFiltersDiv.classList.add("show");
   }, 10);

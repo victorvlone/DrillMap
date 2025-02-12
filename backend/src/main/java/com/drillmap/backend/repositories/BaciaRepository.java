@@ -10,9 +10,10 @@ import com.drillmap.backend.entities.Bacia;
 
 public interface BaciaRepository extends JpaRepository<Bacia, Integer> {
 
-    List<Bacia> findByNome(String name);
-
     @Query("SELECT DISTINCT b.nome, b.estado FROM Bacia b WHERE b.nome = :nome")
     List<Object[]> findDistinctByNome(@Param("nome") String nome);
+
+    @Query("SELECT DISTINCT b.estado FROM Bacia b")
+    List<String> findDistinctEstados();
 
 }
