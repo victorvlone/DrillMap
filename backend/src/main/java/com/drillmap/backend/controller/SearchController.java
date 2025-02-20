@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drillmap.backend.dtos.PocoDTO;
 import com.drillmap.backend.services.SearchService;
 
 import lombok.AllArgsConstructor;
@@ -40,4 +41,9 @@ public class SearchController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/pocos")
+    public ResponseEntity<List<PocoDTO>> buscarPocos(@RequestParam String filtro, @RequestParam String valor){
+        List<PocoDTO> pocos = searchService.searchFinal(filtro, valor);
+        return ResponseEntity.ok(pocos);
+    }
 }

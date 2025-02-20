@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.drillmap.backend.config.PocoSpecification;
+import com.drillmap.backend.dtos.PocoDTO;
+import com.drillmap.backend.entities.Poco;
 import com.drillmap.backend.repositories.BaciaRepository;
 import com.drillmap.backend.repositories.BlocoRepository;
 import com.drillmap.backend.repositories.CampoRepository;
@@ -24,6 +28,15 @@ public class SearchService {
     private final CampoRepository campoRepository;
     private final PocoRepository pocoRepository;
     private final JdbcTemplate jdbcTemplate;
+
+    public List<PocoDTO> searchFinal(String filtro, String valor){
+        Specification<Poco> spec = PocoSpecification.filtrarPor(filtro, valor);
+        List<Poco> pocos = pocoRepository.findAll(spec);
+
+        return pocos.stream()
+        .map(poco -> new PocoDTO(poco.getNome(), poco.getLatitude(), poco.getLongitude()))
+        .collect(Collectors.toList());
+    }
 
     public  List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
         if(campo.equalsIgnoreCase("Estado")){
@@ -111,6 +124,4 @@ public class SearchService {
         })
         .collect(Collectors.toList());
     }
-
-
 }
