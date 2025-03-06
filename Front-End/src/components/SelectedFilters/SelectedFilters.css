@@ -1,0 +1,30 @@
+.filters-selected {
+  display: flex;
+  position: fixed;
+  gap: 1rem;
+  top: 8.5rem;
+  left: 50%;
+  transform: translateX(-40%) translateX(-21%);
+  display: none;
+  width: 550px;
+}
+.filters-selected.show {
+  display: flex;
+}
+.filter-selected {
+  width: 15rem;
+  height: 2.9rem;
+  background: linear-gradient(var(--verdeClaro), var(--verdeEscuro));
+  border-radius: 2rem;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  color: white;
+  box-shadow: 0 0 7px black;
+  font-weight: 500;
+}
+.filter-selected span {
+  font-size: 20px;
+  cursor: pointer;
+}
