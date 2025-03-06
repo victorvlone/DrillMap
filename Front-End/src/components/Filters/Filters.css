@@ -1,0 +1,32 @@
+.filters {
+  position: absolute;
+  z-index: 31;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  padding: 15px;
+  width: 12.5rem;
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  top: 8.5rem;
+  left: 50%;
+  transform: translateX(30%) translateX(100%);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.438);
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.filters.show,
+.subFilters.show {
+  opacity: 1;
+  display: flex;
+}
+.filters p,
+.subFilters p {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filters p:hover,
+.subFilters p:hover {
+  color: var(--verdeEscuro);
+}

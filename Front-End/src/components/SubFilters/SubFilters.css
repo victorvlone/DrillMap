@@ -1,0 +1,28 @@
+.subFilters {
+  width: 15rem;
+  height: 30rem;
+  background-color: white;
+  position: absolute;
+  z-index: 10;
+  border-radius: 1rem;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.438);
+  top: 2rem;
+  left: 110%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  overflow-y: scroll;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.subFilters::-webkit-scrollbar {
+  display: none;
+}
+.subFilters.show {
+  transform: translateX(
+    0
+  ); /* A div se moverá para a posição original quando visível */
+  opacity: 1; /* Faz a div se tornar visível */
+}
