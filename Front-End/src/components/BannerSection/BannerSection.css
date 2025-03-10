@@ -1,10 +1,11 @@
 .banner {
   width: 100%;
-  height: 90vh;
+  height: 900px;
+  max-height: 90vh;
   background-image: url(../../assets/images/BannerBackground.png);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: center 75%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -14,14 +15,8 @@
   font-style: normal;
   color: var(--azulEscuro);
 }
-.banner-content {
-  width: 50%;
-}
-.banner-content h1 {
-  font-size: clamp(2rem, 4vw, 7rem);
-}
 .banner-content p {
-  font-size: 1vw;
+  font-size: clamp(1rem, 1vw, 2rem);
 }
 @media (max-width: 450px) {
   .banner {
@@ -42,7 +37,26 @@
     display: none;
   }
 }
+@media (min-width: 451px) and (max-width: 1023px) {
+  .banner {
+    height: clamp(1rem, 60vw, 60vw);
+  }
+  .banner-content h1 {
+    font-size: clamp(3rem, 5vw, 9rem);
+  }
+  .banner-content p {
+    font-size: clamp(0.5rem, 1vw, 2rem);
+    width: 80%;
+    margin: auto;
+  }
+}
 @media (min-width: 1024px) {
+  .banner-content {
+    width: 80%;
+  }
+  .banner-content h1 {
+    font-size: clamp(5rem, 4vw, 9rem);
+  }
   .bannerText-mobile {
     display: none;
   }

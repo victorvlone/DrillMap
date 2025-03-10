@@ -16,7 +16,6 @@ html {
   flex-direction: column;
   gap: 10rem;
   padding: 5rem;
-  width: 70%;
 }
 .community-benefits {
   display: flex;
@@ -51,6 +50,9 @@ html {
 .community-img {
   background: linear-gradient(var(--verdeClaro), var(--verdeEscuro));
   width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 1.5rem;
   border-radius: 50%;
   position: absolute;
@@ -66,7 +68,7 @@ html {
 }
 .benefits-container p {
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 500;
   font-style: normal;
 }
 .community button {
@@ -137,5 +139,86 @@ html {
   }
   .benefits-container-text p {
     text-align: start;
+  }
+}
+@media (min-width: 451px) and (max-width: 1023px) {
+  .community {
+    width: 80%;
+    gap: 3rem;
+  }
+  .community-text h3 {
+    font-size: clamp(0.9rem, 1.9vw, 1.9vw);
+  }
+  .community-text p {
+    font-size: clamp(0.6rem, 1.2vw, 2rem);
+  }
+  .community-benefits {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  .benefits-container {
+    flex-direction: row;
+    align-items: center;
+    width: clamp(3rem, 40vw, 40vw);
+    height: clamp(3rem, 10vw, 10vw);
+    background-color: white;
+    border-radius: 10px;
+  }
+  .community-img {
+    display: none;
+  }
+  .benefits-container-text {
+    padding: 20px;
+  }
+  .benefits-container-text h4 {
+    margin: 0;
+    text-align: start;
+    font-size: clamp(0.7rem, 1.8vw, 1.8vw);
+  }
+  .benefits-container-text p {
+    text-align: start;
+    font-size: clamp(0.6rem, 1.2vw, 2rem);
+  }
+  .community button {
+    width: clamp(3rem, 20vw, 20vw);
+    font-size: clamp(0.5rem, 1.5vw, 1.5vw);
+    height: clamp(3rem, 5vw, 5vw);
+  }
+}
+@media (min-width: 1024px) {
+  .community {
+    width: 80%;
+  }
+  .community-text h3 {
+    font-size: clamp(1.5rem, 1.3vw, 2.5rem);
+  }
+  .community-text p {
+    font-size: clamp(0.7rem, 0.9vw, 1.5rem);
+  }
+  .benefits-container {
+    width: clamp(13rem, 10vw, 18rem);
+    height: clamp(2rem, 15vw, 25rem);
+  }
+  .benefits-container-text h4 {
+    font-size: clamp(1rem, 1.2vw, 2rem);
+  }
+  .benefits-container-text p {
+    font-size: clamp(0.8rem, 0.8vw, 1.4rem);
+  }
+  .community-img {
+    width: clamp(7rem, 5vw, 10rem);
+    height: clamp(7rem, 5vw, 10rem);
+  }
+  .community-img img {
+    width: clamp(3rem, 3.5vw, 5rem);
+    height: clamp(3rem, 3.5vw, 5rem);
+  }
+  .community button {
+    font-size: clamp(1rem, 0.8vw, 1.5rem);
+    width: clamp(1.5rem, 10vw, 20rem);
+    height: clamp(1.5rem, 2.5vw, 4.5rem);
   }
 }

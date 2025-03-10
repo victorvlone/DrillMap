@@ -37,7 +37,7 @@ function Header({ isMapPage }) {
 
   return (
     <div className="header-container">
-      <header className="header">
+      <header className="header container">
         <Link to="/home">
           <img
             id="logo"

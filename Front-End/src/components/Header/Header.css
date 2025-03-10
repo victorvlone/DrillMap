@@ -210,7 +210,16 @@
     display: none;
   }
 }
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 451px) and (max-width: 1023px) {
+  .header-logo {
+    width: clamp(10rem, 12vw, 12vw);
+  }
+  .header-nav ul > li {
+    font-size: clamp(1rem, 1.3vw, 1.3vw);
+  }
+  .header {
+    width: 80%;
+  }
   .header-nav > ul {
     gap: 2rem;
   }
@@ -222,6 +231,15 @@
   }
 }
 @media (min-width: 1024px) {
+  .header {
+    width: 80%;
+  }
+  .header-logo {
+    width: clamp(1rem, 15vw, 15rem);
+  }
+  .header-nav ul > li {
+    font-size: clamp(1.2rem, 0.8vw, 1.5rem);
+  }
   #info-icon,
   #dark-mode-icon,
   #login-icon,

@@ -26,8 +26,9 @@ li {
   list-style-type: none;
 }
 .container {
-  width: 124rem;
-  margin: auto;
+  width: 100%;
+  max-width: 1200px; /* Define um limite */
+  margin: 0 auto; /* Centraliza */
 }
 @media (max-width: 767px) {
 }
