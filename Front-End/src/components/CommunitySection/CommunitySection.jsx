@@ -15,7 +15,7 @@ function CommunitySection() {
       <div className="community-benefits">
         <div className="benefits-container">
           <div className="community-img">
-            <img src="src/assets/images/icon-notifications.png" alt="" />
+            <img src="assets/images/icon-notifications.png" alt="" />
           </div>
           <div className="benefits-container-text">
             <h4>notificação</h4>
@@ -27,7 +27,7 @@ function CommunitySection() {
         </div>
         <div className="benefits-container">
           <div className="community-img">
-            <img src="src/assets/images/icon-Bookmark.png" alt="" />
+            <img src="assets/images/icon-Bookmark.png" alt="" />
           </div>
           <div className="benefits-container-text">
             <h4>favorito</h4>
@@ -39,7 +39,7 @@ function CommunitySection() {
         </div>
         <div className="benefits-container">
           <div className="community-img">
-            <img src="src/assets/images/Icon-details.png" alt="" />
+            <img src="assets/images/Icon-details.png" alt="" />
           </div>
           <div className="benefits-container-text">
             <h4>detalhes</h4>

@@ -41,7 +41,7 @@ function Header({ isMapPage }) {
         <Link to="/home">
           <img
             id="logo"
-            src="src/assets/images/Drillmap_logo.png"
+            src="assets/images/Drillmap_logo.png"
             className="header-logo"
           />
         </Link>

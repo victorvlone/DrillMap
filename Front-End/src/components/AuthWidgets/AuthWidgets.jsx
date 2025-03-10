@@ -53,22 +53,18 @@ function AuthWidgets({ active, isRegistering, closeModal }) {
         <div className="icons-login">
           <img
             className="facebook"
-            src="src/assets/images/facebook_icon.png"
+            src="assets/images/facebook_icon.png"
             alt="Icone do Facebook"
           />
           <div className="google-container">
             <img
               className="google"
-              src="src/assets/images/google_icon.webp"
+              src="assets/images/google_icon.webp"
               alt="Icone do Google"
             />
           </div>
           <div className="twitter-container">
-            <img
-              className="twitter"
-              src="src/assets/images/X_logo.png"
-              alt=""
-            />
+            <img className="twitter" src="assets/images/X_logo.png" alt="" />
           </div>
         </div>
         <form action="#" autoComplete="off">
