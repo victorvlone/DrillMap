@@ -1,7 +1,7 @@
 import "./App.css";
 import Mapa from "./pages/Mapa";
 import Home from "./pages/Home";
-import Header from "./components/header/Header.jsx";
+import Header from "./components/Header/Header.jsx";
 import {
   BrowserRouter as Router,
   Routes,
