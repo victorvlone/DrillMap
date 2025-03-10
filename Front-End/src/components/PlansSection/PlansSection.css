@@ -162,3 +162,36 @@
     padding: 0;
   }
 }
+@media (min-width: 451px) and (max-width: 1023px) {
+  .plans h3 {
+    font-size: clamp(1rem, 2vw, 2vw);
+  }
+  .plans hr {
+    display: none;
+  }
+  .plans-title h4 {
+    font-size: clamp(0.5rem, 1.5vw, 1.5vw);
+    width: clamp(0.5rem, 25vw, 25vw);
+    display: none;
+  }
+  .plans li {
+    font-size: clamp(1rem, 1.5vw, 1.5vw);
+  }
+  .plans-option {
+    width: clamp(2rem, 30vw, 30vw);
+    height: clamp(2rem, 40vw, 40vw);
+  }
+  .plans-option h1 {
+    font-size: clamp(1rem, 4vw, 4vw);
+  }
+  .plans-option h1 span {
+    font-size: clamp(2rem, 6vw, 6vw);
+  }
+  .plans-button button {
+    width: clamp(1rem, 15vw, 15vw);
+    height: clamp(1rem, 5vw, 5vw);
+    font-size: clamp(1rem, 1.5vw, 1.5vw);
+  }
+}
+@media (min-width: 1024px) {
+}
