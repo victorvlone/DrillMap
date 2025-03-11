@@ -20,18 +20,18 @@
 }
 @media (max-width: 450px) {
   .banner {
-    height: 50.8rem;
+    height: clamp(35rem, 120vw, 120rem);
   }
   .banner-content {
     width: 90%;
-    top: 8.6rem;
+    top: clamp(7rem, 20vw, 20vw);
     position: absolute;
   }
   .bannerText-mobile {
-    font-size: 1.1rem !important;
+    font-size: clamp(0.5rem, 3vw, 3vw) !important;
   }
   .banner-content h1 {
-    font-size: 3rem;
+    font-size: clamp(1rem, 7vw, 7rem);
   }
   .bannerText-desktop {
     display: none;

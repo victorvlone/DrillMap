@@ -182,22 +182,22 @@
 
 @media (max-width: 450px) {
   .header-logo {
-    width: 15rem;
+    width: clamp(1rem, 35vw, 35vw);
   }
   .header-container {
-    height: 100px;
+    height: clamp(1rem, 20vw, 20rem);
   }
   .header {
     width: 90%;
   }
   .header-nav > ul {
-    gap: 2rem;
+    gap: clamp(1rem, 5vw, 5vw);
   }
   #info-icon,
   #dark-mode-icon,
   #login-icon,
   #map-icon {
-    font-size: 3rem;
+    font-size: clamp(1rem, 7vw, 7vw);
     cursor: pointer;
     display: flex;
     color: var(--azulEscuro);

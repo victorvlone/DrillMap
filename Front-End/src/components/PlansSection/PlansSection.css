@@ -105,36 +105,32 @@
     width: 100%;
   }
   .plans h3 {
-    font-size: 1.6rem;
+    font-size: clamp(1rem, 3.5vw, 3.5rem);
   }
   .plans li {
-    font-size: 1rem;
+    font-size: clamp(0.5rem, 2.5vw, 2.5rem);
   }
   .plans hr {
     display: none;
   }
   .plans h4 {
-    width: 22.6rem;
-    height: 2.6rem;
-    font-size: 1.3rem;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    display: none;
   }
   .plans-title h3 {
     display: none;
   }
   .plans-option span,
   .plans-option h1 {
-    font-size: 3.2rem;
+    font-size: clamp(1rem, 7vw, 7rem);
   }
   .plans-section {
     flex-direction: column;
-    gap: 4.7rem;
+    gap: clamp(2rem, 8vw, 8rem);
   }
   .plans-option {
     flex-direction: row;
-    height: 8rem;
+    height: clamp(1rem, 18vw, 18rem);
+    width: clamp(1rem, 68vw, 68rem);
     padding: 1.5rem;
   }
   .plans-description {
@@ -147,7 +143,7 @@
   .plans-button button {
     background: none;
     width: max-content;
-    font-size: 1.3rem;
+    font-size: clamp(0.5rem, 3.5vw, 3.5vw);
     box-shadow: none;
   }
   .mensal button {
