@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./SubFilters.css";
 import PropTypes from "prop-types";
 
-function Subfilters({ categoria, filtro }) {
+function Subfilters({ categoria, filtro, onSubfiltroClick }) {
   const [subfiltros, setSubfiltros] = useState([]);
   const [showSubfilters, setShowSubfilters] = useState(false);
 
@@ -37,10 +37,20 @@ function Subfilters({ categoria, filtro }) {
     }
   }, [categoria, filtro]);
 
+  // Função para lidar com o clique no subfiltro
+  const handleSubfiltroClick = (subfiltro) => {
+    // Chama a função do componente pai e passa o filtro e o subfiltro
+    if (onSubfiltroClick) {
+      onSubfiltroClick(subfiltro); // Passa o subfiltro selecionado
+    }
+  };
+
   return (
     <div className={`subFilters ${showSubfilters ? "show" : ""}`}>
       {[...new Set(subfiltros.flatMap(Object.values))].map((valor, index) => (
-        <p key={index}>{valor}</p>
+        <p key={index} onClick={() => handleSubfiltroClick(valor)}>
+          {valor}
+        </p>
       ))}
     </div>
   );
@@ -49,5 +59,6 @@ function Subfilters({ categoria, filtro }) {
 Subfilters.propTypes = {
   categoria: PropTypes.string.isRequired,
   filtro: PropTypes.string.isRequired,
+  onSubfiltroClick: PropTypes.func.isRequired,
 };
 export default Subfilters;

@@ -9,12 +9,13 @@ import Filters from "../Filters/Filters";
 import { map } from "leaflet";
 import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
+import PropTypes from "prop-types";
 
-function Searchbar() {
+function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [filtrosSelecionados, setFiltroSelecionado] = useState([]);
+  const [filtrosSelecionados, setFiltroSelecionadoInterno] = useState([]);
   const [categoriasBloqueadas, setCategoriasBloqueadas] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -54,7 +55,7 @@ function Searchbar() {
         return;
       }
       setShowError(false);
-      setFiltroSelecionado((prev) => [...prev, nome]);
+      setFiltroSelecionadoInterno((prev) => [...prev, nome]);
       setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
       marcarEstadosnoMapa(data, map);
     } catch (error) {
@@ -80,6 +81,12 @@ function Searchbar() {
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
+  };
+
+  const selecionarSubFiltro = (filtroSelecionado, subfiltroSelecionado) => {
+    // Atualiza os estados no componente pai para passar para o mapa
+    setFiltroSelecionado(filtroSelecionado); // Passa o filtro selecionado
+    setSubFiltroSelecionado(subfiltroSelecionado); // Passa o subfiltro selecionado
   };
 
   return (
@@ -157,9 +164,18 @@ function Searchbar() {
         </span>
       </div>
       {showFilters && (
-        <Filters categoria={categoriaSelecionada} showFilters={showFilters} />
+        <Filters
+          categoria={categoriaSelecionada}
+          showFilters={showFilters}
+          selecionarSubFiltro={selecionarSubFiltro}
+        />
       )}
     </div>
   );
 }
+
+Searchbar.propTypes = {
+  setFiltroSelecionado: PropTypes.func.isRequired,
+  setSubFiltroSelecionado: PropTypes.func.isRequired,
+};
 export default Searchbar;

@@ -9,17 +9,34 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import { useState } from "react";
+
 function AppContent() {
-  const location = useLocation(); // Agora está dentro do Router
+  const location = useLocation();
   const isMapPage = location.pathname === "/mapa";
+
+  const [filtroSelecionado, setFiltroSelecionado] = useState(null);
+  const [subFiltroSelecionado, setSubFiltroSelecionado] = useState(null);
 
   return (
     <>
-      <Header isMapPage={isMapPage} />
+      <Header
+        isMapPage={isMapPage}
+        setFiltroSelecionado={setFiltroSelecionado}
+        setSubFiltroSelecionado={setSubFiltroSelecionado}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/mapa" element={<Mapa />} />
+        <Route
+          path="/mapa"
+          element={
+            <Mapa
+              filtro={filtroSelecionado}
+              subFiltroSelecionado={subFiltroSelecionado}
+            />
+          }
+        />
       </Routes>
     </>
   );

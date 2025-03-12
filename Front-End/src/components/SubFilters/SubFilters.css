@@ -26,3 +26,9 @@
   ); /* A div se moverá para a posição original quando visível */
   opacity: 1; /* Faz a div se tornar visível */
 }
+@media (max-width: 450px) {
+  .subFilters {
+    left: clamp(-20rem, -35vw, -35vw);
+    width: clamp(1rem, 32vw, 32vw);
+  }
+}

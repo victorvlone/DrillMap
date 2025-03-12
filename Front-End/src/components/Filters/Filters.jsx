@@ -3,7 +3,7 @@ import "./Filters.css";
 import Subfilters from "../SubFilters/SubFilters";
 import { useState } from "react";
 
-function Filters({ categoria, showFilters }) {
+function Filters({ categoria, showFilters, selecionarSubFiltro }) {
   const [filtroSelecionado, setFiltroSelecionado] = useState(null);
 
   const opcoesFiltros = {
@@ -28,8 +28,15 @@ function Filters({ categoria, showFilters }) {
     setFiltroSelecionado(filtro);
   };
 
+  const handleSubfiltroClick = (subfiltro) => {
+    // Passa o filtro e o subfiltro selecionado para o componente pai
+    if (selecionarSubFiltro) {
+      selecionarSubFiltro(filtroSelecionado, subfiltro); // Passando o filtro e subfiltro selecionado
+    }
+  };
+
   return (
-    <div className={`filters ${showFilters ? "show" : "hidden"}`}>
+    <div className={`filters ${showFilters ? "show" : ""}`}>
       {opcoesFiltros[categoria] ? (
         opcoesFiltros[categoria].map((filtro, index) => (
           <p
@@ -46,7 +53,11 @@ function Filters({ categoria, showFilters }) {
 
       {/* Renderizando o componente Subfilters quando um filtro for selecionado */}
       {filtroSelecionado && (
-        <Subfilters categoria={categoria} filtro={filtroSelecionado} />
+        <Subfilters
+          categoria={categoria}
+          filtro={filtroSelecionado}
+          onSubfiltroClick={handleSubfiltroClick}
+        />
       )}
     </div>
   );
@@ -55,6 +66,7 @@ function Filters({ categoria, showFilters }) {
 Filters.propTypes = {
   categoria: PropTypes.string.isRequired,
   showFilters: PropTypes.bool.isRequired,
+  selecionarSubFiltro: PropTypes.func.isRequired,
 };
 
 export default Filters;
