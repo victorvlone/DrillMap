@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import AuthWidgets from "../AuthWidgets/AuthWidgets";
 import Searchbar from "../Searchbar/Searchbar";
 
-function Header({ isMapPage }) {
+function Header({ isMapPage, setFiltroSelecionado, setSubFiltroSelecionado }) {
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
@@ -48,12 +48,19 @@ function Header({ isMapPage }) {
 
         <nav className="header-nav">
           <ul>
-            {isMapPage && <Searchbar />}
+            {isMapPage && (
+              <Searchbar
+                setFiltroSelecionado={setFiltroSelecionado}
+                setSubFiltroSelecionado={setSubFiltroSelecionado}
+              />
+            )}
             {isMapPage && <li id="ajuda-btn">Ajuda</li>}
             {!isMapPage && (
-              <span id="map-icon" className="material-symbols-outlined">
-                travel_explore
-              </span>
+              <Link to="/mapa">
+                <span id="map-icon" className="material-symbols-outlined">
+                  travel_explore
+                </span>
+              </Link>
             )}
             {isMapPage && (
               <span id="info-icon" className="material-symbols-outlined">
@@ -102,5 +109,7 @@ function Header({ isMapPage }) {
 
 Header.propTypes = {
   isMapPage: PropTypes.bool.isRequired,
+  setFiltroSelecionado: PropTypes.func.isRequired,
+  setSubFiltroSelecionado: PropTypes.func.isRequired,
 };
 export default Header;

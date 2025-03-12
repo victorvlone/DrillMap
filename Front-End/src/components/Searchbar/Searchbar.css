@@ -75,15 +75,37 @@
   cursor: pointer;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 450px) {
   .search-bar {
     position: absolute;
-    top: 100px;
+    top: clamp(1rem, 20vw, 20vw);
     left: 50%;
     transform: translateX(-50%);
-    min-width: 38rem;
+    width: clamp(1rem, 90vw, 90rem) !important;
+    height: clamp(1rem, 10vw, 10rem);
+  }
+  .search-bar input::placeholder {
+    font-size: clamp(
+      0.5rem,
+      3.5vw,
+      3.5vw
+    ); /* ajuste os valores como preferir */
   }
   .dropdown {
-    width: 20rem;
+    width: clamp(0.5rem, 50vw, 50rem);
+    height: clamp(1rem, 10vw, 10rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: red;
+  }
+  .dropdown span {
+    font-size: clamp(0.5rem, 3.5vw, 3.5rem);
+  }
+  .search-box span {
+    font-size: clamp(1rem, 6vw, 6rem);
+  }
+  .dropdown-text {
+    width: 100%;
   }
 }

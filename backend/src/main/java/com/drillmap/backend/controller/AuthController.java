@@ -15,8 +15,6 @@ import com.drillmap.backend.dtos.UserDTO;
 import com.drillmap.backend.dtos.VerificationDTO;
 import com.drillmap.backend.services.EmailService;
 
-
-
 @RestController
 @CrossOrigin("*")
 @RequestMapping("api/auth")
