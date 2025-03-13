@@ -32,12 +32,9 @@ public class Campo {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "id_bloco_exploratorio", nullable = false)
+    @JoinColumn(name = "id_bloco", nullable = false)
     private Bloco bloco;
 
-    @ManyToOne
-    @JoinColumn(name = "dados_id_dados", nullable= false)
-    private Dados dados;
 
     @OneToMany(mappedBy = "campo", cascade = CascadeType.ALL)
     private List<Poco> poco;

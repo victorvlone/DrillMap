@@ -1,5 +1,7 @@
 package com.drillmap.backend.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,13 +27,13 @@ public class Poco {
     private Integer id;
 
     @Column(name = "inicio")
-    private String inicio;
+    private LocalDate inicio;
 
     @Column(name = "termino")
-    private String termino;
+    private LocalDate termino;
 
     @Column(name = "conclusao")
-    private String conclusao;
+    private LocalDate conclusao;
 
     @Column(name = "nome")
     private String nome;
@@ -49,28 +51,24 @@ public class Poco {
     private String situacao;
 
     @Column(name = "latitude")
-    private String latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private String longitude;
+    private Double longitude;
 
     @Column(name = "poco_operador")
     private String pocoOperador;
 
     @Column(name = "cadastro")
     private String cadastro;
-
-    @ManyToOne
-    @JoinColumn(name = "dados_id_dados", nullable= false)
-    private Dados dados;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_campo", nullable = false)
     private Campo campo;
 
-    public Poco(Campo campo, String categoria, String conclusao, 
-        String inicio, String latitude, String longitude, String nome, String pocoOperador,
-        String reclassificacao, String situacao, String termino, String tipodePoco, String cadastro) {
+    public Poco(Campo campo, String categoria, LocalDate conclusao, 
+        LocalDate inicio, Double latitude, Double longitude, String nome, String pocoOperador,
+        String reclassificacao, String situacao, LocalDate termino, String tipodePoco, String cadastro) {
 
         this.campo = campo;
         this.categoria = categoria;

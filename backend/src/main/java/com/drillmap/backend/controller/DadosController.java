@@ -22,12 +22,8 @@ public class DadosController {
 
     @PostMapping(value = "/upload", consumes = {"multipart/form-data"})
     public ResponseEntity<Integer> uploadDados(@RequestPart("file")MultipartFile file) throws IOException{
-        return ResponseEntity.ok(dadosService.uploadDados(file));
-    }
-
-    @PostMapping(value = "/update", consumes = {"multipart/form-data"})
-    public ResponseEntity<Integer> updateDados(@RequestPart("file")MultipartFile file) throws IOException{
-        return ResponseEntity.ok(dadosService.updateDados(file));
+        int registrosCriados = dadosService.importarCsv(file);
+        return ResponseEntity.ok(registrosCriados);
     }
 
 }
