@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PocoDTO {
     private String nome;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 }

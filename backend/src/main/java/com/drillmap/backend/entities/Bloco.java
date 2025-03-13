@@ -20,12 +20,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "bloco_exploratorio")
+@Table(name = "bloco")
 public class Bloco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_bloco_exploratorio")
+    @Column(name = "id_bloco")
     private Integer id;
 
     @Column(name = "nome")
@@ -35,9 +35,6 @@ public class Bloco {
     @JoinColumn(name = "id_bacia", nullable = false)
     private Bacia bacia;
 
-    @ManyToOne
-    @JoinColumn(name = "dados_id_dados", nullable= false)
-    private Dados dados;
 
     @OneToMany(mappedBy = "bloco", cascade = CascadeType.ALL)
     private List<Campo> campos;
