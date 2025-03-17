@@ -35,22 +35,21 @@ public class DadosService {
     private final PocoRepository pocoRepository;
 
     DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     public Integer importarCsv(MultipartFile file) throws IOException {
         List<DadosCsvRpresentation> linhasCsv = parseCsv(file); // Método que converte CSV em lista de representações
         int registrosCriados = 0;
-
+    
         for (DadosCsvRpresentation csv : linhasCsv) {
-
+    
             // 1. Verificar ou criar a Bacia
-            Bacia bacia = baciaRepository.findByNome(csv.getNomeBacia())
-                             .orElseGet(() -> {
-                                 Bacia novaBacia = new Bacia();
-                                 novaBacia.setNome(csv.getNomeBacia());
-                                 novaBacia.setEstado(csv.getEstado());
-                                 return baciaRepository.save(novaBacia);
-                             });
-
+            Bacia bacia = baciaRepository.findByNomeAndEstado(csv.getNomeBacia(), csv.getEstado())
+                 .orElseGet(() -> {
+                     Bacia novaBacia = new Bacia();
+                     novaBacia.setNome(csv.getNomeBacia());
+                     novaBacia.setEstado(csv.getEstado());
+                     return baciaRepository.save(novaBacia);
+                 });
+    
             // 2. Verificar ou criar o Bloco dentro da Bacia
             Bloco bloco = blocoRepository.findByNomeAndBacia(csv.getNomeBloco(), bacia)
                             .orElseGet(() -> {
@@ -59,7 +58,7 @@ public class DadosService {
                                 novoBloco.setBacia(bacia);
                                 return blocoRepository.save(novoBloco);
                             });
-
+    
             // 3. Verificar ou criar o Campo dentro do Bloco
             Campo campo = campoRepository.findByNomeAndBloco(csv.getNomeCampo(), bloco)
                             .orElseGet(() -> {
@@ -68,11 +67,20 @@ public class DadosService {
                                 novoCampo.setBloco(bloco);
                                 return campoRepository.save(novoCampo);
                             });
-
-            // 4. Criar o Poço dentro do Campo
-            Poco poco = new Poco();
-            poco.setNome(csv.getNomePoco());
-            poco.setCampo(campo);
+    
+            // 4. Verificar ou criar o Poço dentro do Campo
+            Poco poco = pocoRepository.findByNomeAndCampoId(csv.getNomePoco(), campo.getId())
+                            .orElseGet(() -> {
+                                Poco novoPoco = new Poco();
+                                novoPoco.setNome(csv.getNomePoco());
+                                novoPoco.setCampo(campo);
+                                return novoPoco;
+                            });
+    
+            // Atualizar os dados do poço se necessário
+            if (poco.getCampo() != null && !poco.getCampo().equals(campo)) {
+                poco.setCampo(campo); // Atualiza o campo, se necessário
+            }
             if (csv.getInicio() != null && !csv.getInicio().isBlank()) {
                 poco.setInicio(LocalDate.parse(csv.getInicio(), format));
             }  
@@ -90,14 +98,16 @@ public class DadosService {
             poco.setLongitude(Double.valueOf(csv.getLongitude().replace(",", ".")));
             poco.setPocoOperador(csv.getPocoOperador());
             poco.setCadastro(csv.getCadastro());
-
+    
+            // Salva ou atualiza o poço
             pocoRepository.save(poco);
-
+    
             registrosCriados++;
         }
-
+    
         return registrosCriados;
     }
+    
         
     private List<DadosCsvRpresentation> parseCsv(MultipartFile file) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {

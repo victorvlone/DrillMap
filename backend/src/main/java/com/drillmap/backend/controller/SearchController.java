@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,16 +36,18 @@ public class SearchController {
             return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity <List<Map<String, Object>>> filtrarDados(@RequestParam String nome, @RequestParam String categoria){
-
-        List<Map<String, Object>> result = searchService.filtrarDados(nome, categoria);
-        return ResponseEntity.ok(result);
+    @PostMapping("/search")
+    public ResponseEntity<?> pesquisarFinal(
+        @RequestParam String categoria,
+        @RequestBody Map<String, Object> filtros
+    ) {
+        if (!categoria.equalsIgnoreCase("poço")) {
+            // Busca apenas o estado!
+            List<String> estados = searchService.buscarEstadosPorCategoria(categoria, filtros);
+            return ResponseEntity.ok(estados);
+        }
+        List<PocoDTO> resultados = searchService.searchFinal(categoria, filtros);
+        return ResponseEntity.ok(resultados);
     }
 
-    @GetMapping("/pocos")
-    public ResponseEntity<List<PocoDTO>> buscarPocos(@RequestParam String filtro, @RequestParam String valor){
-        List<PocoDTO> pocos = searchService.searchFinal(filtro, valor);
-        return ResponseEntity.ok(pocos);
-    }
 }
