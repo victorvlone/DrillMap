@@ -7,9 +7,11 @@ import {
 } from "../../utils/mapUtils.js";
 import Filters from "../Filters/Filters";
 import { map } from "leaflet";
+import L from "leaflet";
 import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import PropTypes from "prop-types";
+import { mapRef } from "../Map/Map.jsx";
 
 function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
@@ -72,6 +74,37 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
       setShowError(false);
       setFiltroSelecionadoInterno((prev) => [...prev, filtro]);
       setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
+
+      if (categoriaSelecionada === "Poços") {
+        let markerLayer = null;
+        console.log("Marcando poço no mapa...");
+
+        // Limpa os markers antigos antes de adicionar novos
+        if (markerLayer) {
+          markerLayer.clearLayers();
+        }
+
+        // Cria um novo Layer Group para os markers
+        markerLayer = L.layerGroup().addTo(mapRef.current);
+
+        data.forEach((poco) => {
+          let { latitude, longitude, nome } = poco;
+
+          // Se as coordenadas já são números, pode tirar isso
+          latitude = parseFloat(latitude.toString().replace(",", "."));
+          longitude = parseFloat(longitude.toString().replace(",", "."));
+
+          if (isNaN(latitude) || isNaN(longitude)) {
+            console.error(
+              `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
+            );
+            return; // Pula se não for válido
+          }
+
+          const marker = L.marker([latitude, longitude]).addTo(markerLayer);
+          marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
+        });
+      }
       marcarEstadosnoMapa(data, map);
     } catch (error) {
       console.error("Error: ", error);
