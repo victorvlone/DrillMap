@@ -17,7 +17,7 @@ public interface BlocoRepository extends JpaRepository<Bloco, Integer> {
     @Query("SELECT DISTINCT b.bacia.estado FROM Bloco b WHERE b.bacia IS NOT NULL")
     List<String> findDistinctEstados();
 
-    @Query("SELECT bl.bacia.estado FROM Bloco bl WHERE LOWER(bl.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    @Query("SELECT b.bacia.estado FROM Bloco b JOIN b.bacia bacia WHERE b.nome = :nome")
     List<String> findEstadoByNome(@Param("nome") String nome);
 
 

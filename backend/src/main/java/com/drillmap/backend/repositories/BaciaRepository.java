@@ -17,7 +17,7 @@ public interface BaciaRepository extends JpaRepository<Bacia, Integer> {
     @Query("SELECT DISTINCT b.estado FROM Bacia b")
     List<String> findDistinctEstados();
 
-    @Query("SELECT DISTINCT b.estado FROM Bacia b WHERE LOWER(b.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    @Query("SELECT b.estado FROM Bacia b WHERE b.nome = :nome")
     List<String> findEstadoByNome(@Param("nome") String nome);
 
 

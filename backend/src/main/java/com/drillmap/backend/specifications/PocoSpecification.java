@@ -34,19 +34,19 @@ public class PocoSpecification {
                     if (valor == null) continue;
 
                     switch (categoria.toLowerCase()) {
-                        case "poco":
+                        case "poços":
                             predicates.add(criarPredicado(cb, root, nomeFiltro, valor));
                             break;
-                        case "campo":
+                        case "campos":
                             if (campoJoin == null) campoJoin = root.join("campo");
                             predicates.add(criarPredicado(cb, campoJoin, nomeFiltro, valor));
                             break;
-                        case "bloco":
+                        case "blocos":
                             if (campoJoin == null) campoJoin = root.join("campo");
                             if (blocoJoin == null) blocoJoin = campoJoin.join("bloco");
                             predicates.add(criarPredicado(cb, blocoJoin, nomeFiltro, valor));
                             break;
-                        case "bacia":
+                        case "bacias":
                             if (campoJoin == null) campoJoin = root.join("campo");
                             if (blocoJoin == null) blocoJoin = campoJoin.join("bloco");
                             if (baciaJoin == null) baciaJoin = blocoJoin.join("bacia");
