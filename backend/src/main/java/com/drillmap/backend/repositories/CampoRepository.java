@@ -17,9 +17,8 @@ public interface CampoRepository extends JpaRepository<Campo, Integer> {
      @Query("SELECT DISTINCT c.bloco.bacia.estado FROM Campo c WHERE c.bloco.bacia IS NOT NULL")
     List<String> findDistinctEstados();
 
-    @Query("SELECT c.bloco.bacia.estado FROM Campo c WHERE LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    @Query("SELECT c.bloco.bacia.estado FROM Campo c JOIN c.bloco b JOIN b.bacia bacia WHERE c.nome = :nome")
     List<String> findEstadoByNome(@Param("nome") String nome);
-
 
     Optional<Campo> findByNomeAndBloco(String nome, Bloco bloco);
 

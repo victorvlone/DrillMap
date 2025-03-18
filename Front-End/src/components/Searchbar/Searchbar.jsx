@@ -40,22 +40,37 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
 
   const pesquisar = async () => {
     const input = document.getElementById("search-input");
-    const nome = input.value;
-    const url = `http://localhost:8080/api/search?nome=${encodeURIComponent(
-      nome
-    )}&categoria=${encodeURIComponent(categoriaSelecionada)}`;
+    const filtro = input.value;
 
+    const filtros = {
+      nome: filtro,
+    };
+    const url = `http://localhost:8080/api/search?categoria=${encodeURIComponent(
+      categoriaSelecionada
+    )}`;
+
+    console.log("Filtros que vão pro backend:", filtros);
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(filtros),
+      });
+      console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
+
       const data = await response.json();
+
       if (!data || data.length === 0) {
         console.warn("Nenhum dado retornado da API");
         setShowError(true);
         return;
       }
+
       setShowError(false);
-      setFiltroSelecionadoInterno((prev) => [...prev, nome]);
+      setFiltroSelecionadoInterno((prev) => [...prev, filtro]);
       setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
       marcarEstadosnoMapa(data, map);
     } catch (error) {

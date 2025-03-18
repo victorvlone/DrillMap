@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drillmap.backend.dtos.EstadoDTO;
 import com.drillmap.backend.dtos.PocoDTO;
 import com.drillmap.backend.services.SearchService;
 
@@ -41,9 +42,9 @@ public class SearchController {
         @RequestParam String categoria,
         @RequestBody Map<String, Object> filtros
     ) {
-        if (!categoria.equalsIgnoreCase("poço")) {
+        if (!categoria.equalsIgnoreCase("poços")) {
             // Busca apenas o estado!
-            List<String> estados = searchService.buscarEstadosPorCategoria(categoria, filtros);
+            List<EstadoDTO> estados = searchService.buscarEstadosPorCategoria(categoria, filtros);
             return ResponseEntity.ok(estados);
         }
         List<PocoDTO> resultados = searchService.searchFinal(categoria, filtros);

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.drillmap.backend.dtos.EstadoDTO;
 import com.drillmap.backend.dtos.PocoDTO;
 import com.drillmap.backend.entities.Poco;
 import com.drillmap.backend.repositories.BaciaRepository;
@@ -38,28 +39,29 @@ public class SearchService {
         .collect(Collectors.<PocoDTO>toList());
     }
 
-    public List<String> buscarEstadosPorCategoria(String categoria, Map<String, Object> filtros) {
-
+    public List<EstadoDTO> buscarEstadosPorCategoria(String categoria, Map<String, Object> filtros) {
         String nome = filtros.getOrDefault("nome", "").toString();
-
-    List<String> estados;
-    switch (categoria.toLowerCase()) {
-        case "bacia":
-            estados = baciaRepository.findEstadoByNome(nome);
-            break;
-        case "bloco":
-            estados = blocoRepository.findEstadoByNome(nome);
-            break;
-        case "campo":
-            estados = campoRepository.findEstadoByNome(nome);
-            break;
-        default:
-            throw new IllegalArgumentException("Categoria inválida para buscar estados");
+    
+        List<String> estados;
+    
+        switch (categoria.toLowerCase()) {
+            case "bacias":
+                estados = baciaRepository.findEstadoByNome(nome);
+                break;
+            case "blocos":
+                estados = blocoRepository.findEstadoByNome(nome);
+                break;
+            case "campos":
+                estados = campoRepository.findEstadoByNome(nome);
+                break;
+            default:
+                throw new IllegalArgumentException("Categoria inválida para buscar estados");
+        }
+    
+        System.out.println("Estados encontrados: " + estados);
+        return estados.stream().map(EstadoDTO::new).collect(Collectors.toList());
     }
-
-    System.out.println("Estados encontrados: " + estados);
-    return estados;
-    }
+    
 
     public  List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
         if(campo.equalsIgnoreCase("Estado")){
@@ -87,7 +89,6 @@ public class SearchService {
             })
             .collect(Collectors.toList());
     }
-
 
     public List<Map<String, Object>> filtrarDados(String nome, String categoria){
         switch (categoria.toLowerCase()){
