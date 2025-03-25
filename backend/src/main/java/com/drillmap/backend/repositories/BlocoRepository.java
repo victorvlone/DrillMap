@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.drillmap.backend.entities.Bacia;
 import com.drillmap.backend.entities.Bloco;
 
-public interface BlocoRepository extends JpaRepository<Bloco, Integer> {
+public interface BlocoRepository extends JpaRepository<Bloco, Integer>,  JpaSpecificationExecutor<Bloco> {
 
     List<Bloco> findByNome(String nome);
 
