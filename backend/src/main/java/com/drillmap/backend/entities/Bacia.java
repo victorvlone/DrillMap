@@ -2,6 +2,8 @@ package com.drillmap.backend.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +34,7 @@ public class Bacia {
     @Column(name = "nome")
     private String nome;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bacia", cascade = CascadeType.ALL)
     private List<Bloco> blocos;
 

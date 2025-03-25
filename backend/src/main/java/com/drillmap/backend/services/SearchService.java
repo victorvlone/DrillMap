@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.drillmap.backend.dtos.EstadoDTO;
 import com.drillmap.backend.dtos.PocoDTO;
 import com.drillmap.backend.entities.Poco;
 import com.drillmap.backend.repositories.BaciaRepository;
@@ -30,38 +29,37 @@ public class SearchService {
     private final PocoRepository pocoRepository;
     private final JdbcTemplate jdbcTemplate;
 
-    public List<PocoDTO> searchFinal(String categoria, Map<String, Object> filtros){
-        Specification<Poco> spec = PocoSpecification.criarSpecification(categoria, filtros);
-        List<Poco> pocos = pocoRepository.findAll(spec);
-
-        return pocos.stream()
-        .map(poco -> new PocoDTO(poco.getNome(), poco.getLatitude(), poco.getLongitude()))
-        .collect(Collectors.<PocoDTO>toList());
+    public List<PocoDTO> buscarPoços(Map<String, Map<String, Object>> filtros) {
+        // Para cada categoria, como Bacias, Poços, Blocos ou Campos, vamos construir a Specification
+        Specification<Poco> especificacao = PocoSpecification.aplicarFiltros(filtros);
+        // Agora, executamos a consulta usando o repositório
+        return pocoRepository.findAll(especificacao)
+                         .stream()
+                         .map(this::convertToDto) // Converte cada Poco para PocoDTO
+                         .collect(Collectors.toList());
     }
 
-    public List<EstadoDTO> buscarEstadosPorCategoria(String categoria, Map<String, Object> filtros) {
-        String nome = filtros.getOrDefault("nome", "").toString();
-    
-        List<String> estados;
-    
-        switch (categoria.toLowerCase()) {
-            case "bacias":
-                estados = baciaRepository.findEstadoByNome(nome);
-                break;
-            case "blocos":
-                estados = blocoRepository.findEstadoByNome(nome);
-                break;
-            case "campos":
-                estados = campoRepository.findEstadoByNome(nome);
-                break;
-            default:
-                throw new IllegalArgumentException("Categoria inválida para buscar estados");
-        }
-    
-        System.out.println("Estados encontrados: " + estados);
-        return estados.stream().map(EstadoDTO::new).collect(Collectors.toList());
+    private PocoDTO convertToDto(Poco poco) {
+        return new PocoDTO(
+            poco.getNome(),
+            poco.getCampo().getBloco().getNome(),
+            poco.getCampo().getNome(),
+            poco.getCampo().getBloco().getBacia().getNome(),
+            poco.getLatitude(),
+            poco.getLongitude(),
+            poco.getCampo().getBloco().getBacia().getEstado(),
+            poco.getSituacao(),
+            poco.getInicio(),
+            poco.getTermino(),
+            poco.getConclusao(),
+            poco.getReclassificacao(),
+            poco.getTipodePoco(),
+            poco.getCategoria(),
+            poco.getPocoOperador(),
+            poco.getCadastro()
+        );
     }
-    
+
 
     public  List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
         if(campo.equalsIgnoreCase("Estado")){

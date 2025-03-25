@@ -31,6 +31,7 @@ public class Bloco {
     @Column(name = "nome")
     private String nome;
 
+    
     @ManyToOne
     @JoinColumn(name = "id_bacia", nullable = false)
     private Bacia bacia;

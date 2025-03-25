@@ -6,7 +6,6 @@ import {
   desmarcarEstadosnoMapa,
 } from "../../utils/mapUtils.js";
 import Filters from "../Filters/Filters";
-import { map } from "leaflet";
 import L from "leaflet";
 import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
@@ -105,7 +104,8 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
           marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
         });
       }
-      marcarEstadosnoMapa(data, map);
+      const estadosUnicos = [...new Set(data.map((item) => item.estado))];
+      marcarEstadosnoMapa(estadosUnicos);
     } catch (error) {
       console.error("Error: ", error);
     }

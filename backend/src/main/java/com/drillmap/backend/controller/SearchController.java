@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drillmap.backend.dtos.EstadoDTO;
 import com.drillmap.backend.dtos.PocoDTO;
 import com.drillmap.backend.services.SearchService;
 
@@ -37,17 +36,25 @@ public class SearchController {
             return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<?> pesquisarFinal(
-        @RequestParam String categoria,
-        @RequestBody Map<String, Object> filtros
-    ) {
-        if (!categoria.equalsIgnoreCase("poços")) {
-            // Busca apenas o estado!
-            List<EstadoDTO> estados = searchService.buscarEstadosPorCategoria(categoria, filtros);
-            return ResponseEntity.ok(estados);
-        }
-        List<PocoDTO> resultados = searchService.searchFinal(categoria, filtros);
+    // @PostMapping("/search")
+    // public ResponseEntity<?> searchHierarquico(@RequestBody Map<String, Map<String, Object>> filtros) {
+    //     if (filtros == null || filtros.isEmpty()) {
+    //         return ResponseEntity.badRequest().body("Nenhum filtro informado");
+    //     }
+
+    //     // Envia o map para o service processar
+    //     Object resultado = searchService.searchFinal(filtros);
+        
+    //     return ResponseEntity.ok(resultado);
+    // }
+
+@PostMapping("/search")
+    public ResponseEntity<?> search(@RequestBody Map<String, Map<String, Object>> filtros) {
+        System.out.println("Recebido: " + filtros);  // Só para debugar e ver se chegou certinho
+
+        List<PocoDTO> resultados = searchService.buscarPoços(filtros);
+
+        // Retorna os resultados da consulta
         return ResponseEntity.ok(resultados);
     }
 
