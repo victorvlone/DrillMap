@@ -9,16 +9,19 @@ import Filters from "../Filters/Filters";
 import L from "leaflet";
 import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
-import PropTypes from "prop-types";
 import { mapRef } from "../Map/Map.jsx";
 
-function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
+function Searchbar() {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
   const [showError, setShowError] = useState(false);
   const [filtrosSelecionados, setFiltroSelecionadoInterno] = useState([]);
   const [categoriasBloqueadas, setCategoriasBloqueadas] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [filtros, setFiltros] = useState({});
+
+  const [filtroSelecionado, setFiltroSelecionado] = useState([]);
+  const [subFiltroSelecionado, setSubFiltroSelecionado] = useState([]);
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
 
@@ -39,25 +42,30 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
     }
   }, [categoriasBloqueadas, categorias]);
 
-  const pesquisar = async () => {
-    const input = document.getElementById("search-input");
-    const filtro = input.value;
-
-    const filtros = {
-      nome: filtro,
+  const acumularFiltrosERealizarBusca = async (filtro, subfiltro) => {
+    // Cria um novo filtro baseado no que foi passado
+    const novosFiltros = {
+      ...filtros,
+      [categoriaSelecionada]: {
+        ...(filtros[categoriaSelecionada] || {}),
+        [filtro]: subfiltro,
+      },
     };
-    const url = `http://localhost:8080/api/search?categoria=${encodeURIComponent(
-      categoriaSelecionada
-    )}`;
 
-    console.log("Filtros que vão pro backend:", filtros);
+    setFiltros(novosFiltros); // Atualiza o estado com os filtros acumulados
+
+    // Faz a requisição
+    const url = `http://localhost:8080/api/search`;
+
+    console.log("Filtros que vão pro backend:", novosFiltros);
+
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(filtros),
+        body: JSON.stringify(novosFiltros),
       });
       console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
@@ -71,25 +79,15 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
       }
 
       setShowError(false);
-      setFiltroSelecionadoInterno((prev) => [...prev, filtro]);
+      setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
       setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
 
+      // Se a categoria for Poços, marca no mapa
       if (categoriaSelecionada === "Poços") {
-        let markerLayer = null;
-        console.log("Marcando poço no mapa...");
-
-        // Limpa os markers antigos antes de adicionar novos
-        if (markerLayer) {
-          markerLayer.clearLayers();
-        }
-
-        // Cria um novo Layer Group para os markers
-        markerLayer = L.layerGroup().addTo(mapRef.current);
+        let markerLayer = L.layerGroup().addTo(mapRef.current);
 
         data.forEach((poco) => {
           let { latitude, longitude, nome } = poco;
-
-          // Se as coordenadas já são números, pode tirar isso
           latitude = parseFloat(latitude.toString().replace(",", "."));
           longitude = parseFloat(longitude.toString().replace(",", "."));
 
@@ -97,18 +95,29 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
             console.error(
               `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
             );
-            return; // Pula se não for válido
+            return;
           }
 
           const marker = L.marker([latitude, longitude]).addTo(markerLayer);
           marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
         });
       }
+
+      // Marca os estados no mapa
       const estadosUnicos = [...new Set(data.map((item) => item.estado))];
       marcarEstadosnoMapa(estadosUnicos);
     } catch (error) {
       console.error("Error: ", error);
     }
+  };
+
+  const pesquisar = async () => {
+    const input = document.getElementById("search-input");
+    const filtro = input.value;
+
+    if (!filtro) return;
+
+    await acumularFiltrosERealizarBusca("nome", filtro);
     input.value = "";
   };
 
@@ -117,7 +126,7 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
     const novosFiltrosSelecionados = filtrosSelecionados.filter(
       (f) => f !== filtro
     );
-    setFiltroSelecionado(novosFiltrosSelecionados);
+    setFiltroSelecionadoInterno(novosFiltrosSelecionados);
 
     // Se não houver mais filtros ativos, limpa completamente categoriasBloqueadas
     if (novosFiltrosSelecionados.length === 0) {
@@ -131,10 +140,23 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
     setShowFilters(!showFilters);
   };
 
-  const selecionarSubFiltro = (filtroSelecionado, subfiltroSelecionado) => {
-    // Atualiza os estados no componente pai para passar para o mapa
-    setFiltroSelecionado(filtroSelecionado); // Passa o filtro selecionado
-    setSubFiltroSelecionado(subfiltroSelecionado); // Passa o subfiltro selecionado
+  const selecionarSubFiltro = async (
+    filtroSelecionado,
+    subfiltroSelecionado
+  ) => {
+    const filtroNormalizado = filtroSelecionado.toLowerCase();
+    const subfiltroNormalizado = subfiltroSelecionado.toLowerCase();
+
+    console.log("Filtro normalizado no Searchbar:", filtroNormalizado);
+    console.log("Subfiltro normalizado no Searchbar:", subfiltroNormalizado);
+
+    setFiltroSelecionado(filtroNormalizado);
+    setSubFiltroSelecionado(subfiltroNormalizado);
+
+    await acumularFiltrosERealizarBusca(
+      filtroNormalizado,
+      subfiltroNormalizado
+    );
   };
 
   return (
@@ -221,9 +243,4 @@ function Searchbar({ setFiltroSelecionado, setSubFiltroSelecionado }) {
     </div>
   );
 }
-
-Searchbar.propTypes = {
-  setFiltroSelecionado: PropTypes.func.isRequired,
-  setSubFiltroSelecionado: PropTypes.func.isRequired,
-};
 export default Searchbar;

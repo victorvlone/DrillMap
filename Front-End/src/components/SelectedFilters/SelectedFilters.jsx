@@ -13,7 +13,9 @@ function SelectedFilters({ filtrosSelecionados, removerFiltro }) {
           {filtro}
           <span
             className="material-symbols-outlined"
-            onClick={() => removerFiltro(filtro)}
+            onClick={() => {
+              removerFiltro(filtro);
+            }}
           >
             close
           </span>

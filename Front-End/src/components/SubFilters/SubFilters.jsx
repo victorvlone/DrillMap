@@ -9,7 +9,7 @@ function Subfilters({ categoria, filtro, onSubfiltroClick }) {
   useEffect(() => {
     const tabelaMap = {
       Bacias: "bacia",
-      Blocos: "bloco_exploratorio",
+      Blocos: "bloco",
       Campos: "campo",
       Poços: "poco",
     };
