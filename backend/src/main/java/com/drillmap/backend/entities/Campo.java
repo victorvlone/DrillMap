@@ -28,7 +28,7 @@ public class Campo {
     @Column(name = "id_campo")
     private Integer id;
 
-    @Column(name = "nome_campo")
+    @Column(name = "nome")
     private String nome;
 
     @ManyToOne

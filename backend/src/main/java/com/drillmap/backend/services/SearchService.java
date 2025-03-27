@@ -73,10 +73,10 @@ public class SearchService {
     private List<Map<String, Object>> buscarEstadosPorTabela(String tabela) {
         List<String> estados;
         switch (tabela.toLowerCase()) {
-            case "bacia": estados = baciaRepository.findDistinctEstados(); break;
-            case "bloco": estados = blocoRepository.findDistinctEstados(); break;
-            case "campo": estados = campoRepository.findDistinctEstados(); break;
-            case "poço": estados = pocoRepository.findDistinctEstados(); break;
+            case "bacias": estados = baciaRepository.findDistinctEstados(); break;
+            case "blocos": estados = blocoRepository.findDistinctEstados(); break;
+            case "campos": estados = campoRepository.findDistinctEstados(); break;
+            case "poços": estados = pocoRepository.findDistinctEstados(); break;
             default: throw new IllegalArgumentException("Tabela invalida para filtro de estado");
         }
         return estados.stream()
