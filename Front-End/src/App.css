@@ -33,5 +33,10 @@ a {
   max-width: 1200px; /* Define um limite */
   margin: 0 auto; /* Centraliza */
 }
+.filters.show,
+.subFilters.show {
+  opacity: 1;
+  visibility: visible;
+}
 @media (max-width: 767px) {
 }

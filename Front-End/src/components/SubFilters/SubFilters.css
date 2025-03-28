@@ -15,16 +15,11 @@
   overflow: hidden;
   overflow-y: scroll;
   opacity: 0;
+  visibility: hidden;
   transition: opacity 0.3s ease;
 }
 .subFilters::-webkit-scrollbar {
   display: none;
-}
-.subFilters.show {
-  transform: translateX(
-    0
-  ); /* A div se moverá para a posição original quando visível */
-  opacity: 1; /* Faz a div se tornar visível */
 }
 @media (max-width: 450px) {
   .subFilters {

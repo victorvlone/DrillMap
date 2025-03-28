@@ -15,7 +15,7 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.251);
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 .failed-search p {
   font-size: 1.3rem;
@@ -39,8 +39,4 @@
 .failed-search.show {
   opacity: 1;
   visibility: visible;
-}
-.failed-search.hide {
-  opacity: 0;
-  visibility: hidden;
 }

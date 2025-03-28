@@ -55,7 +55,7 @@ function Searchbar() {
     setFiltros(novosFiltros); // Atualiza o estado com os filtros acumulados
 
     // Faz a requisição
-    const url = `http://localhost:8080/api/search`;
+    const url = `http://localhost:8080/api/search?page=0&size=1000`;
 
     console.log("Filtros que vão pro backend:", novosFiltros);
 
@@ -71,8 +71,17 @@ function Searchbar() {
       if (!response.ok) throw new Error("Erro ao buscar dados");
 
       const data = await response.json();
+      console.log("Dados retornados da API:", data);
 
-      if (!data || data.length === 0) {
+      if (!data || !Array.isArray(data.content)) {
+        console.error("Erro: 'data.content' não é um array!", data);
+        setShowError(true);
+        return;
+      }
+
+      const content = data.content; // Acessando os dados dentro de "content"
+
+      if (content.length === 0) {
         console.warn("Nenhum dado retornado da API");
         setShowError(true);
         return;
@@ -82,26 +91,34 @@ function Searchbar() {
       setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
       setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
 
-      // Se a categoria for Poços, marca no mapa
-      if (categoriaSelecionada === "Poços") {
-        let markerLayer = L.layerGroup().addTo(mapRef.current);
+      let markerLayer = L.layerGroup().addTo(mapRef.current);
 
-        data.forEach((poco) => {
-          let { latitude, longitude, nome } = poco;
-          latitude = parseFloat(latitude.toString().replace(",", "."));
-          longitude = parseFloat(longitude.toString().replace(",", "."));
+      content.forEach((poco) => {
+        let { latitude, longitude, nome } = poco;
+        latitude = parseFloat(latitude.toString().replace(",", "."));
+        longitude = parseFloat(longitude.toString().replace(",", "."));
 
-          if (isNaN(latitude) || isNaN(longitude)) {
-            console.error(
-              `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
-            );
-            return;
-          }
+        if (isNaN(latitude) || isNaN(longitude)) {
+          console.error(
+            `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
+          );
+          return;
+        }
 
-          const marker = L.marker([latitude, longitude]).addTo(markerLayer);
-          marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
+        const markerIcon = L.icon({
+          iconUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png", // URL do ícone padrão
+          iconSize: [20, 30], // Tamanho do ícone [largura, altura]
+          iconAnchor: [10, 30], // Ponto do ícone que será ancorado à posição do marcador
+          popupAnchor: [0, -30], // Distância entre o marcador e o popup
         });
-      }
+
+        // Cria o marcador com o ícone personalizado
+        const marker = L.marker([latitude, longitude], {
+          icon: markerIcon,
+        }).addTo(markerLayer);
+        marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
+      });
 
       // Marca os estados no mapa
       const estadosUnicos = [...new Set(data.map((item) => item.estado))];
@@ -157,6 +174,8 @@ function Searchbar() {
       filtroNormalizado,
       subfiltroNormalizado
     );
+
+    setShowFilters(false);
   };
 
   return (
