@@ -14,9 +14,7 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.438);
   transition: opacity 0.3s ease;
   opacity: 0;
-}
-.filters.show {
-  opacity: 1;
+  visibility: hidden;
 }
 .filters p,
 .subFilters p {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 function FailedSearch({ categoria, showError, onClose }) {
   return (
-    <div className={`failed-search ${showError ? "show" : "hide"}`}>
+    <div className={`failed-search ${showError ? "show" : ""}`}>
       <p>Não há nenhuma {categoria} com esse nome.</p>
       <p>Tente pesquisar em outra categoria.</p>
       <button onClick={onClose}>OK!</button>

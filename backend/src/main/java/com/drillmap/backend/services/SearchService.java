@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -29,14 +33,21 @@ public class SearchService {
     private final PocoRepository pocoRepository;
     private final JdbcTemplate jdbcTemplate;
 
-    public List<PocoDTO> buscarPoços(Map<String, Map<String, Object>> filtros) {
+    public Page<PocoDTO> buscarPoços(Map<String, Map<String, Object>> filtros, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
         // Para cada categoria, como Bacias, Poços, Blocos ou Campos, vamos construir a Specification
         Specification<Poco> especificacao = PocoSpecification.aplicarFiltros(filtros);
         // Agora, executamos a consulta usando o repositório
-        return pocoRepository.findAll(especificacao)
-                         .stream()
-                         .map(this::convertToDto) // Converte cada Poco para PocoDTO
-                         .collect(Collectors.toList());
+         Page<Poco> pageDePoços = pocoRepository.findAll(especificacao, pageable);
+
+    // Converte os resultados para DTOs
+        List<PocoDTO> pocoDTOs = pageDePoços.getContent().stream()
+                                        .map(this::convertToDto)
+                                        .collect(Collectors.toList());
+
+    // Retorna um Page<> com os DTOs
+        return new PageImpl<>(pocoDTOs, pageable, pageDePoços.getTotalElements());
     }
 
     private PocoDTO convertToDto(Poco poco) {
@@ -60,7 +71,6 @@ public class SearchService {
         );
     }
 
-
     public  List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
         if(campo.equalsIgnoreCase("Estado")){
             return buscarEstadosPorTabela(tabela);
@@ -73,10 +83,10 @@ public class SearchService {
     private List<Map<String, Object>> buscarEstadosPorTabela(String tabela) {
         List<String> estados;
         switch (tabela.toLowerCase()) {
-            case "bacias": estados = baciaRepository.findDistinctEstados(); break;
-            case "blocos": estados = blocoRepository.findDistinctEstados(); break;
-            case "campos": estados = campoRepository.findDistinctEstados(); break;
-            case "poços": estados = pocoRepository.findDistinctEstados(); break;
+            case "bacia": estados = baciaRepository.findDistinctEstados(); break;
+            case "bloco": estados = blocoRepository.findDistinctEstados(); break;
+            case "campo": estados = campoRepository.findDistinctEstados(); break;
+            case "poco": estados = pocoRepository.findDistinctEstados(); break;
             default: throw new IllegalArgumentException("Tabela invalida para filtro de estado");
         }
         return estados.stream()

@@ -3,6 +3,7 @@ package com.drillmap.backend.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,23 +37,13 @@ public class SearchController {
             return ResponseEntity.ok(result);
     }
 
-    // @PostMapping("/search")
-    // public ResponseEntity<?> searchHierarquico(@RequestBody Map<String, Map<String, Object>> filtros) {
-    //     if (filtros == null || filtros.isEmpty()) {
-    //         return ResponseEntity.badRequest().body("Nenhum filtro informado");
-    //     }
-
-    //     // Envia o map para o service processar
-    //     Object resultado = searchService.searchFinal(filtros);
-        
-    //     return ResponseEntity.ok(resultado);
-    // }
-
-@PostMapping("/search")
-    public ResponseEntity<?> search(@RequestBody Map<String, Map<String, Object>> filtros) {
+    @PostMapping("/search")
+    public ResponseEntity<?> search(@RequestBody Map<String, Map<String, Object>> filtros, 
+    @RequestParam(defaultValue = "0") int page,  // Página inicial padrão = 0
+    @RequestParam(defaultValue = "100") int size) {
         System.out.println("Recebido: " + filtros);  // Só para debugar e ver se chegou certinho
 
-        List<PocoDTO> resultados = searchService.buscarPoços(filtros);
+        Page<PocoDTO> resultados = searchService.buscarPoços(filtros, page, size);
 
         // Retorna os resultados da consulta
         return ResponseEntity.ok(resultados);
