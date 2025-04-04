@@ -10,8 +10,9 @@ import L from "leaflet";
 import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import { mapRef } from "../Map/Map.jsx";
+import PropTypes from "prop-types";
 
-function Searchbar() {
+function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -20,10 +21,14 @@ function Searchbar() {
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
 
-  const [filtroSelecionado, setFiltroSelecionado] = useState([]);
-  const [subFiltroSelecionado, setSubFiltroSelecionado] = useState([]);
-
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
+
+  useEffect(() => {
+    // Só chama se já tiver filtros aplicados
+    if (Object.keys(filtros).length > 0) {
+      acumularFiltrosERealizarBusca(null, null, paginaAtual);
+    }
+  }, [paginaAtual]);
 
   useEffect(() => {
     mudarCategoria();
@@ -42,22 +47,33 @@ function Searchbar() {
     }
   }, [categoriasBloqueadas, categorias]);
 
-  const acumularFiltrosERealizarBusca = async (filtro, subfiltro) => {
-    // Cria um novo filtro baseado no que foi passado
-    const novosFiltros = {
-      ...filtros,
-      [categoriaSelecionada]: {
-        ...(filtros[categoriaSelecionada] || {}),
-        [filtro]: subfiltro,
-      },
-    };
+  const acumularFiltrosERealizarBusca = async (
+    filtro,
+    subfiltro,
+    novaPagina = 0
+  ) => {
+    let filtrosAtuais = filtros;
 
-    setFiltros(novosFiltros); // Atualiza o estado com os filtros acumulados
+    if (filtro !== null) {
+      filtrosAtuais = {
+        ...filtros,
+        [categoriaSelecionada]: {
+          ...(filtros[categoriaSelecionada] || {}),
+          [filtro]: subfiltro,
+        },
+      };
+      mudarPagina(0);
+    } else {
+      mudarPagina(novaPagina);
+    }
+    // Cria um novo filtro baseado no que foi passado
+    setFiltros(filtrosAtuais); // Atualiza o estado com os filtros acumulados
+    console.log("Página enviada para o backend:", novaPagina);
 
     // Faz a requisição
-    const url = `http://localhost:8080/api/search?page=0&size=1000`;
+    const url = `http://localhost:8080/api/search?page=${novaPagina}&size=500`;
 
-    console.log("Filtros que vão pro backend:", novosFiltros);
+    console.log("Filtros que vão pro backend:", filtrosAtuais);
 
     try {
       const response = await fetch(url, {
@@ -65,7 +81,7 @@ function Searchbar() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(novosFiltros),
+        body: JSON.stringify(filtrosAtuais),
       });
       console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
@@ -88,8 +104,10 @@ function Searchbar() {
       }
 
       setShowError(false);
-      setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
-      setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
+      if (filtro !== null) {
+        setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
+        setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
+      }
 
       let markerLayer = L.layerGroup().addTo(mapRef.current);
 
@@ -105,24 +123,20 @@ function Searchbar() {
           return;
         }
 
-        const markerIcon = L.icon({
-          iconUrl:
-            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png", // URL do ícone padrão
-          iconSize: [20, 30], // Tamanho do ícone [largura, altura]
-          iconAnchor: [10, 30], // Ponto do ícone que será ancorado à posição do marcador
-          popupAnchor: [0, -30], // Distância entre o marcador e o popup
-        });
-
-        // Cria o marcador com o ícone personalizado
-        const marker = L.marker([latitude, longitude], {
-          icon: markerIcon,
-        }).addTo(markerLayer);
-        marker.bindPopup(`<b>Poço:</b> ${nome || "Sem nome"}`);
+        const marker = L.marker([latitude, longitude]).addTo(markerLayer);
+        marker.bindPopup(`
+          <b>Poço:</b> ${poco.nomePoco || "Sem nome"}<br>
+          <b>Latitude:</b> ${latitude}<br>
+          <b>Longitude:</b> ${longitude}<br>
+          <b>Estado:</b> ${poco.estado || "Desconhecido"}
+        `);
       });
 
       // Marca os estados no mapa
-      const estadosUnicos = [...new Set(data.map((item) => item.estado))];
+      const estadosUnicos = [...new Set(content.map((item) => item.estado))];
       marcarEstadosnoMapa(estadosUnicos);
+
+      setShowPagControl(true);
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -166,9 +180,6 @@ function Searchbar() {
 
     console.log("Filtro normalizado no Searchbar:", filtroNormalizado);
     console.log("Subfiltro normalizado no Searchbar:", subfiltroNormalizado);
-
-    setFiltroSelecionado(filtroNormalizado);
-    setSubFiltroSelecionado(subfiltroNormalizado);
 
     await acumularFiltrosERealizarBusca(
       filtroNormalizado,
@@ -262,4 +273,11 @@ function Searchbar() {
     </div>
   );
 }
+
+Searchbar.propTypes = {
+  mudarPagina: PropTypes.func.isRequired,
+  setShowPagControl: PropTypes.func.isRequired,
+  paginaAtual: PropTypes.number.isRequired,
+};
+
 export default Searchbar;

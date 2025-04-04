@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import AuthWidgets from "../AuthWidgets/AuthWidgets";
 import Searchbar from "../Searchbar/Searchbar";
 
-function Header({ isMapPage }) {
+function Header({ isMapPage, mudarPagina, paginaAtual, setShowPagControl }) {
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
@@ -48,7 +48,13 @@ function Header({ isMapPage }) {
 
         <nav className="header-nav">
           <ul>
-            {isMapPage && <Searchbar />}
+            {isMapPage && (
+              <Searchbar
+                mudarPagina={mudarPagina}
+                paginaAtual={paginaAtual}
+                setShowPagControl={setShowPagControl}
+              />
+            )}
             {isMapPage && <li id="ajuda-btn">Ajuda</li>}
             {!isMapPage && (
               <Link to="/mapa">
@@ -104,5 +110,8 @@ function Header({ isMapPage }) {
 
 Header.propTypes = {
   isMapPage: PropTypes.bool.isRequired,
+  mudarPagina: PropTypes.func,
+  paginaAtual: PropTypes.number,
+  setShowPagControl: PropTypes.func,
 };
 export default Header;
