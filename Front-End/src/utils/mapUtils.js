@@ -68,6 +68,8 @@ export function marcarEstadosnoMapa(estadosRetornados) {
             layer.addTo(map);
 
             estadosMarcados.push(estado);
+
+            map.fitBounds(layer.getBounds());
           })
           .catch((error) => {
             console.error(
