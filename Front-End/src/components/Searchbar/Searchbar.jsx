@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 // importação do css do SearchBar
 import "./Searchbar.css";
 import {
@@ -20,6 +20,7 @@ function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
   const [categoriasBloqueadas, setCategoriasBloqueadas] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
+  const markerLayerRef = useRef(null); // <--  ref para guardar o layer de markers.
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
 
@@ -75,13 +76,20 @@ function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
 
     console.log("Filtros que vão pro backend:", filtrosAtuais);
 
+    const filtrosLimpos = Object.fromEntries(
+      Object.entries(filtrosAtuais).filter(
+        ([, valor]) => valor && Object.keys(valor).length > 0
+      )
+    );
+    console.log("Filtros limpos que vão pro backend:", filtrosLimpos);
+
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(filtrosAtuais),
+        body: JSON.stringify(filtrosLimpos),
       });
       console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
@@ -108,8 +116,14 @@ function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
         setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
         setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
       }
+      if (markerLayerRef.current) {
+        markerLayerRef.current.clearLayers();
+        mapRef.current.removeLayer(markerLayerRef.current);
+      }
 
+      // Cria novo layer
       let markerLayer = L.layerGroup().addTo(mapRef.current);
+      markerLayerRef.current = markerLayer;
 
       content.forEach((poco) => {
         let { latitude, longitude, nome } = poco;
@@ -152,19 +166,44 @@ function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
     input.value = "";
   };
 
-  const removerFiltro = (filtro) => {
+  const removerFiltro = (subfiltroParaRemover) => {
     // Remove o filtro da lista de selecionados
     const novosFiltrosSelecionados = filtrosSelecionados.filter(
-      (f) => f !== filtro
+      (f) => f !== subfiltroParaRemover
     );
     setFiltroSelecionadoInterno(novosFiltrosSelecionados);
 
-    // Se não houver mais filtros ativos, limpa completamente categoriasBloqueadas
-    if (novosFiltrosSelecionados.length === 0) {
-      setCategoriasBloqueadas([]); // Limpa todas as categorias bloqueadas
+    // Cria uma cópia do objeto filtros
+    const novosFiltros = { ...filtros };
+
+    // Percorre as categorias e remove o subfiltro
+    for (const categoria in novosFiltros) {
+      for (const filtro in novosFiltros[categoria]) {
+        if (novosFiltros[categoria][filtro] === subfiltroParaRemover) {
+          delete novosFiltros[categoria][filtro];
+
+          // Se a categoria ficar vazia, remove também
+          if (Object.keys(novosFiltros[categoria]).length === 0) {
+            delete novosFiltros[categoria];
+          }
+          break;
+        }
+      }
     }
 
+    // Atualiza os filtros e categorias bloqueadas
+    setFiltros(novosFiltros);
+
+    const novasCategoriasBloqueadas = categorias.filter(
+      (categoria) => novosFiltros[categoria]
+    );
+    setCategoriasBloqueadas(novasCategoriasBloqueadas);
+
+    // Atualiza visualmente
     desmarcarEstadosnoMapa();
+    if (novosFiltrosSelecionados.length > 0) {
+      acumularFiltrosERealizarBusca(null, null); // Recarrega com os filtros atualizados
+    }
   };
 
   const toggleFilters = () => {
