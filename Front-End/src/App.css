@@ -17,6 +17,7 @@ html {
   --azulEscuro: #1f2e4a;
   --preto: #363737;
   --Poppins: "Poppins", serif;
+  --sombra: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 body {
   height: 100vh;

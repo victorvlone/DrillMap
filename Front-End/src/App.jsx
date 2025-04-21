@@ -17,6 +17,7 @@ function AppContent() {
   // Estado global para paginação
   const [paginaAtual, setPaginaAtual] = useState(0);
   const [showPagControl, setShowPagControl] = useState(false);
+  const [pocoSelecionado, setPocoSelecionado] = useState(null);
 
   // Função que será passada até o Searchbar
   const mudarPagina = (novaPagina) => {
@@ -30,6 +31,7 @@ function AppContent() {
         mudarPagina={mudarPagina}
         paginaAtual={paginaAtual}
         setShowPagControl={setShowPagControl}
+        setPocoSelecionado={setPocoSelecionado}
       />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -41,6 +43,8 @@ function AppContent() {
               mudarPagina={mudarPagina}
               paginaAtual={paginaAtual}
               showPagControl={showPagControl}
+              pocoSelecionado={pocoSelecionado}
+              setPocoSelecionado={setPocoSelecionado}
             />
           }
         />

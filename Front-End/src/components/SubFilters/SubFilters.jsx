@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import "./SubFilters.css";
 import PropTypes from "prop-types";
 
+function removerAcentos(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 function Subfilters({ categoria, filtro, onSubfiltroClick }) {
   const [subfiltros, setSubfiltros] = useState([]);
   const [showSubfilters, setShowSubfilters] = useState(false);
@@ -15,10 +19,13 @@ function Subfilters({ categoria, filtro, onSubfiltroClick }) {
     };
     const tabela = tabelaMap[categoria];
 
+    const campoNormalizado = removerAcentos(filtro).toLowerCase();
+
     const subFiltros = async () => {
+      console.log(campoNormalizado);
       const url = `http://localhost:8080/api/filtros?tabela=${encodeURIComponent(
         tabela
-      )}&campo=${encodeURIComponent(filtro)}`;
+      )}&campo=${encodeURIComponent(campoNormalizado)}`;
 
       try {
         const response = await fetch(url);

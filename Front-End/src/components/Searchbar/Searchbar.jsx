@@ -12,7 +12,12 @@ import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import { mapRef } from "../Map/Map.jsx";
 import PropTypes from "prop-types";
 
-function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
+function Searchbar({
+  mudarPagina,
+  setShowPagControl,
+  paginaAtual,
+  setPocoSelecionado,
+}) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -140,10 +145,10 @@ function Searchbar({ mudarPagina, setShowPagControl, paginaAtual }) {
         const marker = L.marker([latitude, longitude]).addTo(markerLayer);
         marker.bindPopup(`
           <b>Poço:</b> ${poco.nomePoco || "Sem nome"}<br>
-          <b>Latitude:</b> ${latitude}<br>
-          <b>Longitude:</b> ${longitude}<br>
-          <b>Estado:</b> ${poco.estado || "Desconhecido"}
         `);
+        marker.on("click", () => {
+          setPocoSelecionado(poco);
+        });
       });
 
       // Marca os estados no mapa
@@ -317,6 +322,7 @@ Searchbar.propTypes = {
   mudarPagina: PropTypes.func.isRequired,
   setShowPagControl: PropTypes.func.isRequired,
   paginaAtual: PropTypes.number.isRequired,
+  setPocoSelecionado: PropTypes.func.isRequired,
 };
 
 export default Searchbar;

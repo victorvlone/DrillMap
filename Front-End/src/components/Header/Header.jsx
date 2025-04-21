@@ -5,7 +5,13 @@ import { Link } from "react-router-dom";
 import AuthWidgets from "../AuthWidgets/AuthWidgets";
 import Searchbar from "../Searchbar/Searchbar";
 
-function Header({ isMapPage, mudarPagina, paginaAtual, setShowPagControl }) {
+function Header({
+  isMapPage,
+  mudarPagina,
+  paginaAtual,
+  setShowPagControl,
+  setPocoSelecionado,
+}) {
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
@@ -53,6 +59,7 @@ function Header({ isMapPage, mudarPagina, paginaAtual, setShowPagControl }) {
                 mudarPagina={mudarPagina}
                 paginaAtual={paginaAtual}
                 setShowPagControl={setShowPagControl}
+                setPocoSelecionado={setPocoSelecionado}
               />
             )}
             {isMapPage && <li id="ajuda-btn">Ajuda</li>}
@@ -113,5 +120,6 @@ Header.propTypes = {
   mudarPagina: PropTypes.func,
   paginaAtual: PropTypes.number,
   setShowPagControl: PropTypes.func,
+  setPocoSelecionado: PropTypes.func,
 };
 export default Header;
