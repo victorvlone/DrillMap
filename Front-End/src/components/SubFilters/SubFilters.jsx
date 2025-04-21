@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import "./SubFilters.css";
 import PropTypes from "prop-types";
 
+const camposEspeciais = {
+  "Tipo de poço": "tipo_de_poco",
+  "Poço operador": "poco_operador",
+};
+
 function removerAcentos(texto) {
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -19,7 +24,9 @@ function Subfilters({ categoria, filtro, onSubfiltroClick }) {
     };
     const tabela = tabelaMap[categoria];
 
-    const campoNormalizado = removerAcentos(filtro).toLowerCase();
+    const campoNormalizado =
+      camposEspeciais[filtro] ||
+      removerAcentos(filtro).replace(/\s+/g, "").toLowerCase();
 
     const subFiltros = async () => {
       console.log(campoNormalizado);

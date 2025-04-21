@@ -53,6 +53,15 @@ function Searchbar({
     }
   }, [categoriasBloqueadas, categorias]);
 
+  const camposEspeciais = {
+    "Tipo de poço": "tipo_de_poco",
+    "Poço operador": "poco_operador",
+  };
+
+  function removerAcentos(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
   const acumularFiltrosERealizarBusca = async (
     filtro,
     subfiltro,
@@ -61,11 +70,15 @@ function Searchbar({
     let filtrosAtuais = filtros;
 
     if (filtro !== null) {
+      const filtroNormalizado =
+        camposEspeciais[filtro] ||
+        removerAcentos(filtro).replace(/\s+/g, "").toLowerCase();
+
       filtrosAtuais = {
         ...filtros,
         [categoriaSelecionada]: {
           ...(filtros[categoriaSelecionada] || {}),
-          [filtro]: subfiltro,
+          [filtroNormalizado]: subfiltro,
         },
       };
       mudarPagina(0);
