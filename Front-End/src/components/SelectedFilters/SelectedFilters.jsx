@@ -10,7 +10,7 @@ function SelectedFilters({ filtrosSelecionados, removerFiltro }) {
     >
       {filtrosSelecionados.map((filtro, index) => (
         <div key={index} className="filter-selected">
-          {filtro}
+          <span className="filtro-texto">{filtro}</span>
           <span
             className="material-symbols-outlined"
             onClick={() => {

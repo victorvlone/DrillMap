@@ -28,3 +28,9 @@
   font-size: 20px;
   cursor: pointer;
 }
+.filtro-texto {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px !important;
+}
