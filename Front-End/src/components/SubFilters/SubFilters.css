@@ -15,7 +15,7 @@
   overflow: hidden;
   overflow-y: scroll;
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
   transition: opacity 0.3s ease;
 }
 .subFilters::-webkit-scrollbar {

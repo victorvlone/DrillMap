@@ -11,9 +11,9 @@ function removerAcentos(texto) {
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-function Subfilters({ categoria, filtro, onSubfiltroClick }) {
+function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
   const [subfiltros, setSubfiltros] = useState([]);
-  const [showSubfilters, setShowSubfilters] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const tabelaMap = {
@@ -40,7 +40,7 @@ function Subfilters({ categoria, filtro, onSubfiltroClick }) {
         const data = await response.json();
         console.log("Dados recebidos:", data);
         setSubfiltros(data);
-        setShowSubfilters(true);
+        setIsVisible(true);
       } catch (error) {
         console.error("Erro ao carregar subFiltros:", error);
       }
@@ -57,10 +57,17 @@ function Subfilters({ categoria, filtro, onSubfiltroClick }) {
     if (onSubfiltroClick) {
       onSubfiltroClick(subfiltro); // Passa o subfiltro selecionado
     }
+
+    setIsVisible(false);
+
+    // Depois de 300ms (tempo da animação), chama onClose pra esconder tudo
+    setTimeout(() => {
+      if (onClose) onClose();
+    }, 300);
   };
 
   return (
-    <div className={`subFilters ${showSubfilters ? "show" : ""}`}>
+    <div className={`subFilters ${isVisible ? "show" : ""}`}>
       {[...new Set(subfiltros.flatMap(Object.values))].map((valor, index) => (
         <p key={index} onClick={() => handleSubfiltroClick(valor)}>
           {valor}
@@ -74,5 +81,6 @@ Subfilters.propTypes = {
   categoria: PropTypes.string.isRequired,
   filtro: PropTypes.string.isRequired,
   onSubfiltroClick: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 export default Subfilters;

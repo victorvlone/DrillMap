@@ -218,9 +218,14 @@ function Searchbar({
     setCategoriasBloqueadas(novasCategoriasBloqueadas);
 
     // Atualiza visualmente
-    desmarcarEstadosnoMapa();
     if (novosFiltrosSelecionados.length > 0) {
       acumularFiltrosERealizarBusca(null, null); // Recarrega com os filtros atualizados
+    } else {
+      desmarcarEstadosnoMapa();
+      if (markerLayerRef.current) {
+        markerLayerRef.current.clearLayers();
+        mapRef.current.removeLayer(markerLayerRef.current);
+      }
     }
   };
 
@@ -325,6 +330,7 @@ function Searchbar({
           categoria={categoriaSelecionada}
           showFilters={showFilters}
           selecionarSubFiltro={selecionarSubFiltro}
+          onClose={() => setShowFilters(false)}
         />
       )}
     </div>

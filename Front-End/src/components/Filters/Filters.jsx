@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import "./Filters.css";
 import Subfilters from "../SubFilters/SubFilters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function Filters({ categoria, showFilters, selecionarSubFiltro }) {
+function Filters({ categoria, showFilters, selecionarSubFiltro, onClose }) {
   const [filtroSelecionado, setFiltroSelecionado] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const opcoesFiltros = {
     Bacias: ["Nome", "Estado"],
@@ -24,6 +25,19 @@ function Filters({ categoria, showFilters, selecionarSubFiltro }) {
     ],
   };
 
+  useEffect(() => {
+    if (showFilters) {
+      const timer = setTimeout(() => setIsVisible(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setIsVisible(false);
+      const timeout = setTimeout(() => {
+        onClose();
+      }, 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [showFilters, onClose]);
+
   const handleFiltroClick = (filtro) => {
     setFiltroSelecionado(filtro);
   };
@@ -36,7 +50,7 @@ function Filters({ categoria, showFilters, selecionarSubFiltro }) {
   };
 
   return (
-    <div className={`filters ${showFilters ? "show" : ""}`}>
+    <div className={`filters ${isVisible ? "show" : ""}`}>
       {opcoesFiltros[categoria] ? (
         opcoesFiltros[categoria].map((filtro, index) => (
           <p
@@ -57,6 +71,7 @@ function Filters({ categoria, showFilters, selecionarSubFiltro }) {
           categoria={categoria}
           filtro={filtroSelecionado}
           onSubfiltroClick={handleSubfiltroClick}
+          onClose={onClose}
         />
       )}
     </div>
@@ -67,6 +82,7 @@ Filters.propTypes = {
   categoria: PropTypes.string.isRequired,
   showFilters: PropTypes.bool.isRequired,
   selecionarSubFiltro: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default Filters;

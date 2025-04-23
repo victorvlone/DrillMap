@@ -37,7 +37,7 @@ a {
 .filters.show,
 .subFilters.show {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 @media (max-width: 767px) {
 }
