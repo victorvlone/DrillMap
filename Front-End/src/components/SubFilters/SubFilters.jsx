@@ -30,7 +30,9 @@ function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
 
     const subFiltros = async () => {
       console.log(campoNormalizado);
-      const url = `http://localhost:8080/api/filtros?tabela=${encodeURIComponent(
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/api/filtros?tabela=${encodeURIComponent(
         tabela
       )}&campo=${encodeURIComponent(campoNormalizado)}`;
 

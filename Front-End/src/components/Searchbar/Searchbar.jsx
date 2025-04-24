@@ -90,7 +90,9 @@ function Searchbar({
     console.log("Página enviada para o backend:", novaPagina);
 
     // Faz a requisição
-    const url = `http://localhost:8080/api/search?page=${novaPagina}&size=500`;
+    const url = `${
+      import.meta.env.VITE_API_URL
+    }/api/search?page=${novaPagina}&size=500`;
 
     console.log("Filtros que vão pro backend:", filtrosAtuais);
 

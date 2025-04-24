@@ -40,3 +40,5 @@ application.properties
 
 #ignorar configuracoes do docker
 docker-compose.yml
+
+.env
