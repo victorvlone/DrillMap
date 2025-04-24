@@ -12,6 +12,13 @@ import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import { mapRef } from "../Map/Map.jsx";
 import PropTypes from "prop-types";
 
+const customIcon = new L.Icon({
+  iconUrl: "/assets/images/pin-amarelo.png", // Caminho relativo à public/
+  iconSize: [35, 35], // Tamanho do ícone
+  iconAnchor: [16, 32], // Centro da base do ícone
+  popupAnchor: [0, -32], // Onde a popup aparece
+});
+
 function Searchbar({
   mudarPagina,
   setShowPagControl,
@@ -92,7 +99,7 @@ function Searchbar({
     // Faz a requisição
     const url = `${
       import.meta.env.VITE_API_URL
-    }/api/search?page=${novaPagina}&size=500`;
+    }/api/search?page=${novaPagina}&size=100`;
 
     console.log("Filtros que vão pro backend:", filtrosAtuais);
 
@@ -157,7 +164,10 @@ function Searchbar({
           return;
         }
 
-        const marker = L.marker([latitude, longitude]).addTo(markerLayer);
+        const marker = L.marker([latitude, longitude], {
+          icon: customIcon,
+        }).addTo(markerLayer);
+
         marker.bindPopup(`
           <b>Poço:</b> ${poco.nomePoco || "Sem nome"}<br>
         `);
