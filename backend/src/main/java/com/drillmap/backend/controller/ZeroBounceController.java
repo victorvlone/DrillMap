@@ -12,18 +12,14 @@ import com.zerobounce.ErrorResponse;
 import com.zerobounce.ZBValidateResponse;
 import com.zerobounce.ZeroBounceSDK;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin("*")
 public class ZeroBounceController {
 
-    public static final Dotenv dotenv = Dotenv.configure()
-    .directory("C:/Users/ftcpa/Desktop/DrillMap/DrillMapV1")
-    .filename("keys.env").load();
 
-    private static final String ZERO_BOUNCE_API_KEY = dotenv.get("ZEROBOUNCE_API_KEY");
+    private static final String ZERO_BOUNCE_API_KEY = System.getenv("ZEROBOUNCE_API_KEY");
 
     @PostMapping("/validate-email")
     public ResponseEntity<?> validateEmail(@Valid @RequestBody EmailValidationRequest request){

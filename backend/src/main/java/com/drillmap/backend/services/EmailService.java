@@ -12,18 +12,12 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 @Service
 public class EmailService {
 
-    public static final Dotenv dotenv = Dotenv.configure()
-    .directory("C:/Users/ftcpa/Desktop/DrillMap/DrillMapV1")
-    .filename("keys.env").load();
-
     public void enviarEmail(String destinatario, String assunto, String conteudo){
         try {
-            String apiKey = dotenv.get("SENDGRID_API_KEY");
+            String apiKey = System.getenv("SENDGRID_API_KEY");
             if (apiKey == null || apiKey.isEmpty()) {
                 throw new IllegalStateException("Chave API do SendGrid não encontrada");
             }
