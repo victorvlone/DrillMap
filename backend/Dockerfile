@@ -1,12 +1,25 @@
-# Etapa 1: build da aplicação com Maven + Java 21
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+FROM openjdk:21-jdk-slim as build
+
+
 WORKDIR /app
-COPY . .
+
+
+COPY backend/pom.xml /app/pom.xml
+RUN mvn clean dependency:resolve
+
+
+COPY backend/src /app/src
+
+
 RUN mvn clean package -DskipTests
 
-# Etapa 2: imagem leve com JAR rodando no Java 21
-FROM eclipse-temurin:21-jdk
+
+FROM openjdk:21-jre-slim
+
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+COPY --from=build /app/target/*.jar /app/app.jar
+
+CMD ["java", "-jar", "/app/app.jar"]
