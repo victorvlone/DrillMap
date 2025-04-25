@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 const customIcon = new L.Icon({
   iconUrl: "/assets/images/pin-amarelo.png", // Caminho relativo à public/
-  iconSize: [35, 35], // Tamanho do ícone
+  iconSize: [20, 29], // Tamanho do ícone
   iconAnchor: [16, 32], // Centro da base do ícone
   popupAnchor: [0, -32], // Onde a popup aparece
 });

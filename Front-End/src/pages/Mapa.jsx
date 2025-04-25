@@ -13,14 +13,14 @@ function Mapa({
   return (
     <div>
       <Map />
-      {showPagControl && (
-        <PagControl mudarPagina={mudarPagina} paginaAtual={paginaAtual} />
-      )}
       {pocoSelecionado && (
         <PocoInfoCard
           poco={pocoSelecionado}
           onClose={() => setPocoSelecionado(null)}
         />
+      )}
+      {showPagControl && (
+        <PagControl mudarPagina={mudarPagina} paginaAtual={paginaAtual} />
       )}
     </div>
   );

@@ -4,9 +4,10 @@
   gap: 1rem;
   top: 8.5rem;
   left: 50%;
-  transform: translateX(-40%) translateX(-25%);
+  transform: translateX(-65%);
   display: none;
   width: 550px;
+  align-items: center;
 }
 .filters-selected.show {
   display: flex;
@@ -33,4 +34,22 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 14px !important;
+}
+@media (max-width: 450px) {
+  .filters-selected {
+    width: clamp(1rem, 90vw, 300rem);
+    left: 66%;
+    top: clamp(1rem, 15vw, 8rem);
+  }
+  .filter-selected {
+    width: clamp(1rem, 30vw, 200rem);
+    height: clamp(0.1rem, 8vw, 100rem);
+    padding: clamp(0.8rem, 3vw, 100rem);
+  }
+  .filtro-texto {
+    font-size: clamp(0.7rem, 3vw, 100rem) !important;
+  }
+  .filter-selected span {
+    font-size: clamp(1rem, 4vw, 100rem);
+  }
 }

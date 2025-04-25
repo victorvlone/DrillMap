@@ -24,3 +24,15 @@
   opacity: 0.5;
   pointer-events: none;
 }
+@media (max-width: 450px) {
+  .pagControl {
+    width: clamp(1rem, 40vw, 100rem);
+    height: clamp(1rem, 8vw, 10rem);
+  }
+  .pagControl p {
+    font-size: clamp(0.5rem, 3vw, 100rem);
+  }
+  .pagControl span {
+    font-size: clamp(0.5rem, 5vw, 100rem);
+  }
+}

@@ -8,8 +8,7 @@
   align-items: center;
   flex-direction: column;
   position: absolute;
-  top: 140px;
-  left: 100px;
+  left: 10%;
   padding: 7px;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -118,4 +117,56 @@
 .poco-content {
   scrollbar-width: auto; /* pode ser auto, thin ou none */
   scrollbar-color: black; /* thumb, track */
+}
+
+@media (max-width: 450px) {
+  .poco-container {
+    background-color: red !important;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    height: clamp(1rem, 65vw, 100rem);
+    width: clamp(1rem, 90vw, 1000rem);
+    border-radius: 10px 10px 0 0;
+  }
+  .poco-container.show {
+    bottom: 0 !important;
+  }
+  .poco-container.show ~ .pagControl {
+    bottom: 67vw;
+  }
+  .poco-close {
+    font-size: clamp(1rem, 8vw, 100vw);
+    border-radius: 10px 0 10px 0;
+  }
+  .poco-title {
+    width: clamp(1rem, 86vw, 200rem);
+    height: clamp(1rem, 30vw, 200rem);
+    border-radius: 10px;
+  }
+  .poco-buttons {
+    width: clamp(1rem, 80vw, 200rem);
+    height: clamp(1rem, 15vw, 200rem);
+  }
+  .icons-data span,
+  .icons-buttons span {
+    font-size: clamp(0.2rem, 10vw, 100rem);
+  }
+  .poco-name h5 {
+    font-size: clamp(0.5rem, 4vw, 100rem);
+  }
+  .poco-name p {
+    font-size: clamp(0.5rem, 3vw, 100rem);
+  }
+  .poco-data h3 {
+    font-size: clamp(1rem, 3vw, 100rem);
+  }
+  .poco-data h2 {
+    font-size: clamp(1rem, 3.5vw, 100rem);
+  }
+}
+@media (min-width: 1024px) {
+  .poco-container {
+    top: 15rem;
+  }
 }
