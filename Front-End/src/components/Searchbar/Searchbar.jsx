@@ -33,11 +33,12 @@ function Searchbar({
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
   const markerLayerRef = useRef(null); // <--  ref para guardar o layer de markers.
+  const [podeRemoverFiltro, setPodeRemoverFiltro] = useState(true);
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
 
   useEffect(() => {
-    // Só chama se já tiver filtros aplicados
+    console.log("teste:", Object.keys(filtros));
     if (Object.keys(filtros).length > 0) {
       acumularFiltrosERealizarBusca(null, null, paginaAtual);
     }
@@ -45,7 +46,6 @@ function Searchbar({
 
   useEffect(() => {
     mudarCategoria();
-    console.log(categorias);
   }, [categoriasBloqueadas]);
 
   const mudarCategoria = useCallback(() => {
@@ -109,6 +109,12 @@ function Searchbar({
       )
     );
     console.log("Filtros limpos que vão pro backend:", filtrosLimpos);
+    console.log("Chaves de filtros limpos:", Object.keys(filtrosLimpos));
+
+    if (Object.keys(filtrosLimpos).length === 0) {
+      console.log("Nenhum filtro aplicado. Requisição cancelada.");
+      return;
+    }
 
     try {
       const response = await fetch(url, {
@@ -178,6 +184,7 @@ function Searchbar({
 
       // Marca os estados no mapa
       const estadosUnicos = [...new Set(content.map((item) => item.estado))];
+      console.log("estado para ser maarcado: ", estadosUnicos);
       marcarEstadosnoMapa(estadosUnicos);
 
       setShowPagControl(true);
@@ -197,6 +204,10 @@ function Searchbar({
   };
 
   const removerFiltro = (subfiltroParaRemover) => {
+    if (!podeRemoverFiltro) return; // se não pode remover ainda, ignora
+
+    setPodeRemoverFiltro(false); // trava a remoção
+
     // Remove o filtro da lista de selecionados
     const novosFiltrosSelecionados = filtrosSelecionados.filter(
       (f) => f !== subfiltroParaRemover
@@ -231,7 +242,7 @@ function Searchbar({
 
     // Atualiza visualmente
     if (novosFiltrosSelecionados.length > 0) {
-      acumularFiltrosERealizarBusca(null, null); // Recarrega com os filtros atualizados
+      acumularFiltrosERealizarBusca(null, null);
     } else {
       desmarcarEstadosnoMapa();
       if (markerLayerRef.current) {
@@ -239,6 +250,11 @@ function Searchbar({
         mapRef.current.removeLayer(markerLayerRef.current);
       }
     }
+
+    // Espera 2 segundos antes de liberar nova remoção
+    setTimeout(() => {
+      setPodeRemoverFiltro(true);
+    }, 1000); // 2000ms = 2 segundos
   };
 
   const toggleFilters = () => {

@@ -102,5 +102,7 @@ export function desmarcarEstadosnoMapa(estado) {
     }
   });
 
+  estadosMarcados = [];
+
   console.log(`Estado ${estado} removido do mapa.`);
 }
