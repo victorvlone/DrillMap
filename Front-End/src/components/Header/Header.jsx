@@ -11,6 +11,7 @@ function Header({
   paginaAtual,
   setShowPagControl,
   setPocoSelecionado,
+  setStartHelpTour,
 }) {
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -62,7 +63,11 @@ function Header({
                 setPocoSelecionado={setPocoSelecionado}
               />
             )}
-            {isMapPage && <li id="ajuda-btn">Ajuda</li>}
+            {isMapPage && (
+              <li id="ajuda-btn" onClick={() => setStartHelpTour(true)}>
+                Ajuda
+              </li>
+            )}
             {!isMapPage && (
               <Link to="/mapa">
                 <span id="map-icon" className="material-symbols-outlined">
@@ -71,7 +76,11 @@ function Header({
               </Link>
             )}
             {isMapPage && (
-              <span id="info-icon" className="material-symbols-outlined">
+              <span
+                id="info-icon"
+                className="material-symbols-outlined"
+                onClick={() => setStartHelpTour(true)}
+              >
                 info
               </span>
             )}
@@ -121,5 +130,6 @@ Header.propTypes = {
   paginaAtual: PropTypes.number,
   setShowPagControl: PropTypes.func,
   setPocoSelecionado: PropTypes.func,
+  setStartHelpTour: PropTypes.func.isRequired,
 };
 export default Header;

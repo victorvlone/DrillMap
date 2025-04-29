@@ -1,0 +1,127 @@
+.container-help {
+  width: 300px;
+  height: fit-content;
+  background: linear-gradient(#ffffff, #eeeeee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra);
+  flex-direction: column;
+  border-radius: 20px;
+  padding: 20px;
+  gap: 10px;
+  position: fixed;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+.container-help p {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.container-help button {
+  background: linear-gradient(var(--verdeEscuro), var(--verdeClaro));
+  width: 80%;
+  border: none;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  color: white;
+  height: 3rem;
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+}
+.container-help img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+}
+#help-1 {
+  top: 80px;
+  left: 50%;
+  transform: translate(calc(-50% + -270px), 0); /* Mais resistente a zoom */
+}
+#help-2 {
+  top: 80px;
+  left: 50%;
+  transform: translate(calc(-50% + -20px), 0);
+}
+#help-3 {
+  top: 80px;
+  left: 50%;
+  transform: translate(calc(-50% + 100px), 0);
+}
+#help-3 span {
+  font-size: 16px;
+}
+#help-4 {
+  top: 120px;
+  left: 50%;
+  transform: translate(calc(-50% + 620px), 0);
+}
+#help-5 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#help-6 {
+  top: 50%;
+  left: 600px;
+}
+#help-7 {
+  top: 500px;
+  left: 50%;
+  transform: translate(calc(-50%), 0);
+}
+.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (max-width: 450px) {
+  .container-help {
+    width: clamp(1rem, 35vw, 100rem);
+    border-radius: 7px;
+  }
+  .container-help p {
+    font-size: clamp(0.7rem, 2.5vw, 100rem);
+  }
+  .container-help button {
+    height: clamp(1rem, 6vw, 100rem);
+    font-size: clamp(0.7rem, 2.5vw, 100rem);
+    border-radius: 5px;
+  }
+  .container-help img {
+    width: clamp(1rem, 28vw, 100rem);
+    border-radius: 5px;
+  }
+  #help-1 {
+    top: clamp(1rem, 32vw, 100rem);
+    left: 50%;
+    transform: translate(calc(-50% + -130px), 0);
+  }
+  #help-2 {
+    top: clamp(1rem, 32vw, 100rem);
+    left: 50%;
+    transform: translate(calc(-50% + 20px), 0);
+  }
+  #help-3 {
+    top: clamp(1rem, 32vw, 100rem);
+  }
+  #help-4 {
+    top: 480px;
+    left: 50%;
+    transform: translate(calc(-50% + -60px), 0);
+  }
+  #help-6 {
+    top: 46%;
+    left: 50%;
+    transform: translate(calc(-50% + -120px), 0);
+  }
+  #help-7 {
+    top: clamp(1rem, 65vw, 100rem);
+    left: 50%;
+    transform: translate(calc(-50% + -0px), 0);
+  }
+}

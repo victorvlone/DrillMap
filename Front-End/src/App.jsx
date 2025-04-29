@@ -18,7 +18,7 @@ function AppContent() {
   const [paginaAtual, setPaginaAtual] = useState(0);
   const [showPagControl, setShowPagControl] = useState(false);
   const [pocoSelecionado, setPocoSelecionado] = useState(null);
-
+  const [startHelpTour, setStartHelpTour] = useState(false);
   // Função que será passada até o Searchbar
   const mudarPagina = (novaPagina) => {
     setPaginaAtual(novaPagina);
@@ -32,6 +32,7 @@ function AppContent() {
         paginaAtual={paginaAtual}
         setShowPagControl={setShowPagControl}
         setPocoSelecionado={setPocoSelecionado}
+        setStartHelpTour={setStartHelpTour}
       />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -45,6 +46,8 @@ function AppContent() {
               showPagControl={showPagControl}
               pocoSelecionado={pocoSelecionado}
               setPocoSelecionado={setPocoSelecionado}
+              startHelpTour={startHelpTour} // <-- novo
+              setStartHelpTour={setStartHelpTour} // <-- novo
             />
           }
         />
