@@ -3,6 +3,8 @@ import Map from "../components/Map/Map";
 import PagControl from "../components/PagControl/PagControl";
 import PocoInfoCard from "../components/PocoInfoCard/PocoInfoCard";
 import HelpTour from "../components/HelpTour/HelpTour";
+import EndOfPagesNotice from "../components/EndOfPagesNotice/EndOfPagesNotice";
+import { useState } from "react";
 
 function Mapa({
   mudarPagina,
@@ -12,7 +14,9 @@ function Mapa({
   setPocoSelecionado,
   startHelpTour,
   setStartHelpTour,
+  dadosPaginados,
 }) {
+  const [showEndNotice, setShowEndNotice] = useState(false);
   return (
     <div>
       <Map />
@@ -22,9 +26,25 @@ function Mapa({
           onClose={() => setPocoSelecionado(null)}
         />
       )}
-      {showPagControl && (
-        <PagControl mudarPagina={mudarPagina} paginaAtual={paginaAtual} />
+
+      {showEndNotice && (
+        <EndOfPagesNotice onClose={() => setShowEndNotice(false)} />
       )}
+
+      {showPagControl && dadosPaginados && (
+        <>
+          <p className="pages-text">
+            Página {dadosPaginados.number + 1} de {dadosPaginados.totalPages}
+          </p>
+          <PagControl
+            mudarPagina={mudarPagina}
+            paginaAtual={paginaAtual}
+            totalPages={dadosPaginados.totalPages}
+            onAttemptNext={() => setShowEndNotice(true)}
+          />
+        </>
+      )}
+
       {startHelpTour && (
         <HelpTour
           startHelpTour={startHelpTour}
@@ -43,6 +63,7 @@ Mapa.propTypes = {
   setPocoSelecionado: PropTypes.func,
   startHelpTour: PropTypes.bool.isRequired,
   setStartHelpTour: PropTypes.func.isRequired,
+  dadosPaginados: PropTypes.object.isRequired,
 };
 
 export default Mapa;

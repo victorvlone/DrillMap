@@ -5,6 +5,7 @@
   min-width: 20rem;
   background-color: white;
   box-shadow: 0 0 7px black;
+  position: relative;
 }
 .dropdown {
   position: relative;
@@ -107,5 +108,19 @@
   }
   .dropdown-text {
     width: 100%;
+  }
+}
+@media (min-width: 451px) and (max-width: 1023px) {
+  .search-bar {
+    position: absolute;
+    top: clamp(7rem, 8vw, 20vw);
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(1rem, 80vw, 90rem) !important;
+  }
+}
+@media (min-width: 1024px) {
+  .search-bar {
+    width: clamp(1rem, 34vw, 100rem);
   }
 }

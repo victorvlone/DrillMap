@@ -12,6 +12,7 @@ function Header({
   setShowPagControl,
   setPocoSelecionado,
   setStartHelpTour,
+  setDadosPaginados,
 }) {
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -61,6 +62,7 @@ function Header({
                 paginaAtual={paginaAtual}
                 setShowPagControl={setShowPagControl}
                 setPocoSelecionado={setPocoSelecionado}
+                setDadosPaginados={setDadosPaginados}
               />
             )}
             {isMapPage && (
@@ -131,5 +133,6 @@ Header.propTypes = {
   setShowPagControl: PropTypes.func,
   setPocoSelecionado: PropTypes.func,
   setStartHelpTour: PropTypes.func.isRequired,
+  setDadosPaginados: PropTypes.func.isRequired,
 };
 export default Header;

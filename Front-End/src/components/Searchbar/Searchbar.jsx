@@ -24,6 +24,7 @@ function Searchbar({
   setShowPagControl,
   paginaAtual,
   setPocoSelecionado,
+  setDadosPaginados,
 }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
@@ -49,6 +50,7 @@ function Searchbar({
   }, [categoriasBloqueadas]);
 
   const mudarCategoria = useCallback(() => {
+    console.log("categorias para serem marcadas: ", categorias);
     const categoriasDisponiveis = categorias.filter(
       (categoria) => !categoriasBloqueadas.includes(categoria)
     );
@@ -137,17 +139,25 @@ function Searchbar({
       }
 
       const content = data.content; // Acessando os dados dentro de "content"
-
       if (content.length === 0) {
         console.warn("Nenhum dado retornado da API");
-        setShowError(true);
+
+        // Só mostra erro se for a primeira página
+        if (novaPagina === 0) {
+          setShowError(true);
+        }
+
         return;
       }
 
       setShowError(false);
+      setDadosPaginados(data);
+
       if (filtro !== null) {
         setFiltroSelecionadoInterno((prev) => [...prev, subfiltro]);
-        setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
+        if (categoriaSelecionada !== "Poços") {
+          setCategoriasBloqueadas((prev) => [...prev, categoriaSelecionada]);
+        }
       }
       if (markerLayerRef.current) {
         markerLayerRef.current.clearLayers();
@@ -235,9 +245,13 @@ function Searchbar({
     // Atualiza os filtros e categorias bloqueadas
     setFiltros(novosFiltros);
 
-    const novasCategoriasBloqueadas = categorias.filter(
-      (categoria) => novosFiltros[categoria]
-    );
+    const novasCategoriasBloqueadas = categorias.filter((categoria) => {
+      if (categoria === "Poços") return false;
+      return (
+        novosFiltros[categoria] &&
+        Object.keys(novosFiltros[categoria]).length > 0
+      );
+    });
     setCategoriasBloqueadas(novasCategoriasBloqueadas);
 
     // Atualiza visualmente
@@ -245,6 +259,7 @@ function Searchbar({
       acumularFiltrosERealizarBusca(null, null);
     } else {
       desmarcarEstadosnoMapa();
+      setShowPagControl(false);
       if (markerLayerRef.current) {
         markerLayerRef.current.clearLayers();
         mapRef.current.removeLayer(markerLayerRef.current);
@@ -267,6 +282,11 @@ function Searchbar({
   ) => {
     const filtroNormalizado = filtroSelecionado.toLowerCase();
     const subfiltroNormalizado = subfiltroSelecionado.toLowerCase();
+
+    if (filtrosSelecionados.includes(subfiltroNormalizado)) {
+      console.warn("Subfiltro já selecionado:", subfiltroNormalizado);
+      return; // Não faz nada se for repetido
+    }
 
     console.log("Filtro normalizado no Searchbar:", filtroNormalizado);
     console.log("Subfiltro normalizado no Searchbar:", subfiltroNormalizado);
@@ -370,6 +390,7 @@ Searchbar.propTypes = {
   setShowPagControl: PropTypes.func.isRequired,
   paginaAtual: PropTypes.number.isRequired,
   setPocoSelecionado: PropTypes.func.isRequired,
+  setDadosPaginados: PropTypes.func.isRequired,
 };
 
 export default Searchbar;

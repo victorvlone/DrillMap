@@ -53,3 +53,20 @@
     font-size: clamp(1rem, 4vw, 100rem);
   }
 }
+@media (min-width: 451px) and (max-width: 1023px) {
+  .filters-selected {
+    top: clamp(6rem, 6vw, 100rem);
+    left: 360px;
+  }
+  .filter-selected {
+    width: clamp(15rem, 20vw, 100rem);
+  }
+}
+@media (min-width: 1024px) {
+  .filters-selected {
+    transform: none;
+    left: 0;
+    bottom: 700px;
+    position: absolute;
+  }
+}

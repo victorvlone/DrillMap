@@ -125,3 +125,10 @@
     transform: translate(calc(-50% + -0px), 0);
   }
 }
+@media (min-width: 1024px) {
+  #help-4 {
+    top: 120px;
+    right: 36%;
+    left: auto;
+  }
+}
