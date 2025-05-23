@@ -14,6 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PocoDTO {
+
+    private Integer id;
     private String nomePoco;
     private String nomeBloco;
     private String nomeCampo;

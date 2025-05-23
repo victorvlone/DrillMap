@@ -2,6 +2,7 @@ package com.drillmap.backend.services;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sendgrid.Method;
@@ -15,9 +16,11 @@ import com.sendgrid.helpers.mail.objects.Email;
 @Service
 public class EmailService {
 
+    @Value("${SENDGRID_API_KEY}")
+    private String apiKey;
+
     public void enviarEmail(String destinatario, String assunto, String conteudo){
         try {
-            String apiKey = System.getenv("SENDGRID_API_KEY");
             if (apiKey == null || apiKey.isEmpty()) {
                 throw new IllegalStateException("Chave API do SendGrid não encontrada");
             }

@@ -52,6 +52,7 @@ public class SearchService {
 
     private PocoDTO convertToDto(Poco poco) {
         return new PocoDTO(
+            poco.getId(),
             poco.getNome(),
             poco.getCampo().getBloco().getNome(),
             poco.getCampo().getNome(),

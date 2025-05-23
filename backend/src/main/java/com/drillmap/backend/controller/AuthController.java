@@ -1,5 +1,6 @@
 package com.drillmap.backend.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,10 +52,11 @@ public class AuthController {
 
         if(code != null && code.equals(verification.getCode())){
             verificationCodes.remove(verification.getEmail());
-            return ResponseEntity.ok("Verificado com sucesso");
+return ResponseEntity.ok(Collections.singletonMap("valid", true));
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Deu Código inválido ou expirado.");
+return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                         .body(Collections.singletonMap("valid", false));
     }
 
 

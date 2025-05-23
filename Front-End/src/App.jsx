@@ -8,7 +8,10 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./utils/firebaseConfig.js";
+import DeleteConfirm from "./components/DeleteConfirm/DeleteConfirm.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -20,6 +23,23 @@ function AppContent() {
   const [pocoSelecionado, setPocoSelecionado] = useState(null);
   const [startHelpTour, setStartHelpTour] = useState(false);
   const [dadosPaginados, setDadosPaginados] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const [usuarioLogado, setUsuarioLogado] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsuarioLogado(user);
+        console.log("Usuário logado:", user.email);
+      } else {
+        setUsuarioLogado(null);
+        console.log("Usuário deslogado");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
   // Função que será passada até o Searchbar
   const mudarPagina = (novaPagina) => {
     setPaginaAtual(novaPagina);
@@ -35,7 +55,16 @@ function AppContent() {
         setPocoSelecionado={setPocoSelecionado}
         setStartHelpTour={setStartHelpTour}
         setDadosPaginados={setDadosPaginados}
+        usuarioLogado={usuarioLogado}
+        setUsuarioLogado={setUsuarioLogado}
+        setShowDeleteConfirm={setShowDeleteConfirm}
       />
+      {showDeleteConfirm && (
+        <DeleteConfirm
+          showDeleteConfirm={showDeleteConfirm}
+          setShowDeleteConfirm={setShowDeleteConfirm}
+        />
+      )}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />

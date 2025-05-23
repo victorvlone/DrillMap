@@ -11,12 +11,20 @@ import FailedSearch from "../FailedSearch/FailedSearch";
 import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import { mapRef } from "../Map/Map.jsx";
 import PropTypes from "prop-types";
+import { auth } from "../../utils/firebaseConfig.js";
 
 const customIcon = new L.Icon({
   iconUrl: "/assets/images/pin-amarelo.png", // Caminho relativo à public/
   iconSize: [20, 29], // Tamanho do ícone
   iconAnchor: [16, 32], // Centro da base do ícone
   popupAnchor: [0, -32], // Onde a popup aparece
+});
+
+const iconFavorito = L.icon({
+  iconUrl: "/assets/images/pin-verde.png",
+  iconSize: [20, 29],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
 });
 
 function Searchbar({
@@ -70,6 +78,21 @@ function Searchbar({
   function removerAcentos(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
+
+  // função para buscra os poços que já foram favoritados pelo usuario
+  const buscarPocosFavoritados = async (idUsuario) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/favoritos/listar/${idUsuario}`
+      );
+      if (!res.ok) throw new Error("Erro ao buscar favoritos");
+      const data = await res.json();
+      return data.map((p) => p.poco.id.toString());
+    } catch (err) {
+      console.error("Erro ao buscar favoritos:", err);
+      return [];
+    }
+  };
 
   const acumularFiltrosERealizarBusca = async (
     filtro,
@@ -168,8 +191,14 @@ function Searchbar({
       let markerLayer = L.layerGroup().addTo(mapRef.current);
       markerLayerRef.current = markerLayer;
 
+      let favoritosIds = [];
+      const user = auth.currentUser;
+      if (user) {
+        favoritosIds = await buscarPocosFavoritados(user.uid);
+      }
+
       content.forEach((poco) => {
-        let { latitude, longitude, nome } = poco;
+        let { latitude, longitude, nome, id } = poco;
         latitude = parseFloat(latitude.toString().replace(",", "."));
         longitude = parseFloat(longitude.toString().replace(",", "."));
 
@@ -180,8 +209,12 @@ function Searchbar({
           return;
         }
 
+        const icon = favoritosIds.includes(id.toString())
+          ? iconFavorito
+          : customIcon;
+
         const marker = L.marker([latitude, longitude], {
-          icon: customIcon,
+          icon: icon,
         }).addTo(markerLayer);
 
         marker.bindPopup(`

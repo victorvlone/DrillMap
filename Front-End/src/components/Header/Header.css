@@ -237,4 +237,21 @@
   #map-icon {
     display: none;
   }
+  .profile {
+    border-radius: 50%;
+    width: 4rem;
+    box-shadow: var(--sombra);
+    cursor: pointer;
+    transition: width 0.2s ease;
+  }
+  .profile:hover {
+    width: 4.5rem;
+  }
+  .notification-icon {
+    display: flex;
+    align-items: center;
+  }
+  .notification-icon span {
+    font-size: 2.7rem;
+  }
 }

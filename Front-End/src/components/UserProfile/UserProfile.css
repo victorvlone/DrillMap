@@ -1,0 +1,62 @@
+.userProfile-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  width: 32.9rem;
+  border-radius: 10px;
+  position: absolute;
+  top: 80px;
+  right: 350px;
+  flex-direction: column;
+  box-shadow: var(--sombra);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.userProfile-container.show {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+.userProfile-banner {
+  display: flex;
+  align-items: center;
+  background: url(assets/images/BannerBackground.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  border-radius: 10px 10px 0 0;
+  width: 100%;
+  padding: 20px;
+  gap: 20px;
+}
+.userProfile-banner img {
+  width: 7rem;
+  border-radius: 50%;
+  box-shadow: var(--sombra);
+}
+.userProfile-edit p {
+  font-weight: 500;
+  cursor: pointer;
+}
+.userProfile-data {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.userProfile-data h4 {
+  font-weight: 600;
+}
+.userProfile-data p {
+  margin-left: 20px;
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+}

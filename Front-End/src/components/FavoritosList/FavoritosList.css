@@ -1,0 +1,74 @@
+.favoritosList-container {
+  border-radius: 10px;
+  background-color: white;
+  position: absolute;
+  top: 80px;
+  right: 350px;
+  width: 400px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  box-shadow: var(--sombra);
+  gap: 20px;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 10;
+  pointer-events: none;
+  transition: visibility 0.3s ease;
+}
+.favoritosList-container.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.favorito-item {
+  position: relative;
+}
+.favoritosList-container p {
+  font-weight: 500;
+}
+.favoritosList-container img {
+  width: 40px;
+}
+.favoritosList-container ul {
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+}
+.favoritosList-container li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: margin-left 0.2s ease;
+}
+.favoritosList-container li:hover {
+  margin-left: 20px;
+}
+.favoritosList-info p {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+.favoritosList-info {
+  display: flex;
+  flex-direction: column;
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+}
+.back-btn p {
+  font-weight: 700;
+}
+.removerFav {
+  margin-left: 90%;
+  position: absolute;
+}

@@ -1,12 +1,15 @@
 package com.drillmap.backend.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,13 +19,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "id_usuario")
+    private String id;
 
     @Column(name = "primeiroNome", length = 100, nullable = false)
     private String primeiroNome;
@@ -33,19 +34,15 @@ public class Usuario {
     @Column(name = "email", length = 500, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "senha", length = 60, nullable = false)
-    private String senha;
+    @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
+    private List <Favoritos> favoritos = new ArrayList<>();
 
-    @Column(name = "uid", length = 255, nullable = false, unique = true)
-    private String uid;
-
-    public Usuario(Integer id, String primeiroNome, String ultimoNome, String email, String senha, String uid) {
+    public Usuario(String id, String primeiroNome, String ultimoNome, String email) {
         this.id = id;
         this.primeiroNome = primeiroNome;
         this.ultimoNome = ultimoNome;
         this.email = email;
-        this.senha = senha;
-        this.uid = uid;
     }
 
 }

@@ -1,9 +1,12 @@
 import PropTypes from "prop-types";
 import "./PocoInfoCard.css";
 import { useEffect, useState } from "react";
+import { auth } from "../../utils/firebaseConfig";
 
 function PocoInfoCard({ poco, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
+  const [favoritado, setFavoritado] = useState(null);
+  const [iconeCarregando, setIconeCarregando] = useState(true);
 
   useEffect(() => {
     // Adiciona a classe 'show' depois que o componente é montado
@@ -19,6 +22,64 @@ function PocoInfoCard({ poco, onClose }) {
       onClose();
     }, 300); // mesmo tempo do transition no CSS
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 10);
+
+    setIconeCarregando(true);
+    const verificarSeJaFoiFavoritado = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setIconeCarregando(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/favoritos/listar/${user.uid}`
+        );
+        if (!res.ok) throw new Error("Erro ao buscar favoritos");
+
+        const favoritos = await res.json();
+        const jaFavoritado = favoritos.some((fav) => fav.poco.id === poco.id);
+        setFavoritado(jaFavoritado);
+      } catch (err) {
+        console.error("Erro ao verificar favorito:", err);
+      } finally {
+        setIconeCarregando(false); // 🔁 Desliga o loading
+      }
+    };
+
+    verificarSeJaFoiFavoritado();
+
+    return () => clearTimeout(timer);
+  }, [poco.id]);
+
+  function favoritar() {
+    const user = auth.currentUser;
+    const url = `${import.meta.env.VITE_API_URL}/favoritos/favoritar`;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        usuario: { id: user.uid },
+        poco: { id: poco.id },
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro ao favoritar");
+      })
+      .then((data) => {
+        console.log("Favoritado com sucesso: ", data);
+        setFavoritado(true);
+      })
+      .catch((err) => {
+        console.error("Erro ao favoritar: ", err);
+      });
+  }
 
   return (
     <div className={`poco-container ${isVisible ? "show" : ""}`}>
@@ -38,7 +99,28 @@ function PocoInfoCard({ poco, onClose }) {
             </div>
           </div>
           <div className="icons-buttons">
-            <span className="material-symbols-outlined">bookmark</span>
+            <div onClick={favoritar} className="favorito-icon">
+              {iconeCarregando || favoritado === null ? (
+                // Mostra ícone de loading enquanto carrega ou ainda está indefinido
+                <lord-icon
+                  src="https://cdn.lordicon.com/ibckyoan.json"
+                  trigger="loop"
+                  state="loop-autorenew"
+                  style={{ width: "40px", height: "40px" }}
+                />
+              ) : (
+                // Ícone final (favoritado ou não)
+                <span
+                  className="material-symbols-outlined"
+                  style={{
+                    fontSize: "36px",
+                  }}
+                >
+                  {favoritado ? "bookmark_added" : "bookmark"}
+                </span>
+              )}
+            </div>
+
             <span className="material-symbols-outlined">article</span>
           </div>
         </div>
