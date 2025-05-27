@@ -334,6 +334,9 @@ html {
   margin-left: 0%;
   text-align: center;
 }
+hr {
+  display: none;
+}
 @media (max-width: 450px) {
   .wrapper {
     left: 50%;
@@ -362,6 +365,7 @@ html {
     height: clamp(1rem, 10vw, 100rem);
   }
   hr {
+    display: block;
     border: 2px solid gray;
     border-radius: 10px;
     width: 50px;
