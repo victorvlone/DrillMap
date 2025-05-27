@@ -16,9 +16,12 @@
   pointer-events: none;
   transition: opacity 0.3s ease;
   box-shadow: var(--sombra);
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
 }
 .userConfig-container.show {
   opacity: 1;
+  transform: translateY(0);
   pointer-events: auto;
   visibility: visible;
 }
@@ -37,4 +40,21 @@
 }
 .person-remove {
   color: red;
+}
+@media (max-width: 450px) {
+  .userConfig-container {
+    right: 7%;
+    top: 90%;
+    font-size: clamp(0.2rem, 3vw, 100rem);
+    width: clamp(1rem, 45vw, 100rem);
+    height: clamp(1rem, 40vw, 100rem);
+    gap: clamp(0.1rem, 1vw, 100rem);
+    padding: clamp(0.4rem, 4vw, 100rem);
+  }
+  .config-options {
+    padding: clamp(0.3rem, 2vw, 100rem);
+  }
+  .userConfig-container span {
+    font-size: clamp(0.2rem, 4vw, 100rem);
+  }
 }

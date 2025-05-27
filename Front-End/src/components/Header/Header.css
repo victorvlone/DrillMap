@@ -179,7 +179,20 @@
   background-color: rgba(21, 26, 39, 1);
   color: white;
 }
-
+.profile {
+  border-radius: 50%;
+  width: 4rem;
+  box-shadow: var(--sombra);
+  cursor: pointer;
+  transition: width 0.2s ease;
+}
+.notification-icon {
+  display: flex;
+  align-items: center;
+}
+.notification-icon span {
+  font-size: 2.7rem;
+}
 @media (max-width: 450px) {
   .header-logo {
     width: clamp(1rem, 35vw, 35vw);
@@ -196,7 +209,8 @@
   #info-icon,
   #dark-mode-icon,
   #login-icon,
-  #map-icon {
+  #map-icon,
+  .notification-icon span {
     font-size: clamp(1rem, 7vw, 7vw);
     cursor: pointer;
     display: flex;
@@ -226,6 +240,8 @@
   #map-icon {
     display: none;
   }
+  .profile {
+  }
 }
 @media (min-width: 1024px) {
   .header {
@@ -237,21 +253,7 @@
   #map-icon {
     display: none;
   }
-  .profile {
-    border-radius: 50%;
-    width: 4rem;
-    box-shadow: var(--sombra);
-    cursor: pointer;
-    transition: width 0.2s ease;
-  }
   .profile:hover {
     width: 4.5rem;
-  }
-  .notification-icon {
-    display: flex;
-    align-items: center;
-  }
-  .notification-icon span {
-    font-size: 2.7rem;
   }
 }

@@ -14,10 +14,12 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
 }
 .user-container.show {
   opacity: 1;
+  transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
 }
@@ -31,4 +33,32 @@
 }
 .user-option:hover {
   margin-left: 10px;
+}
+
+@media (max-width: 450px) {
+  .user-container {
+    right: 7%;
+    top: 90%;
+    font-size: clamp(0.5rem, 3vw, 100rem);
+    width: clamp(1rem, 30vw, 100rem);
+    height: clamp(1rem, 33vw, 100rem);
+    gap: clamp(0.5rem, 5vw, 100rem);
+    padding: clamp(0.4rem, 4vw, 100rem);
+  }
+  .user-container span {
+    font-size: clamp(0.5rem, 5vw, 100rem);
+  }
+}
+@media (min-width: 451px) and (max-width: 1023px) {
+  .user-container {
+    right: 10%;
+    font-size: clamp(0.5rem, 1.5vw, 100rem);
+    width: clamp(1rem, 15vw, 100rem);
+    height: clamp(1rem, 15vw, 100rem);
+    gap: clamp(0.5rem, 2vw, 100rem);
+    padding: clamp(0.4rem, 2vw, 100rem);
+  }
+  .user-container span {
+    font-size: clamp(1rem, 2vw, 100rem);
+  }
 }

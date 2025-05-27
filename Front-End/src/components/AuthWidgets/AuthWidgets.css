@@ -329,3 +329,43 @@ html {
 .dark-mode .wrapper a {
   color: white;
 }
+#general-error {
+  width: 100%;
+  margin-left: 0%;
+  text-align: center;
+}
+@media (max-width: 450px) {
+  .wrapper {
+    left: 50%;
+    transform: translate(-50%);
+    bottom: 0 !important;
+    top: auto;
+    width: 100% !important;
+    height: 400px !important;
+    box-shadow: none;
+    border-radius: 20px !important;
+  }
+  .wrapper.active {
+    height: 600px !important;
+  }
+  .input-box input {
+    height: clamp(2rem, 9vw, 100rem);
+  }
+  .icons-login img {
+    width: clamp(1rem, 10vw, 100rem);
+  }
+  .icon-close {
+    display: none !important;
+  }
+  .btn {
+    width: clamp(1rem, 100%, 100rem);
+    height: clamp(1rem, 10vw, 100rem);
+  }
+  hr {
+    border: 2px solid gray;
+    border-radius: 10px;
+    width: 50px;
+    margin: auto;
+    margin-bottom: 10px;
+  }
+}

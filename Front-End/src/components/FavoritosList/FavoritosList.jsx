@@ -4,19 +4,35 @@ import "./FavoritosList.css";
 import { onAuthStateChanged } from "firebase/auth";
 import PropTypes from "prop-types";
 
-function FavoritosList({ showFavoriteList, setShowFavoriteList }) {
+function FavoritosList({ showFavoriteList, setShowUserConfig, onClose }) {
   const [favoritos, setFavoritos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (showFavoriteList) {
-      const timer = setTimeout(() => setIsVisible(true), 10);
-      return () => clearTimeout(timer);
-    } else {
-      setIsVisible(false);
+      setIsVisible(true);
     }
   }, [showFavoriteList]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Tempo igual ao da transição CSS
+  };
+
+  // Fechar ao clicar fora (opcional)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isVisible && !e.target.closest(".favoritosList-container")) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isVisible]);
 
   function removerFavorito(id) {
     const url = `${import.meta.env.VITE_API_URL}/favoritos/excluir/${id}`;
@@ -46,37 +62,49 @@ function FavoritosList({ showFavoriteList, setShowFavoriteList }) {
   }
 
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const url = `${import.meta.env.VITE_API_URL}/favoritos/listar/${
           user.uid
         }`;
         fetch(url)
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) throw new Error("Erro na requisição");
+            return response.json();
+          })
           .then((data) => {
-            setFavoritos(data);
-            setLoading(false);
+            setFavoritos(data || []);
           })
           .catch((err) => {
-            console.error(
-              "Erro ao listar poços favoritos do usuário:",
-              err.message
-            );
+            console.error("Erro ao listar favoritos:", err);
+            setFavoritos([]);
+          })
+          .finally(() => {
             setLoading(false);
           });
       } else {
-        setLoading(false);
         setFavoritos([]);
+        setLoading(false);
       }
     });
 
-    return () => unsubscribe(); // cleanup
+    return () => unsubscribe();
   }, []);
   return (
-    <div className={`favoritosList-container ${isVisible ? "show" : ""}`}>
+    <div
+      className={`favoritosList-container container ${
+        isVisible ? "show" : ""
+      } ${!loading ? "loaded" : ""}`}
+    >
       <h4>Salvos</h4>
       {loading ? (
-        <p>Carregando...</p>
+        <lord-icon
+          src="https://cdn.lordicon.com/ibckyoan.json"
+          trigger="loop"
+          state="loop-autorenew"
+          style={{ width: "40px", height: "40px" }}
+        />
       ) : favoritos.length === 0 ? (
         <p>Nenhum poço salvo.</p>
       ) : (
@@ -98,7 +126,13 @@ function FavoritosList({ showFavoriteList, setShowFavoriteList }) {
           ))}
         </ul>
       )}
-      <div className="back-btn" onClick={() => setShowFavoriteList(false)}>
+      <div
+        className="back-btn"
+        onClick={() => {
+          handleClose();
+          setShowUserConfig(true);
+        }}
+      >
         <span className="material-symbols-outlined">undo</span>
         <p>Voltar</p>
       </div>
@@ -108,7 +142,8 @@ function FavoritosList({ showFavoriteList, setShowFavoriteList }) {
 
 FavoritosList.propTypes = {
   showFavoriteList: PropTypes.bool.isRequired,
-  setShowFavoriteList: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setShowUserConfig: PropTypes.func.isRequired,
 };
 
 export default FavoritosList;

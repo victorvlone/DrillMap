@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 // importação do css do SearchBar
 import "./Searchbar.css";
 import {
@@ -12,20 +12,7 @@ import SelectedFilters from "../SelectedFilters/SelectedFilters";
 import { mapRef } from "../Map/Map.jsx";
 import PropTypes from "prop-types";
 import { auth } from "../../utils/firebaseConfig.js";
-
-const customIcon = new L.Icon({
-  iconUrl: "/assets/images/pin-amarelo.png", // Caminho relativo à public/
-  iconSize: [20, 29], // Tamanho do ícone
-  iconAnchor: [16, 32], // Centro da base do ícone
-  popupAnchor: [0, -32], // Onde a popup aparece
-});
-
-const iconFavorito = L.icon({
-  iconUrl: "/assets/images/pin-verde.png",
-  iconSize: [20, 29],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
+import { customIcon, iconFavorito } from "../../utils/mapIcons.js";
 
 function Searchbar({
   mudarPagina,
@@ -33,6 +20,7 @@ function Searchbar({
   paginaAtual,
   setPocoSelecionado,
   setDadosPaginados,
+  markerLayerRef,
 }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
@@ -41,7 +29,6 @@ function Searchbar({
   const [categoriasBloqueadas, setCategoriasBloqueadas] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
-  const markerLayerRef = useRef(null); // <--  ref para guardar o layer de markers.
   const [podeRemoverFiltro, setPodeRemoverFiltro] = useState(true);
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
@@ -424,6 +411,7 @@ Searchbar.propTypes = {
   paginaAtual: PropTypes.number.isRequired,
   setPocoSelecionado: PropTypes.func.isRequired,
   setDadosPaginados: PropTypes.func.isRequired,
+  markerLayerRef: PropTypes.object,
 };
 
 export default Searchbar;

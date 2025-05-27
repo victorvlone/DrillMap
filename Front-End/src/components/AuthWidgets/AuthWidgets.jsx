@@ -2,11 +2,15 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import "./AuthWidgets.css";
 import { auth } from "../../utils/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [forcaSenha, setForcaSenha] = useState("");
   const [showRequirements, setShowRequirements] = useState(false);
 
   const [primeiroNome, setPrimeiroNome] = useState("");
@@ -78,27 +82,34 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         );
         const user = userCredential.user;
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/usuarios/salvar`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: user.uid,
-            primeiroNome: primeiroNome,
-            ultimoNome: ultimoNome,
-            email: email,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log("Resposta:", data))
-          .catch((err) => console.error("Erro:", err));
+        const res = fetch(
+          `${import.meta.env.VITE_API_URL}/api/usuarios/salvar`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: user.uid,
+              primeiroNome: primeiroNome,
+              ultimoNome: ultimoNome,
+              email: email,
+            }),
+          }
+        );
+        if (!res.ok) {
+          await user.delete();
+          throw new Error("Erro ao salvar usuário no banco SQL");
+        }
+
+        const data = await res.json();
+        console.log("Resposta:", data);
 
         setEmail("");
         setPassword("");
         setPrimeiroNome("");
         setUltimoNome("");
-        console.log("Usuário criado!");
+        console.log("Usuário criado com sucesso no Firebase e SQL!");
         closeModal();
       } else {
         alert("codigo invalido, tente novamente!");
@@ -146,6 +157,14 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
       return;
     }
 
+    const requisitos = Object.values(passwordRequirements);
+    const senhaForte = requisitos.every((regex) => regex.test(password));
+
+    if (!senhaForte) {
+      setForcaSenha(true);
+      return;
+    }
+
     const emailValido = await validarEmail(email);
     if (!emailValido) {
       setEmailError(true);
@@ -156,6 +175,41 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
     if (!codigoEnviado) {
       alert("Erro ao enviar o código. Tente novamente.");
       return;
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    const emailInput = document.getElementById("Email-login").value;
+    const passwordInput = document.getElementById("Password-login").value;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        emailInput,
+        passwordInput
+      );
+      const user = userCredential.user;
+
+      console.log("Usuário autenticado com Firebase:", user);
+
+      // Aqui você pode buscar os dados adicionais do seu backend SQL:
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/usuarios/${user.uid}`
+      );
+      const userData = await res.json();
+
+      console.log("Dados do usuário no SQL:", userData);
+
+      // Salvar no localStorage se desejar
+      localStorage.setItem("usuarioLogado", JSON.stringify(userData));
+
+      // Fechar modal
+      closeModal();
+    } catch (error) {
+      console.error("Erro no login:", error);
+      alert("Email ou senha inválidos.");
     }
   }
 
@@ -195,8 +249,9 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         className="form-box login"
         style={{ display: isRegistering === "code" ? "none" : "block" }}
       >
+        <hr />
         <h2>Login</h2>
-        <form action="#" autoComplete="off">
+        <form action="#" autoComplete="off" onSubmit={handleLogin}>
           <div className="input-box">
             <input type="email" id="Email-login" required placeholder="Email" />
           </div>
@@ -239,6 +294,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         className="form-box register"
         style={{ display: isRegistering === "code" ? "none" : "block" }}
       >
+        <hr />
         <h2>Cadastro</h2>
 
         <div className="icons-login">
@@ -312,6 +368,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
                   const value = e.target.value;
                   setPassword(value);
                   setShowRequirements(value.length > 0);
+                  if (forcaSenha) setForcaSenha(false);
                 }}
                 onBlur={() => {
                   setShowRequirements(false);
@@ -397,7 +454,12 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
           <button type="submit" id="btn-register" className="btn">
             Cadastrar
           </button>
-          <p id="general-error" className="error-message"></p>
+          <p
+            id="general-error"
+            className={`error-message ${forcaSenha ? "show" : ""}`}
+          >
+            A senha não é forte o suficiente
+          </p>
           <div className="login-register">
             <p>
               Já tem uma conta?{" "}
@@ -442,7 +504,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
 
 AuthWidgets.propTypes = {
   active: PropTypes.bool.isRequired,
-  isRegistering: PropTypes.bool.isRequired,
+  isRegistering: PropTypes.string,
   setIsRegistering: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
 };

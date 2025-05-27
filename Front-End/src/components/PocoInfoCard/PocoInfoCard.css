@@ -118,6 +118,10 @@
   scrollbar-width: auto; /* pode ser auto, thin ou none */
   scrollbar-color: black; /* thumb, track */
 }
+.favorito-icon {
+  display: flex;
+  align-items: center;
+}
 
 @media (max-width: 450px) {
   .poco-container {
@@ -134,6 +138,9 @@
   }
   .poco-container.show ~ .pagControl {
     bottom: 67vw;
+  }
+  .poco-container.show ~ .pages-text {
+    bottom: 75vw; /* ou um valor um pouco maior para ficar acima */
   }
   .poco-close {
     font-size: clamp(1rem, 8vw, 100vw);

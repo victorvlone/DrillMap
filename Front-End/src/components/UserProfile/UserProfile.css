@@ -10,6 +10,7 @@
   flex-direction: column;
   box-shadow: var(--sombra);
   opacity: 0;
+  z-index: 10;
   pointer-events: none;
   visibility: hidden;
   transition: opacity 0.3s ease;
@@ -23,10 +24,9 @@
   display: flex;
   align-items: center;
   background: url(assets/images/BannerBackground.png);
-  background-position: center;
-  background-repeat: no-repeat;
+  background-position: bottom;
   background-size: cover;
-  background-attachment: fixed;
+  background-repeat: no-repeat;
   border-radius: 10px 10px 0 0;
   width: 100%;
   padding: 20px;
@@ -59,4 +59,66 @@
   align-items: center;
   margin-bottom: 10px;
   cursor: pointer;
+}
+@media (max-width: 450px) {
+  .userProfile-container {
+    width: 100%;
+    left: 50%;
+    top: auto;
+    bottom: 0;
+    transform: translate(-50%);
+    border-radius: 10px 10px 0 0;
+    box-shadow: none;
+  }
+  .userProfile-container p {
+    font-size: clamp(1rem, 3.5vw, 100rem);
+  }
+  .userProfile-container h4 {
+    font-size: clamp(1rem, 4vw, 100rem);
+  }
+  .userProfile-container img {
+    width: clamp(1rem, 15vw, 100rem);
+  }
+  .userProfile-container span {
+    font-size: clamp(1rem, 7vw, 100rem);
+  }
+}
+@media (min-width: 451px) and (max-width: 1023px) {
+  .userProfile-container {
+    right: 10%;
+    width: clamp(1rem, 30vw, 100rem);
+    height: clamp(5rem, 30vw, 100rem);
+  }
+  .userProfile-container p {
+    font-size: clamp(0.5rem, 1.5vw, 100rem);
+  }
+  .userProfile-container h4 {
+    font-size: clamp(0.5rem, 1.5vw, 100rem);
+  }
+  .userProfile-container img {
+    width: clamp(0.5rem, 7vw, 100rem);
+  }
+  .userProfile-container span {
+    font-size: clamp(1rem, 2.5vw, 100rem);
+  }
+  .userProfile-data {
+    padding: clamp(1rem, 2vw, 100rem);
+  }
+  .userProfile-banner {
+    padding: clamp(1rem, 2vw, 100rem);
+  }
+}
+@media (min-width: 1024px) {
+  .userProfile-container p {
+    font-size: clamp(0.5rem, 0.7vw, 100rem);
+  }
+  .userProfile-container h4 {
+    font-size: clamp(0.5rem, 0.8vw, 100rem);
+  }
+  .userProfile-container img {
+    width: clamp(0.5rem, 3vw, 100rem);
+  }
+  .userProfile-container span {
+    font-size: clamp(1rem, 1vw, 100rem);
+  }
 }

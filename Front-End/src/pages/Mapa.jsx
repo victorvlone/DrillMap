@@ -15,6 +15,7 @@ function Mapa({
   startHelpTour,
   setStartHelpTour,
   dadosPaginados,
+  markerLayerRef,
 }) {
   const [showEndNotice, setShowEndNotice] = useState(false);
   return (
@@ -23,6 +24,7 @@ function Mapa({
       {pocoSelecionado && (
         <PocoInfoCard
           poco={pocoSelecionado}
+          markerLayerRef={markerLayerRef}
           onClose={() => setPocoSelecionado(null)}
         />
       )}
@@ -63,7 +65,8 @@ Mapa.propTypes = {
   setPocoSelecionado: PropTypes.func,
   startHelpTour: PropTypes.bool.isRequired,
   setStartHelpTour: PropTypes.func.isRequired,
-  dadosPaginados: PropTypes.object.isRequired,
+  dadosPaginados: PropTypes.object,
+  markerLayerRef: PropTypes.object,
 };
 
 export default Mapa;

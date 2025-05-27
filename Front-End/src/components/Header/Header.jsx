@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import "./Header.css";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import AuthWidgets from "../AuthWidgets/AuthWidgets";
 import Searchbar from "../Searchbar/Searchbar";
 import UserWidget from "../userWidget/UserWidget";
 import UserConfig from "../UserConfig/UserConfig";
-import UserProfile from "../UserProfile/UserProfile";
-import FavoritosList from "../FavoritosList/FavoritosList";
 
 function Header({
   isMapPage,
@@ -17,16 +14,18 @@ function Header({
   setPocoSelecionado,
   setStartHelpTour,
   setDadosPaginados,
-  usuarioLogado,
-  setUsuarioLogado,
+  usuario,
+  setUsuario,
   setShowDeleteConfirm,
+  markerLayerRef,
+  setShowFavoriteList,
+  setShowUserProfile,
+  showUserConfig,
+  setShowUserConfig,
+  setIsRegistering,
+  setAuthPopUp,
 }) {
-  const [authPopup, setAuthPopUp] = useState(false);
-  const [isRegistering, setIsRegistering] = useState("");
   const [showUserWidget, setShowUserWidget] = useState(false);
-  const [showUserConfig, setShowUserConfig] = useState(false);
-  const [showUserProfile, setShowUserProfile] = useState(false);
-  const [showFavoriteList, setShowFavoriteList] = useState(false);
 
   const OpenAuthModal = (authType) => {
     setAuthPopUp(true);
@@ -80,6 +79,7 @@ function Header({
                 setShowPagControl={setShowPagControl}
                 setPocoSelecionado={setPocoSelecionado}
                 setDadosPaginados={setDadosPaginados}
+                markerLayerRef={markerLayerRef}
               />
             )}
             {isMapPage && (
@@ -106,9 +106,15 @@ function Header({
             <span id="dark-mode-icon" className="material-symbols-outlined">
               dark_mode
             </span>
-            <span id="login-icon" className="material-symbols-outlined">
-              login
-            </span>
+            {!usuario && (
+              <span
+                id="login-icon"
+                className="material-symbols-outlined"
+                onClick={() => setIsRegistering("register")}
+              >
+                login
+              </span>
+            )}
             {!isMapPage && (
               <li>
                 <Link to="/mapa" id="map-btn">
@@ -119,7 +125,7 @@ function Header({
             <li className="darkModeToggle">
               <span className="material-symbols-outlined icon">dark_mode</span>
             </li>
-            {usuarioLogado && (
+            {usuario && (
               <>
                 <li className="notification-icon">
                   <span className="material-symbols-outlined">
@@ -134,17 +140,13 @@ function Header({
                 />
               </>
             )}
-            {showFavoriteList && (
-              <FavoritosList
-                showFavoriteList={showFavoriteList}
-                setShowFavoriteList={setShowFavoriteList}
-              />
-            )}
             {showUserWidget && (
               <UserWidget
                 showUserWidget={showUserWidget}
                 setShowUserConfig={setShowUserConfig}
                 setShowFavoriteList={setShowFavoriteList}
+                setUsuario={setUsuario}
+                onClose={() => setShowUserWidget(false)}
               />
             )}
             {showUserConfig && (
@@ -153,15 +155,11 @@ function Header({
                 setShowUserConfig={setShowUserConfig}
                 setShowUserProfile={setShowUserProfile}
                 setShowDeleteConfirm={setShowDeleteConfirm}
+                setShowUserWidget={setShowUserWidget}
+                onClose={() => setShowUserConfig(false)}
               />
             )}
-            {showUserProfile && (
-              <UserProfile
-                showUserProfile={showUserProfile}
-                setShowUserProfile={setShowUserProfile}
-              />
-            )}
-            {!usuarioLogado && (
+            {!usuario && (
               <>
                 <li
                   className="btnRegister-popup"
@@ -180,12 +178,6 @@ function Header({
           </ul>
         </nav>
       </header>
-      <AuthWidgets
-        active={authPopup}
-        isRegistering={isRegistering}
-        setIsRegistering={setIsRegistering}
-        closeModal={() => setAuthPopUp(false)}
-      />
     </div>
   );
 }
@@ -198,8 +190,15 @@ Header.propTypes = {
   setPocoSelecionado: PropTypes.func,
   setStartHelpTour: PropTypes.func.isRequired,
   setDadosPaginados: PropTypes.func.isRequired,
-  usuarioLogado: PropTypes.bool.isRequired,
-  setUsuarioLogado: PropTypes.func.isRequired,
+  usuario: PropTypes.object,
+  setUsuario: PropTypes.func,
   setShowDeleteConfirm: PropTypes.func.isRequired,
+  markerLayerRef: PropTypes.object,
+  setShowFavoriteList: PropTypes.func.isRequired,
+  setShowUserProfile: PropTypes.func.isRequired,
+  setShowUserConfig: PropTypes.func.isRequired,
+  showUserConfig: PropTypes.bool.isRequired,
+  setAuthPopUp: PropTypes.func,
+  setIsRegistering: PropTypes.func.isRequired,
 };
 export default Header;

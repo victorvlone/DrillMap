@@ -15,17 +15,35 @@
   visibility: hidden;
   z-index: 10;
   pointer-events: none;
-  transition: visibility 0.3s ease;
+  overflow: hidden;
+  max-height: 150px;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, max-height 0.5s ease, transform 0.5s ease,
+    visibility 0.5s ease;
 }
 .favoritosList-container.show {
   opacity: 1;
   visibility: visible;
+  transform: translateY(0);
   pointer-events: auto;
+}
+.favoritosList-container.loaded {
+  max-height: 350px; /* Altura quando carregado */
 }
 .favorito-item {
   position: relative;
 }
+.favoritosList-container h4 {
+  font-size: 14px;
+}
+.favoritosList-container strong {
+  font-size: 14px;
+}
+.favoritosList-container span {
+  font-size: 24px;
+}
 .favoritosList-container p {
+  font-size: 13px;
   font-weight: 500;
 }
 .favoritosList-container img {
@@ -71,4 +89,62 @@
 .removerFav {
   margin-left: 90%;
   position: absolute;
+  cursor: pointer;
+}
+@media (max-width: 450px) {
+  .favoritosList-container {
+    width: 100%;
+    left: 50% !important;
+    bottom: 0;
+    top: auto;
+    transform: translate(-50%) !important;
+    border-radius: none;
+    box-shadow: none;
+    font-size: clamp(0.5rem, 3vw, 100rem);
+  }
+  .favoritosList-container img {
+    width: clamp(1rem, 10vw, 100rem);
+  }
+  .favoritosList-info {
+    width: clamp(0.5rem, 40vw, 100rem);
+  }
+  .removerFav {
+    font-size: clamp(1rem, 6vw, 100rem);
+  }
+}
+@media (min-width: 451px) and (max-width: 1023px) {
+  .favoritosList-container {
+    right: 10%;
+    width: clamp(1rem, 30vw, 100rem);
+    padding: clamp(1rem, 1.5vw, 100rem);
+  }
+  .favoritosList-container h4 {
+    font-size: clamp(1rem, 1.5vw, 100rem);
+  }
+  .favoritosList-container img {
+    width: clamp(1rem, 4vw, 100rem);
+  }
+  .favoritosList-container p {
+    font-size: clamp(0.5rem, 1.2vw, 100rem);
+  }
+  .favoritosList-container strong {
+    font-size: clamp(0.5rem, 1.3vw, 100rem);
+  }
+  .favoritosList-info {
+    width: clamp(0.5rem, 40vw, 100rem);
+  }
+  .removerFav {
+    font-size: clamp(1rem, 3vw, 100rem);
+  }
+  .favoritosList-container li {
+    gap: clamp(1rem, 2vw, 100rem);
+  }
+  .favoritosList-container span {
+    font-size: clamp(1rem, 2vw, 100rem);
+  }
+}
+@media (min-width: 1024px) and (max-width: 1650px) {
+  .favoritosList-container {
+    right: 12%;
+  }
 }

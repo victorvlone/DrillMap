@@ -3,18 +3,34 @@ import "./UserProfile.css";
 import PropTypes from "prop-types";
 import { auth } from "../../utils/firebaseConfig";
 
-function UserProfile({ showUserProfile, setShowUserProfile }) {
-  const [isVisible, setIsVisible] = useState(false);
+function UserProfile({ showUserProfile, onClose }) {
   const [userData, setUserData] = useState({ name: "", email: "" });
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (showUserProfile) {
-      const timer = setTimeout(() => setIsVisible(true), 10);
-      return () => clearTimeout(timer);
-    } else {
-      setIsVisible(false);
+      setIsVisible(true);
     }
   }, [showUserProfile]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Tempo igual ao da transição CSS
+  };
+
+  // Fechar ao clicar fora (opcional)
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isVisible && !e.target.closest(".userProfile-container")) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isVisible]);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -53,10 +69,15 @@ function UserProfile({ showUserProfile, setShowUserProfile }) {
         </div>
         <div className="userProfile-password">
           <h4>Senha</h4>
-          <p>senha12334</p>
+          <p>••••••••••</p>
         </div>
       </div>
-      <div className="back-btn" onClick={() => setShowUserProfile(false)}>
+      <div
+        className="back-btn"
+        onClick={() => {
+          handleClose();
+        }}
+      >
         <span className="material-symbols-outlined">undo</span>
         <p>Voltar</p>
       </div>
@@ -66,7 +87,7 @@ function UserProfile({ showUserProfile, setShowUserProfile }) {
 
 UserProfile.propTypes = {
   showUserProfile: PropTypes.bool.isRequired,
-  setShowUserProfile: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default UserProfile;

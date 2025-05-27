@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import "./PocoInfoCard.css";
 import { useEffect, useState } from "react";
 import { auth } from "../../utils/firebaseConfig";
+import { iconFavorito } from "../../utils/mapIcons";
 
-function PocoInfoCard({ poco, onClose }) {
+function PocoInfoCard({ poco, onClose, markerLayerRef }) {
   const [isVisible, setIsVisible] = useState(false);
   const [favoritado, setFavoritado] = useState(null);
   const [iconeCarregando, setIconeCarregando] = useState(true);
@@ -75,6 +76,26 @@ function PocoInfoCard({ poco, onClose }) {
       .then((data) => {
         console.log("Favoritado com sucesso: ", data);
         setFavoritado(true);
+
+        if (markerLayerRef.current) {
+          markerLayerRef.current.eachLayer((layer) => {
+            const markerLatLng = layer.getLatLng();
+            const pocoLat = parseFloat(
+              poco.latitude.toString().replace(",", ".")
+            );
+            const pocoLng = parseFloat(
+              poco.longitude.toString().replace(",", ".")
+            );
+
+            const isSameLocation =
+              Math.abs(markerLatLng.lat - pocoLat) < 0.00001 &&
+              Math.abs(markerLatLng.lng - pocoLng) < 0.00001;
+
+            if (isSameLocation) {
+              layer.setIcon(iconFavorito); // muda pro ícone de favorito
+            }
+          });
+        }
       })
       .catch((err) => {
         console.error("Erro ao favoritar: ", err);
@@ -190,6 +211,7 @@ function PocoInfoCard({ poco, onClose }) {
 PocoInfoCard.propTypes = {
   poco: PropTypes.any,
   onClose: PropTypes.func.isRequired,
+  markerLayerRef: PropTypes.object,
 };
 
 export default PocoInfoCard;

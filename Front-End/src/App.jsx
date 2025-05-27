@@ -8,10 +8,13 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./utils/firebaseConfig.js";
 import DeleteConfirm from "./components/DeleteConfirm/DeleteConfirm.jsx";
+import FavoritosList from "./components/FavoritosList/FavoritosList.jsx";
+import UserProfile from "./components/UserProfile/UserProfile.jsx";
+import AuthWidgets from "./components/AuthWidgets/AuthWidgets.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -24,6 +27,12 @@ function AppContent() {
   const [startHelpTour, setStartHelpTour] = useState(false);
   const [dadosPaginados, setDadosPaginados] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showFavoriteList, setShowFavoriteList] = useState(false);
+  const [showUserConfig, setShowUserConfig] = useState(false);
+  const [authPopup, setAuthPopUp] = useState(false);
+  const [isRegistering, setIsRegistering] = useState("");
+  const markerLayerRef = useRef(null);
 
   const [usuarioLogado, setUsuarioLogado] = useState(null);
 
@@ -55,9 +64,17 @@ function AppContent() {
         setPocoSelecionado={setPocoSelecionado}
         setStartHelpTour={setStartHelpTour}
         setDadosPaginados={setDadosPaginados}
-        usuarioLogado={usuarioLogado}
-        setUsuarioLogado={setUsuarioLogado}
+        usuario={usuarioLogado}
+        setUsuario={setUsuarioLogado}
         setShowDeleteConfirm={setShowDeleteConfirm}
+        setShowFavoriteList={setShowFavoriteList}
+        setShowUserProfile={setShowUserProfile}
+        showUserConfig={showUserConfig}
+        setShowUserConfig={setShowUserConfig}
+        markerLayerRef={markerLayerRef}
+        setIsRegistering={setIsRegistering}
+        setAuthPopUp={setAuthPopUp}
+        closeModal={() => setAuthPopUp(false)}
       />
       {showDeleteConfirm && (
         <DeleteConfirm
@@ -65,6 +82,27 @@ function AppContent() {
           setShowDeleteConfirm={setShowDeleteConfirm}
         />
       )}
+      {showFavoriteList && (
+        <FavoritosList
+          showFavoriteList={showFavoriteList}
+          setShowFavoriteList={setShowFavoriteList}
+          setShowUserConfig={setShowUserConfig}
+          onClose={() => setShowFavoriteList(false)}
+        />
+      )}
+      {showUserProfile && (
+        <UserProfile
+          showUserProfile={showUserProfile}
+          setShowUserProfile={setShowUserProfile}
+          onClose={() => setShowUserProfile(false)}
+        />
+      )}
+      <AuthWidgets
+        active={authPopup}
+        isRegistering={isRegistering}
+        setIsRegistering={setIsRegistering}
+        closeModal={() => setAuthPopUp(false)}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
@@ -80,6 +118,7 @@ function AppContent() {
               startHelpTour={startHelpTour} // <-- novo
               setStartHelpTour={setStartHelpTour} // <-- novo
               dadosPaginados={dadosPaginados}
+              markerLayerRef={markerLayerRef}
             />
           }
         />
