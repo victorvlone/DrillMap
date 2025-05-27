@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
 import "./CommunitySection.css";
 
-function CommunitySection() {
+function CommunitySection({ setAuthPopUp, setIsRegistering }) {
   return (
     <section className="community container">
       <div className="community-text">
@@ -50,9 +51,22 @@ function CommunitySection() {
           </div>
         </div>
       </div>
-      <button className="community-btn">cadastre-se</button>
+      <button
+        className="community-btn"
+        onClick={() => {
+          setAuthPopUp(true);
+          setIsRegistering("register");
+        }}
+      >
+        cadastre-se
+      </button>
     </section>
   );
 }
+
+CommunitySection.propTypes = {
+  setAuthPopUp: PropTypes.func,
+  setIsRegistering: PropTypes.func,
+};
 
 export default CommunitySection;

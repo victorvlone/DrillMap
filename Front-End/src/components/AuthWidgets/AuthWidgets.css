@@ -144,12 +144,15 @@ html {
 .wrapper.active-popup {
   transform: scale(1);
 }
-.wrapper.active {
-  height: 650px;
-  width: 513px;
+.wrapper.register-mode {
+  height: 550px;
+  width: 480px;
 }
-.wrapper.active.show-req {
-  height: 750px;
+.wrapper.code-mode {
+  height: 263px; /* ou use min-height se quiser flexibilidade */
+}
+.wrapper.register-mode.show-req {
+  height: 650px;
 }
 .wrapper .form-box {
   width: 100%;
@@ -159,7 +162,7 @@ html {
   transition: transform 0.18s ease;
   transform: translateX(0);
 }
-.wrapper.active .form-box.login {
+.wrapper.register-mode .form-box.login {
   transition: none;
   transform: translateX(-600px);
 }
@@ -168,7 +171,7 @@ html {
   transition: none;
   transform: translateX(400px);
 }
-.wrapper.active .form-box.register {
+.wrapper.register-mode .form-box.register {
   transition: transform 0.18s ease;
   transform: translateX(0);
 }
@@ -307,7 +310,7 @@ html {
   margin: 25px 0 10px;
 }
 .login-register p a {
-  color: #03a9f4;
+  color: var(--verdeEscuro);
   text-decoration: none;
   font-weight: 600;
 }
@@ -339,17 +342,26 @@ hr {
 }
 @media (max-width: 450px) {
   .wrapper {
-    left: 50%;
-    transform: translate(-50%);
+    position: fixed;
+    left: 50% !important;
     bottom: 0 !important;
-    top: auto;
+    top: auto !important;
     width: 100% !important;
     height: 400px !important;
-    box-shadow: none;
+    transform: translateX(-50%) scale(0) !important;
+    transform-origin: bottom center;
+    transition: transform 0.4s ease;
     border-radius: 20px !important;
+    border-radius: 10px 10px 0 0 !important;
   }
-  .wrapper.active {
-    height: 600px !important;
+  .wrapper.register-mode {
+    height: 550px !important;
+  }
+  .wrapper.code-mode {
+    height: 263px !important; /* ou use min-height se quiser flexibilidade */
+  }
+  .wrapper.active-popup {
+    transform: translateX(-50%) scale(1) !important;
   }
   .input-box input {
     height: clamp(2rem, 9vw, 100rem);
@@ -371,5 +383,6 @@ hr {
     width: 50px;
     margin: auto;
     margin-bottom: 10px;
+    cursor: pointer;
   }
 }

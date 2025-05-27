@@ -110,7 +110,7 @@ function Header({
               <span
                 id="login-icon"
                 className="material-symbols-outlined"
-                onClick={() => setIsRegistering("register")}
+                onClick={() => OpenAuthModal("login")}
               >
                 login
               </span>

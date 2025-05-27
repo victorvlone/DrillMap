@@ -99,13 +99,30 @@ function AppContent() {
       )}
       <AuthWidgets
         active={authPopup}
+        setAuthPopUp={setAuthPopUp}
         isRegistering={isRegistering}
         setIsRegistering={setIsRegistering}
         closeModal={() => setAuthPopUp(false)}
       />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              setAuthPopUp={setAuthPopUp}
+              setIsRegistering={setIsRegistering}
+            />
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <Home
+              setAuthPopUp={setAuthPopUp}
+              setIsRegistering={setIsRegistering}
+            />
+          }
+        />
         <Route
           path="/mapa"
           element={

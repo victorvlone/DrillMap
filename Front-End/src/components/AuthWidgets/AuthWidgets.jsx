@@ -12,6 +12,10 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
   const [emailError, setEmailError] = useState("");
   const [forcaSenha, setForcaSenha] = useState("");
   const [showRequirements, setShowRequirements] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmRegisterPassword, setShowConfirmRegisterPassword] =
+    useState(false);
 
   const [primeiroNome, setPrimeiroNome] = useState("");
   const [ultimoNome, setUltimoNome] = useState("");
@@ -36,7 +40,6 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         console.log("Código de verificação enviado:", data);
 
         setIsRegistering("code");
-        document.querySelector(".wrapper").style.height = "263px";
 
         return true;
       })
@@ -82,7 +85,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         );
         const user = userCredential.user;
 
-        const res = fetch(
+        const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/usuarios/salvar`,
           {
             method: "POST",
@@ -231,8 +234,10 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
   return (
     <div
       className={`wrapper ${active ? "active-popup" : ""} ${
-        isRegistering === "register" ? "active" : ""
-      } ${showRequirements ? "show-req" : ""}`}
+        isRegistering === "register" ? "register-mode" : ""
+      } ${isRegistering === "code" ? "code-mode" : ""} ${
+        showRequirements ? "show-req" : ""
+      }`}
       style={{
         right: active
           ? isRegistering === "register"
@@ -249,19 +254,27 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         className="form-box login"
         style={{ display: isRegistering === "code" ? "none" : "block" }}
       >
-        <hr />
+        <hr onClick={closeModal} />
         <h2>Login</h2>
         <form action="#" autoComplete="off" onSubmit={handleLogin}>
           <div className="input-box">
             <input type="email" id="Email-login" required placeholder="Email" />
           </div>
           <div className="input-box">
-            <input
-              type="password"
-              id="Password-login"
-              required
-              placeholder="Senha"
-            />
+            <div className="password-div">
+              <input
+                type={showLoginPassword ? "text" : "password"}
+                id="Password-login"
+                required
+                placeholder="Senha"
+              />
+              <span
+                className="material-symbols-outlined"
+                onClick={() => setShowLoginPassword((prev) => !prev)}
+              >
+                {showLoginPassword ? "visibility_off" : "visibility"}
+              </span>
+            </div>
           </div>
           <div className="remember-forgot">
             <label>
@@ -294,26 +307,9 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
         className="form-box register"
         style={{ display: isRegistering === "code" ? "none" : "block" }}
       >
-        <hr />
+        <hr onClick={closeModal} />
         <h2>Cadastro</h2>
 
-        <div className="icons-login">
-          <img
-            className="facebook"
-            src="assets/images/facebook_icon.png"
-            alt="Icone do Facebook"
-          />
-          <div className="google-container">
-            <img
-              className="google"
-              src="assets/images/google_icon.webp"
-              alt="Icone do Google"
-            />
-          </div>
-          <div className="twitter-container">
-            <img className="twitter" src="assets/images/X_logo.png" alt="" />
-          </div>
-        </div>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <div className="nome">
             <div className="input-box">
@@ -359,7 +355,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
           <div className="input-box">
             <div className="password-div">
               <input
-                type="password"
+                type={showRegisterPassword ? "text" : "password"}
                 id="password-register"
                 required
                 placeholder="Senha"
@@ -374,7 +370,12 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
                   setShowRequirements(false);
                 }}
               />
-              <span className="material-symbols-outlined">visibility</span>
+              <span
+                className="material-symbols-outlined"
+                onClick={() => setShowRegisterPassword((prev) => !prev)}
+              >
+                {showRegisterPassword ? "visibility_off" : "visibility"}
+              </span>
             </div>
             <ul
               className={`requirement-list ${
@@ -426,7 +427,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
           <div className="input-box">
             <div className="password-div">
               <input
-                type="password"
+                type={showConfirmRegisterPassword ? "text" : "password"}
                 id="password-confirm"
                 required
                 placeholder="Confirme a senha"
@@ -436,7 +437,12 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
                   if (passwordError) setPasswordError(false);
                 }}
               />
-              <span className="material-symbols-outlined">visibility</span>
+              <span
+                className="material-symbols-outlined"
+                onClick={() => setShowConfirmRegisterPassword((prev) => !prev)}
+              >
+                {showConfirmRegisterPassword ? "visibility_off" : "visibility"}
+              </span>
             </div>
             <p
               id="password-error"
@@ -479,6 +485,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
 
       {isRegistering === "code" && (
         <div id="code">
+          <hr onClick={closeModal} />
           <h2>Verifique seu e-mail</h2>
 
           <p>Digite o codigo que enviamos para o e-mail</p>
@@ -507,6 +514,7 @@ AuthWidgets.propTypes = {
   isRegistering: PropTypes.string,
   setIsRegistering: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
+  setAuthPopUp: PropTypes.func.isRequired,
 };
 
 export default AuthWidgets;
