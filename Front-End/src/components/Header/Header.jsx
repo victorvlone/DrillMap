@@ -3,7 +3,7 @@ import "./Header.css";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Searchbar from "../Searchbar/Searchbar";
-import UserWidget from "../userWidget/UserWidget";
+import UserWidget from "../UserWidget/UserWidget.jsx";
 import UserConfig from "../UserConfig/UserConfig";
 
 function Header({
