@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>22</java.version> <!-- ou 23 se for o seu caso -->
+		<java.version>21</java.version> <!-- ou 23 se for o seu caso -->
 		<lombok.version>1.18.38</lombok.version> <!-- Aqui está a correção -->
 	</properties>
 	<dependencies>
