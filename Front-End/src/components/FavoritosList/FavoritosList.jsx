@@ -4,7 +4,12 @@ import "./FavoritosList.css";
 import { onAuthStateChanged } from "firebase/auth";
 import PropTypes from "prop-types";
 
-function FavoritosList({ showFavoriteList, setShowUserConfig, onClose }) {
+function FavoritosList({
+  showFavoriteList,
+  setShowUserConfig,
+  onClose,
+  darkMode,
+}) {
   const [favoritos, setFavoritos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -102,6 +107,7 @@ function FavoritosList({ showFavoriteList, setShowUserConfig, onClose }) {
         <lord-icon
           src="https://cdn.lordicon.com/ibckyoan.json"
           trigger="loop"
+          colors={`primary:${darkMode ? "#ffffff" : "##000000"}`}
           state="loop-autorenew"
           style={{ width: "40px", height: "40px" }}
         />
@@ -144,6 +150,7 @@ FavoritosList.propTypes = {
   showFavoriteList: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   setShowUserConfig: PropTypes.func.isRequired,
+  darkMode: PropTypes.bool,
 };
 
 export default FavoritosList;

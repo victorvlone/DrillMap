@@ -30,11 +30,21 @@ function AppContent() {
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [showFavoriteList, setShowFavoriteList] = useState(false);
   const [showUserConfig, setShowUserConfig] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [authPopup, setAuthPopUp] = useState(false);
   const [isRegistering, setIsRegistering] = useState("");
   const markerLayerRef = useRef(null);
 
   const [usuarioLogado, setUsuarioLogado] = useState(null);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (darkMode) {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -55,7 +65,7 @@ function AppContent() {
   };
 
   return (
-    <>
+    <div className={darkMode ? "dark" : ""}>
       <Header
         isMapPage={isMapPage}
         mudarPagina={mudarPagina}
@@ -74,6 +84,8 @@ function AppContent() {
         markerLayerRef={markerLayerRef}
         setIsRegistering={setIsRegistering}
         setAuthPopUp={setAuthPopUp}
+        setDarkMode={setDarkMode}
+        darkMode={darkMode}
         closeModal={() => setAuthPopUp(false)}
       />
       {showDeleteConfirm && (
@@ -87,6 +99,7 @@ function AppContent() {
           showFavoriteList={showFavoriteList}
           setShowFavoriteList={setShowFavoriteList}
           setShowUserConfig={setShowUserConfig}
+          darkMode={darkMode}
           onClose={() => setShowFavoriteList(false)}
         />
       )}
@@ -136,11 +149,12 @@ function AppContent() {
               setStartHelpTour={setStartHelpTour} // <-- novo
               dadosPaginados={dadosPaginados}
               markerLayerRef={markerLayerRef}
+              darkMode={darkMode}
             />
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
 

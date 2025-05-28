@@ -49,6 +49,120 @@ a {
   font-weight: 600;
   font-size: 14px;
 }
+.header-container,
+.header-container li,
+.header-container li a,
+.banner,
+.mapUsage,
+.wrapper,
+.user-container,
+.userProfile-container,
+.userConfig-container,
+.favoritosList-container,
+.subFilters,
+.filters,
+.dropdown-list,
+.dropdown,
+.wrapper h2,
+.wrapper p,
+.wrapper .remember-forgot,
+.wrapper .remember-forgot a,
+.search-bar span,
+.wrapper input,
+.wrapper .input-code input,
+.search-bar,
+.benefits-container,
+.search-input,
+.poco-container,
+.poco-container .poco-close,
+.poco-container .poco-buttons,
+.container-help,
+.failed-search {
+  transition: all 0.5s ease;
+}
+.dark,
+.dark .header-container.scrolled {
+  transition: all 0.5s ease;
+  background-color: #151a27;
+  color: white;
+}
+.dark .header-container li,
+.dark .header-container li a {
+  transition: all 0.5s ease;
+  color: white;
+}
+.dark .banner {
+  transition: all 0.5s ease;
+  color: white;
+  background: url(/assets/images/Banner-Darkmode.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.dark .mapUsage {
+  transition: all 0.5s ease;
+  color: white;
+  background: url(/assets/images/MapUsageBackground-DarkMode.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.dark .wrapper,
+.dark .user-container,
+.dark .userProfile-container,
+.dark .userConfig-container,
+.dark .favoritosList-container,
+.dark .subFilters,
+.dark .filters,
+.dark .dropdown-list {
+  transition: all 0.5s ease;
+  background-color: #151a27;
+}
+.dark .dropdown {
+  transition: all 0.5s ease;
+  border: 1px solid #151a27;
+}
+.dark .wrapper h2,
+.dark .wrapper p,
+.dark .wrapper .remember-forgot,
+.dark .wrapper .remember-forgot a,
+.dark .search-bar span {
+  transition: all 0.5s ease;
+  color: white;
+}
+.dark .wrapper input,
+.dark .wrapper .input-code input,
+.dark .search-bar,
+.dark .benefits-container {
+  transition: all 0.5s ease;
+  background-color: #1f2533 !important;
+}
+.dark .wrapper input,
+.dark .wrapper .input-code input,
+.dark .search-input {
+  transition: all 0.5s ease;
+  color: white;
+}
+.dark .person-remove p {
+  color: red !important;
+}
+.dark .poco-container,
+.dark .poco-container .poco-close,
+.dark .poco-container .poco-buttons,
+.dark .container-help,
+.dark .failed-search {
+  transition: all 0.5s ease;
+  background: linear-gradient(#1f2533, #1e1e1e);
+}
+.dark .header #info-icon,
+.dark .header #dark-mode-icon,
+.dark .header #login-icon,
+.dark .header #map-icon,
+.dark .header .notification-icon span {
+  transition: all 0.5s ease;
+  color: white;
+}
 @media (max-width: 450px) {
   body {
     overflow: hidden;

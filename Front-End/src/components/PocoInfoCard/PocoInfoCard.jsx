@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../../utils/firebaseConfig";
 import { iconFavorito } from "../../utils/mapIcons";
 
-function PocoInfoCard({ poco, onClose, markerLayerRef }) {
+function PocoInfoCard({ poco, onClose, markerLayerRef, darkMode }) {
   const [isVisible, setIsVisible] = useState(false);
   const [favoritado, setFavoritado] = useState(null);
   const [iconeCarregando, setIconeCarregando] = useState(true);
@@ -126,6 +126,7 @@ function PocoInfoCard({ poco, onClose, markerLayerRef }) {
                 <lord-icon
                   src="https://cdn.lordicon.com/ibckyoan.json"
                   trigger="loop"
+                  colors={`primary:${darkMode ? "#ffffff" : "#000000"}`}
                   state="loop-autorenew"
                   style={{ width: "40px", height: "40px" }}
                 />
@@ -212,6 +213,7 @@ PocoInfoCard.propTypes = {
   poco: PropTypes.any,
   onClose: PropTypes.func.isRequired,
   markerLayerRef: PropTypes.object,
+  darkMode: PropTypes.bool,
 };
 
 export default PocoInfoCard;

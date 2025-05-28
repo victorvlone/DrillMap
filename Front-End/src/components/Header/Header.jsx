@@ -24,6 +24,8 @@ function Header({
   setShowUserConfig,
   setIsRegistering,
   setAuthPopUp,
+  setDarkMode,
+  darkMode,
 }) {
   const [showUserWidget, setShowUserWidget] = useState(false);
 
@@ -65,7 +67,11 @@ function Header({
         <Link to="/home">
           <img
             id="logo"
-            src="assets/images/Drillmap_logo.png"
+            src={
+              darkMode
+                ? "assets/images/Drillmap_logo-dark.png"
+                : "assets/images/Drillmap_logo.png"
+            }
             className="header-logo"
           />
         </Link>
@@ -103,8 +109,12 @@ function Header({
                 info
               </span>
             )}
-            <span id="dark-mode-icon" className="material-symbols-outlined">
-              dark_mode
+            <span
+              id="dark-mode-icon"
+              className="material-symbols-outlined"
+              onClick={() => setDarkMode((prev) => !prev)}
+            >
+              {darkMode ? "light_mode" : "dark_mode"}
             </span>
             {!usuario && (
               <span
@@ -122,8 +132,14 @@ function Header({
                 </Link>
               </li>
             )}
-            <li className="darkModeToggle">
-              <span className="material-symbols-outlined icon">dark_mode</span>
+            <li
+              className="darkModeToggle"
+              onClick={() => setDarkMode((prev) => !prev)}
+            >
+              <span className="material-symbols-outlined icon">
+                {" "}
+                {darkMode ? "light_mode" : "dark_mode"}
+              </span>
             </li>
             {usuario && (
               <>
@@ -200,5 +216,7 @@ Header.propTypes = {
   showUserConfig: PropTypes.bool.isRequired,
   setAuthPopUp: PropTypes.func,
   setIsRegistering: PropTypes.func.isRequired,
+  setDarkMode: PropTypes.func,
+  darkMode: PropTypes.bool,
 };
 export default Header;

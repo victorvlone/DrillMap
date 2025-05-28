@@ -16,15 +16,17 @@ function Mapa({
   setStartHelpTour,
   dadosPaginados,
   markerLayerRef,
+  darkMode,
 }) {
   const [showEndNotice, setShowEndNotice] = useState(false);
   return (
     <div>
-      <Map />
+      <Map darkMode={darkMode} />
       {pocoSelecionado && (
         <PocoInfoCard
           poco={pocoSelecionado}
           markerLayerRef={markerLayerRef}
+          darkMode={darkMode}
           onClose={() => setPocoSelecionado(null)}
         />
       )}
@@ -67,6 +69,7 @@ Mapa.propTypes = {
   setStartHelpTour: PropTypes.func.isRequired,
   dadosPaginados: PropTypes.object,
   markerLayerRef: PropTypes.object,
+  darkMode: PropTypes.bool,
 };
 
 export default Mapa;

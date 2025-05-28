@@ -288,7 +288,7 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
           </button>
           <div className="login-register">
             <p>
-              Não tem uma conta?
+              Não tem uma conta?{" "}
               <a
                 href="#"
                 className="register-link"
