@@ -35,6 +35,12 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
     }
   }
 
+  function handleKeyDown(e, prevInput) {
+    if (e.key === "Backspace" && e.target.value === "" && prevInput) {
+      prevInput.current.focus();
+    }
+  }
+
   // função para enviar um código de confirmação para o email do usuario
   function sendCode(email) {
     const body = JSON.stringify({ email });
@@ -508,24 +514,28 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
               className="verification-code"
               ref={input1}
               onChange={(e) => handleInputChange(e, input2)}
+              onKeyDown={(e) => handleKeyDown(e, null)}
             />
             <input
               maxLength="1"
               className="verification-code"
               ref={input2}
               onChange={(e) => handleInputChange(e, input3)}
+              onKeyDown={(e) => handleKeyDown(e, input1)}
             />
             <input
               maxLength="1"
               className="verification-code"
               ref={input3}
               onChange={(e) => handleInputChange(e, input4)}
+              onKeyDown={(e) => handleKeyDown(e, input2)}
             />
             <input
               maxLength="1"
               className="verification-code"
               ref={input4}
               onChange={(e) => handleInputChange(e, null)}
+              onKeyDown={(e) => handleKeyDown(e, input3)}
             />
           </div>
 
