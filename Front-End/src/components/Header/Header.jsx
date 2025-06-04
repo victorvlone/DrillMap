@@ -64,7 +64,7 @@ function Header({
   return (
     <div className="header-container">
       <header className="header container">
-        <Link to="/home">
+        <Link to="/">
           <img
             id="logo"
             src={
