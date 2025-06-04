@@ -14,12 +14,11 @@ function MapUsageSection() {
           petrolíferas sem cadastro, utilizando filtros para refinar sua busca.
         </p>
         <button>
-          <Link to="/mapa">
-          <a href="mapa.html">mapa</a>
-            </Link>
+          <Link to="/mapa">mapa</Link>
         </button>
       </div>
     </section>
   );
 }
+
 export default MapUsageSection;
