@@ -71,6 +71,9 @@
 .icons-buttons span {
   cursor: pointer;
 }
+.notification-icon {
+  display: none !important;
+}
 .icons-buttons > .notification-btn {
   font-size: 26px;
 }
