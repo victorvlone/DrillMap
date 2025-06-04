@@ -25,7 +25,7 @@ public class EmailService {
                 throw new IllegalStateException("Chave API do SendGrid não encontrada");
             }
 
-            Email from = new Email("joao.v.goncalves7@ba.estudante.senai.br");
+            Email from = new Email("drillmapenterprise@gmail.com");
             Email to = new Email(destinatario);
             Content content = new Content("text/plain", conteudo);
             Mail mail = new Mail(from, assunto, to, content);
