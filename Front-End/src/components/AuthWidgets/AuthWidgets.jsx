@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./AuthWidgets.css";
 import { auth } from "../../utils/firebaseConfig";
 import {
@@ -22,6 +22,18 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const input1 = useRef();
+  const input2 = useRef();
+  const input3 = useRef();
+  const input4 = useRef();
+
+  function handleInputChange(e, nextInput) {
+    const value = e.target.value;
+    if (value.length === 1 && nextInput) {
+      nextInput.current.focus();
+    }
+  }
 
   // função para enviar um código de confirmação para o email do usuario
   function sendCode(email) {
@@ -491,10 +503,30 @@ function AuthWidgets({ active, isRegistering, setIsRegistering, closeModal }) {
           <p>Digite o codigo que enviamos para o e-mail</p>
           <p>xxxxxxxxx@xxxxxx.com</p>
           <div className="input-code">
-            <input maxLength="1" className="verification-code" />
-            <input maxLength="1" className="verification-code" />
-            <input maxLength="1" className="verification-code" />
-            <input maxLength="1" className="verification-code" />
+            <input
+              maxLength="1"
+              className="verification-code"
+              ref={input1}
+              onChange={(e) => handleInputChange(e, input2)}
+            />
+            <input
+              maxLength="1"
+              className="verification-code"
+              ref={input2}
+              onChange={(e) => handleInputChange(e, input3)}
+            />
+            <input
+              maxLength="1"
+              className="verification-code"
+              ref={input3}
+              onChange={(e) => handleInputChange(e, input4)}
+            />
+            <input
+              maxLength="1"
+              className="verification-code"
+              ref={input4}
+              onChange={(e) => handleInputChange(e, null)}
+            />
           </div>
 
           <button
