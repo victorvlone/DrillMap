@@ -1,4 +1,5 @@
 import "./MapUsageSection.css";
+import { Link } from "react-router-dom";
 
 function MapUsageSection() {
   return (
