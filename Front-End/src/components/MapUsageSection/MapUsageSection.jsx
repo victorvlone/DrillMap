@@ -13,7 +13,9 @@ function MapUsageSection() {
           petrolíferas sem cadastro, utilizando filtros para refinar sua busca.
         </p>
         <button>
+          <Link to="/mapa">
           <a href="mapa.html">mapa</a>
+            </Link>
         </button>
       </div>
     </section>
