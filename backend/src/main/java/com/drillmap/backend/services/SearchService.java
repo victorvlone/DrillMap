@@ -23,33 +23,54 @@ import com.drillmap.backend.specifications.PocoSpecification;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Serviço responsável por buscas e filtragens relacionadas a poços e entidades associadas.
+ */
 @Service
 @AllArgsConstructor
 public class SearchService {
 
+    // Repositórios das entidades para acesso ao banco de dados
     private final BaciaRepository baciaRepository;
     private final BlocoRepository blocoRepository;
     private final CampoRepository campoRepository;
     private final PocoRepository pocoRepository;
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     * Busca poços aplicando filtros dinâmicos e paginação.
+     * 
+     * @param filtros Mapa de filtros por categoria (ex: Bacias, Blocos, etc)
+     * @param page Página solicitada
+     * @param size Tamanho da página
+     * @return Página de PocoDTOs filtrados
+     */
     public Page<PocoDTO> buscarPoços(Map<String, Map<String, Object>> filtros, int page, int size) {
 
+        // Cria objeto de paginação
         Pageable pageable = PageRequest.of(page, size);
-        // Para cada categoria, como Bacias, Poços, Blocos ou Campos, vamos construir a Specification
-        Specification<Poco> especificacao = PocoSpecification.aplicarFiltros(filtros);
-        // Agora, executamos a consulta usando o repositório
-         Page<Poco> pageDePoços = pocoRepository.findAll(especificacao, pageable);
 
-    // Converte os resultados para DTOs
+        // Cria a Specification baseada nos filtros recebidos
+        Specification<Poco> especificacao = PocoSpecification.aplicarFiltros(filtros);
+
+        // Executa a consulta paginada usando o repositório
+        Page<Poco> pageDePoços = pocoRepository.findAll(especificacao, pageable);
+
+        // Converte os resultados para DTOs
         List<PocoDTO> pocoDTOs = pageDePoços.getContent().stream()
                                         .map(this::convertToDto)
                                         .collect(Collectors.toList());
 
-    // Retorna um Page<> com os DTOs
+        // Retorna um Page<> com os DTOs
         return new PageImpl<>(pocoDTOs, pageable, pageDePoços.getTotalElements());
     }
 
+    /**
+     * Converte um objeto Poco em PocoDTO.
+     * 
+     * @param poco Entidade Poco
+     * @return DTO correspondente
+     */
     private PocoDTO convertToDto(Poco poco) {
         return new PocoDTO(
             poco.getId(),
@@ -72,17 +93,36 @@ public class SearchService {
         );
     }
 
-    public  List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
-        if(campo.equalsIgnoreCase("Estado")){
+    /**
+     * Busca valores distintos de um campo em uma tabela, com suporte a paginação.
+     * Se o campo for "Estado", busca os estados distintos da tabela.
+     * 
+     * @param tabela Nome da tabela
+     * @param campo Nome do campo
+     * @param page Página solicitada
+     * @param size Tamanho da página
+     * @return Lista de mapas com os valores encontrados
+     */
+    public List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
+        // Se o campo for "Estado", busca estados distintos
+        if(campo.equalsIgnoreCase("estado")){
             return buscarEstadosPorTabela(tabela);
         }
         
+        // Monta e executa a query para buscar valores distintos do campo
         String query = String.format("SELECT %s FROM %s LIMIT ? OFFSET ?", campo, tabela);
         return jdbcTemplate.queryForList(query, size, page * size);
     }
 
+    /**
+     * Busca os estados distintos de uma tabela específica.
+     * 
+     * @param tabela Nome da tabela
+     * @return Lista de mapas com os estados encontrados
+     */
     private List<Map<String, Object>> buscarEstadosPorTabela(String tabela) {
         List<String> estados;
+        // Seleciona o repositório correto conforme a tabela
         switch (tabela.toLowerCase()) {
             case "bacia": estados = baciaRepository.findDistinctEstados(); break;
             case "bloco": estados = blocoRepository.findDistinctEstados(); break;
@@ -90,6 +130,7 @@ public class SearchService {
             case "poco": estados = pocoRepository.findDistinctEstados(); break;
             default: throw new IllegalArgumentException("Tabela invalida para filtro de estado");
         }
+        // Mapeia os estados para o formato de resposta
         return estados.stream()
             .map(estado -> {
                 Map<String, Object> map = new HashMap<>();
@@ -99,6 +140,13 @@ public class SearchService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Filtra dados de acordo com o nome e categoria informados.
+     * 
+     * @param nome Nome a ser buscado
+     * @param categoria Categoria (bacias, blocos, campos, pocos)
+     * @return Lista de mapas com os resultados encontrados
+     */
     public List<Map<String, Object>> filtrarDados(String nome, String categoria){
         switch (categoria.toLowerCase()){
             case "bacias": return searchBacias(nome);
@@ -109,6 +157,12 @@ public class SearchService {
         }
     }
 
+    /**
+     * Busca bacias pelo nome, retornando nome e estado.
+     * 
+     * @param nome Nome da bacia
+     * @return Lista de mapas com nome e estado
+     */
     private List<Map<String, Object>> searchBacias(String nome){
         return baciaRepository.findDistinctByNome(nome).stream()
             .map(obj -> {
@@ -119,6 +173,12 @@ public class SearchService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Busca blocos pelo nome, retornando bloco e estado.
+     * 
+     * @param nome Nome do bloco
+     * @return Lista de mapas com bloco e estado
+     */
     private List<Map<String, Object>> searchBlocos(String nome){
         return blocoRepository.findByNome(nome).stream()
             .map(bloco -> {
@@ -132,6 +192,12 @@ public class SearchService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Busca campos pelo nome, retornando campo e estado.
+     * 
+     * @param nome Nome do campo
+     * @return Lista de mapas com campo e estado
+     */
     private List<Map<String, Object>> searchCampos(String nome){
         return campoRepository.findByNome(nome).stream()
             .map(campo -> {
@@ -145,6 +211,12 @@ public class SearchService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Busca poços pelo nome, retornando poço e estado.
+     * 
+     * @param nome Nome do poço
+     * @return Lista de mapas com poço e estado
+     */
     private List<Map<String, Object>> searchPocos(String nome){
         return pocoRepository.findByNome(nome).stream()
         .map(poco -> {

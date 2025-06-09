@@ -18,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa um campo de petróleo/gás no sistema.
+ */
 @Entity
 @Getter
 @Setter
@@ -25,23 +28,27 @@ import lombok.Setter;
 @Table(name = "campo")
 public class Campo {
 
+    // Identificador único do campo (chave primária)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_campo")
     private Integer id;
 
+    // Nome do campo
     @Column(name = "nome")
     private String nome;
 
+    // Bloco ao qual o campo pertence (relacionamento muitos-para-um)
     @ManyToOne
     @JoinColumn(name = "id_bloco", nullable = false)
     private Bloco bloco;
 
-
+    // Lista de poços associados ao campo (relacionamento um-para-muitos)
     @OneToMany(mappedBy = "campo", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Poco> poco;
 
+    // Construtor com argumentos principais
     public Campo(Bloco bloco, String nome) {
         this.bloco = bloco;
         this.nome = nome;

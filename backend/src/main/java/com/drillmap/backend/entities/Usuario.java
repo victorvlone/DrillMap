@@ -14,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa um usuário do sistema.
+ */
 @Entity
 @Table(name = "usuario")
 @Getter
@@ -21,23 +24,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Usuario {
 
+    // Identificador único do usuário
     @Id
     @Column(name = "id_usuario")
     private String id;
 
+    // Primeiro nome do usuário
     @Column(name = "primeiroNome", length = 100, nullable = false)
     private String primeiroNome;
 
+    // Último nome do usuário
     @Column(name = "ultimoNome", length = 100, nullable = false)
     private String ultimoNome;
 
+    // E-mail do usuário (único)
     @Column(name = "email", length = 500, nullable = false, unique = true)
     private String email;
 
+    // Lista de favoritos do usuário (relacionamento 1:N)
     @OneToMany(mappedBy = "usuario")
     @JsonIgnore
     private List <Favoritos> favoritos = new ArrayList<>();
 
+    // Construtor com todos os campos obrigatórios
     public Usuario(String id, String primeiroNome, String ultimoNome, String email) {
         this.id = id;
         this.primeiroNome = primeiroNome;

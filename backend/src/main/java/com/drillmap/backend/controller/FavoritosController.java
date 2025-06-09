@@ -17,15 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.drillmap.backend.entities.Favoritos;
 import com.drillmap.backend.services.FavoritosService;
 
-
+/**
+ * Controller responsável por expor endpoints para operações de favoritos dos usuários.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/favoritos")
 public class FavoritosController {
     
+    // Injeta o serviço de favoritos para acessar as regras de negócio
     @Autowired
     private FavoritosService favoritosService;
 
+    /**
+     * Endpoint para favoritar um poço para um usuário.
+     * 
+     * @param favorito Objeto Favoritos recebido no corpo da requisição
+     * @return ResponseEntity com o favorito salvo ou mensagem de erro
+     */
     @PostMapping("/favoritar")
     public ResponseEntity<?> favoritarPoco(@RequestBody Favoritos favorito){
         try{
@@ -36,6 +45,12 @@ public class FavoritosController {
         }
     }
 
+    /**
+     * Endpoint para listar todos os favoritos de um usuário.
+     * 
+     * @param id ID do usuário
+     * @return Lista de favoritos do usuário ou mensagem de erro
+     */
     @GetMapping("/listar/{id}")
     public ResponseEntity<?> listar(@PathVariable String id){
         try {
@@ -46,6 +61,12 @@ public class FavoritosController {
         }
     }
 
+    /**
+     * Endpoint para remover um favorito pelo seu ID.
+     * 
+     * @param id ID do favorito
+     * @return Mensagem de sucesso ou erro
+     */
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<?> excluirFavorito(@PathVariable Integer id){
         try {

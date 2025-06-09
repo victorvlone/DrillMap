@@ -18,17 +18,28 @@ import com.drillmap.backend.entities.Usuario;
 import com.drillmap.backend.repositories.UsuarioRepository;
 import com.drillmap.backend.services.UsuarioService;
 
+/**
+ * Controller responsável por expor endpoints para operações CRUD de usuários.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
+    // Injeta o repositório de usuários para acesso direto ao banco de dados
     @Autowired
     private UsuarioRepository repository;
 
+    // Injeta o serviço de usuários para regras de negócio
     @Autowired
     private UsuarioService service;
     
+    /**
+     * Endpoint para cadastrar um novo usuário.
+     * 
+     * @param usuario Objeto Usuario recebido no corpo da requisição
+     * @return ResponseEntity com o usuário salvo ou mensagem de erro
+     */
     @PostMapping("/salvar")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario usuario) {
         try {
@@ -39,12 +50,24 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Endpoint para editar um usuário existente.
+     * 
+     * @param usuario Objeto Usuario com dados atualizados
+     * @return O usuário atualizado
+     */
     @PutMapping
     public Usuario editarUsuario(@RequestBody Usuario usuario){
         Usuario usuarioNovo = repository.save(usuario);
         return usuarioNovo; 
     }
 
+    /**
+     * Endpoint para buscar um usuário pelo ID.
+     * 
+     * @param id ID do usuário
+     * @return ResponseEntity com o usuário encontrado ou mensagem de erro
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarUsuario(@PathVariable String id){
         try{
@@ -60,6 +83,12 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * Endpoint para excluir um usuário pelo ID.
+     * 
+     * @param id ID do usuário
+     * @return Optional contendo o usuário excluído, se encontrado
+     */
     @DeleteMapping("/{id}")
     public Optional<Usuario> excluirUsuario (@PathVariable String id){
         Optional<Usuario> usuario = repository.findById(id);
