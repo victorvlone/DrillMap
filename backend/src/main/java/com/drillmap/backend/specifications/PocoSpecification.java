@@ -41,27 +41,41 @@ public class PocoSpecification {
     
                     // Itera sobre cada filtro dentro da categoria
                     for (Map.Entry<String, Object> filtro : filtrosCategoria.entrySet()) {
-                        String nomeFiltro = filtro.getKey(); // Nome do campo a ser filtrado
-                        Object valorFiltro = filtro.getValue(); // Valor do filtro
+                        String nomeFiltro = filtro.getKey();
+                        Object valorFiltro = filtro.getValue();
 
-                        // Se a categoria for "Bacias", faz join até Bacia e aplica o filtro
                         if ("Bacias".equals(categoria)) {
                             Join<Poco, Campo> campoJoin = root.join("campo");
                             Join<Campo, Bloco> blocoJoin = campoJoin.join("bloco");
                             Join<Bloco, Bacia> baciaJoin = blocoJoin.join("bacia");
                             predicates.add(criteriaBuilder.equal(baciaJoin.get(nomeFiltro), valorFiltro));
-                        // Se a categoria for "Blocos", faz join até Bloco e aplica o filtro
                         } else if ("Blocos".equals(categoria)) {
                             Join<Poco, Campo> campoJoin = root.join("campo");
                             Join<Campo, Bloco> blocoJoin = campoJoin.join("bloco");
-                            predicates.add(criteriaBuilder.equal(blocoJoin.get(nomeFiltro), valorFiltro));
-                        // Se a categoria for "Campos", faz join até Campo e aplica o filtro
+                            if ("estado".equalsIgnoreCase(nomeFiltro)) {
+                                Join<Bloco, Bacia> baciaJoin = blocoJoin.join("bacia");
+                                predicates.add(criteriaBuilder.equal(baciaJoin.get("estado"), valorFiltro));
+                            } else {
+                                predicates.add(criteriaBuilder.equal(blocoJoin.get(nomeFiltro), valorFiltro));
+                            }
                         } else if ("Campos".equals(categoria)) {
                             Join<Poco, Campo> campoJoin = root.join("campo");
-                            predicates.add(criteriaBuilder.equal(campoJoin.get(nomeFiltro), valorFiltro));
-                        // Se a categoria for "Poços", aplica o filtro diretamente no root
+                            if ("estado".equalsIgnoreCase(nomeFiltro)) {
+                                Join<Campo, Bloco> blocoJoin = campoJoin.join("bloco");
+                                Join<Bloco, Bacia> baciaJoin = blocoJoin.join("bacia");
+                                predicates.add(criteriaBuilder.equal(baciaJoin.get("estado"), valorFiltro));
+                            } else {
+                                predicates.add(criteriaBuilder.equal(campoJoin.get(nomeFiltro), valorFiltro));
+                            }
                         } else if ("Poços".equals(categoria)) {
-                            predicates.add(criteriaBuilder.equal(root.get(nomeFiltro), valorFiltro));
+                            if ("estado".equalsIgnoreCase(nomeFiltro)) {
+                                Join<Poco, Campo> campoJoin = root.join("campo");
+                                Join<Campo, Bloco> blocoJoin = campoJoin.join("bloco");
+                                Join<Bloco, Bacia> baciaJoin = blocoJoin.join("bacia");
+                                predicates.add(criteriaBuilder.equal(baciaJoin.get("estado"), valorFiltro));
+                            } else {
+                                predicates.add(criteriaBuilder.equal(root.get(nomeFiltro), valorFiltro));
+                            }
                         }
                     }
                 }
