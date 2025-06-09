@@ -18,6 +18,7 @@
   visibility: hidden;
   transition: opacity 0.2s ease;
   z-index: 10;
+  position: fixed;
 }
 .deleteConfirm-container.show {
   opacity: 1;

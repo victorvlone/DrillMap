@@ -25,23 +25,39 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serviço responsável pela importação de dados a partir de arquivos CSV,
+ * realizando a criação ou atualização de entidades Bacia, Bloco, Campo e Poço.
+ */
 @Service
 @RequiredArgsConstructor
 public class DadosService {
 
+    // Repositórios para acesso ao banco de dados das entidades
     private final BaciaRepository baciaRepository;
     private final BlocoRepository blocoRepository;
     private final CampoRepository campoRepository;
     private final PocoRepository pocoRepository;
 
+    // Formato de data utilizado no CSV
     DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    /**
+     * Importa dados de um arquivo CSV, criando ou atualizando registros no banco.
+     * 
+     * @param file Arquivo CSV enviado pelo usuário
+     * @return Quantidade de registros criados/atualizados
+     * @throws IOException Caso ocorra erro na leitura do arquivo
+     */
     public Integer importarCsv(MultipartFile file) throws IOException {
-        List<DadosCsvRpresentation> linhasCsv = parseCsv(file); // Método que converte CSV em lista de representações
+        // Converte o CSV em uma lista de objetos de representação
+        List<DadosCsvRpresentation> linhasCsv = parseCsv(file);
         int registrosCriados = 0;
     
+        // Processa cada linha do CSV
         for (DadosCsvRpresentation csv : linhasCsv) {
     
-            // 1. Verificar ou criar a Bacia
+            // 1. Verifica se a Bacia existe, senão cria uma nova
             Bacia bacia = baciaRepository.findByNomeAndEstado(csv.getNomeBacia(), csv.getEstado())
                  .orElseGet(() -> {
                      Bacia novaBacia = new Bacia();
@@ -50,7 +66,7 @@ public class DadosService {
                      return baciaRepository.save(novaBacia);
                  });
     
-            // 2. Verificar ou criar o Bloco dentro da Bacia
+            // 2. Verifica se o Bloco existe na Bacia, senão cria um novo
             Bloco bloco = blocoRepository.findByNomeAndBacia(csv.getNomeBloco(), bacia)
                             .orElseGet(() -> {
                                 Bloco novoBloco = new Bloco();
@@ -59,7 +75,7 @@ public class DadosService {
                                 return blocoRepository.save(novoBloco);
                             });
     
-            // 3. Verificar ou criar o Campo dentro do Bloco
+            // 3. Verifica se o Campo existe no Bloco, senão cria um novo
             Campo campo = campoRepository.findByNomeAndBloco(csv.getNomeCampo(), bloco)
                             .orElseGet(() -> {
                                 Campo novoCampo = new Campo();
@@ -68,7 +84,7 @@ public class DadosService {
                                 return campoRepository.save(novoCampo);
                             });
     
-            // 4. Verificar ou criar o Poço dentro do Campo
+            // 4. Verifica se o Poço existe no Campo, senão cria um novo (mas só salva depois)
             Poco poco = pocoRepository.findByNomeAndCampoId(csv.getNomePoco(), campo.getId())
                             .orElseGet(() -> {
                                 Poco novoPoco = new Poco();
@@ -77,7 +93,7 @@ public class DadosService {
                                 return novoPoco;
                             });
     
-            // Atualizar os dados do poço se necessário
+            // Atualiza os dados do poço conforme o CSV
             if (poco.getCampo() != null && !poco.getCampo().equals(campo)) {
                 poco.setCampo(campo); // Atualiza o campo, se necessário
             }
@@ -99,7 +115,7 @@ public class DadosService {
             poco.setPocoOperador(csv.getPocoOperador());
             poco.setCadastro(csv.getCadastro());
     
-            // Salva ou atualiza o poço
+            // Salva ou atualiza o poço no banco de dados
             pocoRepository.save(poco);
     
             registrosCriados++;
@@ -108,13 +124,21 @@ public class DadosService {
         return registrosCriados;
     }
     
-        
+    /**
+     * Converte o arquivo CSV em uma lista de objetos de representação.
+     * 
+     * @param file Arquivo CSV
+     * @return Lista de DadosCsvRpresentation
+     * @throws IOException Caso ocorra erro na leitura
+     */
     private List<DadosCsvRpresentation> parseCsv(MultipartFile file) throws IOException {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            // Define a estratégia de mapeamento pelo nome das colunas do cabeçalho
             HeaderColumnNameMappingStrategy<DadosCsvRpresentation> strategy =
                     new HeaderColumnNameMappingStrategy<>();
             strategy.setType(DadosCsvRpresentation.class);
 
+            // Configura o parser do OpenCSV
             CsvToBean<DadosCsvRpresentation> csvToBean =
                     new CsvToBeanBuilder<DadosCsvRpresentation>(reader)
                             .withMappingStrategy(strategy)
@@ -123,9 +147,11 @@ public class DadosService {
                             .withIgnoreLeadingWhiteSpace(true)
                             .build();
 
+            // Realiza o parse e retorna a lista
             return csvToBean.parse();
 
         } catch (Exception e) {
+            // Lança exceção caso ocorra erro inesperado
             throw new IOException("Erro inesperado ao processar o arquivo CSV.", e);
         }
     }

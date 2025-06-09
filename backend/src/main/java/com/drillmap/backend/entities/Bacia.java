@@ -16,6 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa uma bacia sedimentar no sistema.
+ */
 @Entity
 @Getter
 @Setter
@@ -23,21 +26,26 @@ import lombok.Setter;
 @Table(name = "bacia")
 public class Bacia {
 
+    // Identificador único da bacia (chave primária)
     @Id
     @Column(name = "id_bacia")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Estado onde a bacia está localizada
     @Column(name = "estado")
     private String estado;
 
+    // Nome da bacia
     @Column(name = "nome")
     private String nome;
 
+    // Lista de blocos associados à bacia (relacionamento um-para-muitos)
     @JsonIgnore
     @OneToMany(mappedBy = "bacia", cascade = CascadeType.ALL)
     private List<Bloco> blocos;
 
+    // Construtor com argumentos principais
     public Bacia(String estado, String nome) {
         this.estado = estado;
         this.nome = nome;

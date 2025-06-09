@@ -18,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidade que representa um bloco de exploração no sistema.
+ */
 @Entity
 @Getter
 @Setter
@@ -25,24 +28,27 @@ import lombok.Setter;
 @Table(name = "bloco")
 public class Bloco {
 
+    // Identificador único do bloco (chave primária)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bloco")
     private Integer id;
 
+    // Nome do bloco
     @Column(name = "nome")
     private String nome;
 
-    
+    // Bacia à qual o bloco pertence (relacionamento muitos-para-um)
     @ManyToOne
     @JoinColumn(name = "id_bacia", nullable = false)
     private Bacia bacia;
 
-
+    // Lista de campos associados ao bloco (relacionamento um-para-muitos)
     @OneToMany(mappedBy = "bloco", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Campo> campos;
 
+    // Construtor com argumentos principais
     public Bloco(Bacia bacia, String nome) {
         this.bacia = bacia;
         this.nome = nome;
