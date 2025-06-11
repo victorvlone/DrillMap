@@ -21,6 +21,7 @@ function Searchbar({
   setPocoSelecionado,
   setDadosPaginados,
   markerLayerRef,
+  darkMode,
 }) {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Bacias");
   const [dropdownAberto, setDropdownAberto] = useState(false);
@@ -399,6 +400,7 @@ function Searchbar({
           showFilters={showFilters}
           selecionarSubFiltro={selecionarSubFiltro}
           onClose={() => setShowFilters(false)}
+          darkMode={darkMode}
         />
       )}
     </div>
@@ -412,6 +414,7 @@ Searchbar.propTypes = {
   setPocoSelecionado: PropTypes.func.isRequired,
   setDadosPaginados: PropTypes.func.isRequired,
   markerLayerRef: PropTypes.object,
+  darkMode: PropTypes.bool.isRequired,
 };
 
 export default Searchbar;

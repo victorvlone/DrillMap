@@ -41,11 +41,9 @@ public class SearchController {
      */
     @GetMapping("/filtros")
     public ResponseEntity<List<Map<String, Object>>> subfiltrarDados(@RequestParam String tabela,
-     @RequestParam String campo,
-     @RequestParam(defaultValue = "0") int page,
-     @RequestParam(defaultValue = "50") int size){
+     @RequestParam String campo){
 
-            List<Map<String, Object>> result = searchService.subFiltros(tabela, campo, page, size);
+            List<Map<String, Object>> result = searchService.subFiltros(tabela, campo);
 
             return ResponseEntity.ok(result);
     }

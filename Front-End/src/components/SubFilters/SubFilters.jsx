@@ -11,9 +11,10 @@ function removerAcentos(texto) {
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
+function Subfilters({ categoria, filtro, onSubfiltroClick, onClose, darkMode }) {
   const [subfiltros, setSubfiltros] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     const tabelaMap = {
@@ -29,7 +30,7 @@ function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
       removerAcentos(filtro).replace(/\s+/g, "").toLowerCase();
 
     const subFiltros = async () => {
-      console.log(campoNormalizado);
+      setIsLoading(true);
       const url = `${
         import.meta.env.VITE_API_URL
       }/api/filtros?tabela=${encodeURIComponent(
@@ -45,6 +46,8 @@ function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
         setIsVisible(true);
       } catch (error) {
         console.error("Erro ao carregar subFiltros:", error);
+      } finally {
+        setIsLoading(false); // Finaliza o loading
       }
     };
 
@@ -70,11 +73,24 @@ function Subfilters({ categoria, filtro, onSubfiltroClick, onClose }) {
 
   return (
     <div className={`subFilters ${isVisible ? "show" : ""}`}>
-      {[...new Set(subfiltros.flatMap(Object.values))].map((valor, index) => (
-        <p key={index} onClick={() => handleSubfiltroClick(valor)}>
-          {valor}
-        </p>
-      ))}
+      {isLoading ? (
+        <div className="loading-container">
+          <lord-icon
+          src="https://cdn.lordicon.com/ibckyoan.json"
+          trigger="loop"
+          colors={`primary:${darkMode ? "#ffffff" : "##000000"}`}
+          state="loop-autorenew"
+          style={{ width: "30px", height: "30px" }}
+        />
+          <p>Fazendo requisição...</p>
+        </div>
+      ) : (
+        [...new Set(subfiltros.flatMap(Object.values))].map((valor, index) => (
+          <p key={index} onClick={() => handleSubfiltroClick(valor)}>
+            {valor}
+          </p>
+        ))
+      )}
     </div>
   );
 }
@@ -84,5 +100,6 @@ Subfilters.propTypes = {
   filtro: PropTypes.string.isRequired,
   onSubfiltroClick: PropTypes.func.isRequired,
   onClose: PropTypes.func,
+  darkMode: PropTypes.bool,
 };
 export default Subfilters;

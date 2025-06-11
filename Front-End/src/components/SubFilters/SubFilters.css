@@ -1,6 +1,7 @@
 .subFilters {
   width: 15rem;
-  height: 30rem;
+  height: fit-content;
+  max-height: 30rem;
   background-color: white;
   position: absolute;
   z-index: 10;

@@ -103,15 +103,15 @@ public class SearchService {
      * @param size Tamanho da página
      * @return Lista de mapas com os valores encontrados
      */
-    public List<Map<String, Object>> subFiltros(String tabela, String campo, int page, int size){
+    public List<Map<String, Object>> subFiltros(String tabela, String campo){
         // Se o campo for "Estado", busca estados distintos
         if(campo.equalsIgnoreCase("estado")){
             return buscarEstadosPorTabela(tabela);
         }
         
         // Monta e executa a query para buscar valores distintos do campo
-        String query = String.format("SELECT %s FROM %s LIMIT ? OFFSET ?", campo, tabela);
-        return jdbcTemplate.queryForList(query, size, page * size);
+        String query = String.format("SELECT DISTINCT %s FROM %s", campo, tabela);
+        return jdbcTemplate.queryForList(query);
     }
 
     /**

@@ -3,7 +3,7 @@ import "./Filters.css";
 import Subfilters from "../SubFilters/SubFilters";
 import { useEffect, useState } from "react";
 
-function Filters({ categoria, showFilters, selecionarSubFiltro, onClose }) {
+function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMode }) {
   const [filtroSelecionado, setFiltroSelecionado] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -72,6 +72,7 @@ function Filters({ categoria, showFilters, selecionarSubFiltro, onClose }) {
           filtro={filtroSelecionado}
           onSubfiltroClick={handleSubfiltroClick}
           onClose={onClose}
+          darkMode={darkMode}
         />
       )}
     </div>
@@ -83,6 +84,7 @@ Filters.propTypes = {
   showFilters: PropTypes.bool.isRequired,
   selecionarSubFiltro: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  darkMode: PropTypes.bool,
 };
 
 export default Filters;

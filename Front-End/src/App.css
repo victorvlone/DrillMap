@@ -49,6 +49,19 @@ a {
   font-weight: 600;
   font-size: 14px;
 }
+.loading-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60px;
+  font-size: 1.1rem;
+}
+.loading-container p{
+  font-size: 1.2rem;
+  text-align: center;
+  color: black;
+}
 .header-container,
 .header-container li,
 .header-container li a,

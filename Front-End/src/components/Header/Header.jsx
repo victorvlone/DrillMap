@@ -86,6 +86,7 @@ function Header({
                 setPocoSelecionado={setPocoSelecionado}
                 setDadosPaginados={setDadosPaginados}
                 markerLayerRef={markerLayerRef}
+                darkMode={darkMode}
               />
             )}
             {isMapPage && (
