@@ -64,7 +64,6 @@ public class SearchService {
         // Retorna um Page<> com os DTOs
         return new PageImpl<>(pocoDTOs, pageable, pageDePoços.getTotalElements());
     }
-
     /**
      * Converte um objeto Poco em PocoDTO.
      * 

@@ -44,6 +44,10 @@ public class PocoSpecification {
                         String nomeFiltro = filtro.getKey();
                         Object valorFiltro = filtro.getValue();
 
+                        if (valorFiltro == null || (valorFiltro instanceof String && ((String) valorFiltro).isEmpty())) {
+                            continue;
+                        }
+                        // Verifica a categoria e aplica o filtro correspondente
                         if ("Bacias".equals(categoria)) {
                             Join<Poco, Campo> campoJoin = root.join("campo");
                             Join<Campo, Bloco> blocoJoin = campoJoin.join("bloco");

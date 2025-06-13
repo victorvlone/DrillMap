@@ -47,7 +47,6 @@ public class SearchController {
 
             return ResponseEntity.ok(result);
     }
-
     /**
      * Endpoint para buscar poços aplicando filtros dinâmicos e paginação.
      * 
