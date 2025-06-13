@@ -31,6 +31,8 @@ function Searchbar({
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
   const [podeRemoverFiltro, setPodeRemoverFiltro] = useState(true);
+  const [dadosBrutos, setDadosBrutos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
 
@@ -88,6 +90,7 @@ function Searchbar({
     novaPagina = 0
   ) => {
     let filtrosAtuais = filtros;
+    setIsLoading(true);
 
     if (filtro !== null) {
       const filtroNormalizado =
@@ -137,30 +140,35 @@ function Searchbar({
         },
         body: JSON.stringify(filtrosLimpos),
       });
+      
       console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
-
+      
       const data = await response.json();
       console.log("Dados retornados da API:", data);
-
+      
       if (!data || !Array.isArray(data.content)) {
         console.error("Erro: 'data.content' não é um array!", data);
         setShowError(true);
         return;
       }
-
+      
       const content = data.content; // Acessando os dados dentro de "content"
+      if(!subfiltro) {
+        setDadosBrutos(content);
+        setIsLoading(false);
+      }else{
       if (content.length === 0) {
         console.warn("Nenhum dado retornado da API");
-
+        
         // Só mostra erro se for a primeira página
         if (novaPagina === 0) {
           setShowError(true);
         }
-
+        
         return;
       }
-
+      
       setShowError(false);
       setDadosPaginados(data);
 
@@ -174,60 +182,61 @@ function Searchbar({
         markerLayerRef.current.clearLayers();
         mapRef.current.removeLayer(markerLayerRef.current);
       }
-
+      
       // Cria novo layer
       let markerLayer = L.layerGroup().addTo(mapRef.current);
       markerLayerRef.current = markerLayer;
-
+      
       let favoritosIds = [];
       const user = auth.currentUser;
       if (user) {
         favoritosIds = await buscarPocosFavoritados(user.uid);
       }
-
+      
       content.forEach((poco) => {
         let { latitude, longitude, nome, id } = poco;
         latitude = parseFloat(latitude.toString().replace(",", "."));
         longitude = parseFloat(longitude.toString().replace(",", "."));
-
+        
         if (isNaN(latitude) || isNaN(longitude)) {
           console.error(
             `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
           );
           return;
         }
-
+        
         const icon = favoritosIds.includes(id.toString())
-          ? iconFavorito
-          : customIcon;
-
+        ? iconFavorito
+        : customIcon;
+        
         const marker = L.marker([latitude, longitude], {
           icon: icon,
         }).addTo(markerLayer);
-
+        
         marker.bindPopup(`
           <b>Poço:</b> ${poco.nomePoco || "Sem nome"}<br>
-        `);
-        marker.on("click", () => {
-          setPocoSelecionado(poco);
+          `);
+          marker.on("click", () => {
+            setPocoSelecionado(poco);
+          });
         });
-      });
 
-      // Marca os estados no mapa
-      const estadosUnicos = [...new Set(content.map((item) => item.estado))];
-      console.log("estado para ser maarcado: ", estadosUnicos);
-      marcarEstadosnoMapa(estadosUnicos);
-
-      setShowPagControl(true);
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-  };
-
-  const pesquisar = async () => {
-    const input = document.getElementById("search-input");
-    const filtro = input.value;
-
+        // Marca os estados no mapa
+        const estadosUnicos = [...new Set(content.map((item) => item.estado))];
+        console.log("estado para ser maarcado: ", estadosUnicos);
+        marcarEstadosnoMapa(estadosUnicos);
+        
+        setShowPagControl(true);
+      }
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    };
+    
+    const pesquisar = async () => {
+      const input = document.getElementById("search-input");
+      const filtro = input.value;
+      
     if (!filtro) return;
 
     await acumularFiltrosERealizarBusca("nome", filtro);
@@ -236,9 +245,9 @@ function Searchbar({
 
   const removerFiltro = (subfiltroParaRemover) => {
     if (!podeRemoverFiltro) return; // se não pode remover ainda, ignora
-
+    
     setPodeRemoverFiltro(false); // trava a remoção
-
+    
     // Remove o filtro da lista de selecionados
     const novosFiltrosSelecionados = filtrosSelecionados.filter(
       (f) => f !== subfiltroParaRemover
@@ -317,7 +326,9 @@ function Searchbar({
       subfiltroNormalizado
     );
 
-    setShowFilters(false);
+    if (subfiltroNormalizado) {
+      setShowFilters(false);
+    }
   };
 
   return (
@@ -401,6 +412,8 @@ function Searchbar({
           selecionarSubFiltro={selecionarSubFiltro}
           onClose={() => setShowFilters(false)}
           darkMode={darkMode}
+          dadosBrutos={dadosBrutos}
+          isLoading={isLoading}
         />
       )}
     </div>
