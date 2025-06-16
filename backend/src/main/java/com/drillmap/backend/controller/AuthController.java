@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drillmap.backend.dtos.EmailRequest;
 import com.drillmap.backend.dtos.UserDTO;
 import com.drillmap.backend.dtos.VerificationDTO;
 import com.drillmap.backend.services.EmailService;
@@ -52,10 +53,12 @@ public class AuthController {
         verificationCodes.put(user.getEmail(), code);
 
         // Envia o código por e-mail ao usuário
-        emailService.enviarEmail(user.getEmail(),
-        "código de verificação Drillmap",
-        "Prezado(a),\n\nSeu código de verificação é: " + code + 
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setDestinatario(user.getEmail());
+        emailRequest.setAssunto("código de verificação Drillmap");
+        emailRequest.setConteudo("Prezado(a),\n\nSeu código de verificação é: " + code + 
         ".\n\nPor favor, insira este código na plataforma para concluir a verificação de seu e-mail. Caso você não tenha solicitado este código, desconsidere esta mensagem.\n\nAtenciosamente,\nEquipe DrillMap");
+        emailService.enviarEmail(emailRequest);
 
         // Retorna mensagem de sucesso
         Map<String, String> response = new HashMap<>();

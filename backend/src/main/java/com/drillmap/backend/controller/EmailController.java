@@ -32,11 +32,7 @@ public class EmailController {
     @PostMapping("/api/enviar-email")
     public ResponseEntity<String> enviarEmail(@RequestBody EmailRequest emailRequest){
        try {      
-           emailService.enviarEmail(
-               emailRequest.getDestinatario(), 
-               emailRequest.getAssunto(), 
-               emailRequest.getConteudo()
-           );
+           emailService.enviarEmail(emailRequest);
            return ResponseEntity.ok("E-mail enviado com sucesso!");
        } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

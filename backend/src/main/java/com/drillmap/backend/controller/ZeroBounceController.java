@@ -60,7 +60,14 @@ public class ZeroBounceController {
                     
                     // Preenche o DTO de resposta com os dados retornados pela API
                     zeroBounceResponse.setStatus(response.getStatus().name());
-                    zeroBounceResponse.setSubStatus(response.getSubStatus().name());
+                    
+                    if (response.getSubStatus() != null) {
+                        String subStatusName = response.getSubStatus().name();
+                        zeroBounceResponse.setSubStatus(subStatusName);
+                    } else {
+                        zeroBounceResponse.setSubStatus("N/A");
+                    }
+                    
                     zeroBounceResponse.setEmail(response.getAddress());
                 }    
             }, 
