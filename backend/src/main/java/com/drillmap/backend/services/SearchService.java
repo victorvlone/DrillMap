@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.drillmap.backend.dtos.PocoDTO;
+
 import com.drillmap.backend.entities.Poco;
 import com.drillmap.backend.repositories.BaciaRepository;
 import com.drillmap.backend.repositories.BlocoRepository;
@@ -24,7 +25,8 @@ import com.drillmap.backend.specifications.PocoSpecification;
 import lombok.AllArgsConstructor;
 
 /**
- * Serviço responsável por buscas e filtragens relacionadas a poços e entidades associadas.
+ * Serviço responsável por buscas e filtragens relacionadas a poços e entidades
+ * associadas.
  */
 @Service
 @AllArgsConstructor
@@ -41,8 +43,8 @@ public class SearchService {
      * Busca poços aplicando filtros dinâmicos e paginação.
      * 
      * @param filtros Mapa de filtros por categoria (ex: Bacias, Blocos, etc)
-     * @param page Página solicitada
-     * @param size Tamanho da página
+     * @param page    Página solicitada
+     * @param size    Tamanho da página
      * @return Página de PocoDTOs filtrados
      */
     public Page<PocoDTO> buscarPoços(Map<String, Map<String, Object>> filtros, int page, int size) {
@@ -58,12 +60,13 @@ public class SearchService {
 
         // Converte os resultados para DTOs
         List<PocoDTO> pocoDTOs = pageDePoços.getContent().stream()
-                                        .map(this::convertToDto)
-                                        .collect(Collectors.toList());
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
 
         // Retorna um Page<> com os DTOs
         return new PageImpl<>(pocoDTOs, pageable, pageDePoços.getTotalElements());
     }
+
     /**
      * Converte um objeto Poco em PocoDTO.
      * 
@@ -72,24 +75,23 @@ public class SearchService {
      */
     private PocoDTO convertToDto(Poco poco) {
         return new PocoDTO(
-            poco.getId(),
-            poco.getNome(),
-            poco.getCampo().getBloco().getNome(),
-            poco.getCampo().getNome(),
-            poco.getCampo().getBloco().getBacia().getNome(),
-            poco.getLatitude(),
-            poco.getLongitude(),
-            poco.getCampo().getBloco().getBacia().getEstado(),
-            poco.getSituacao(),
-            poco.getInicio(),
-            poco.getTermino(),
-            poco.getConclusao(),
-            poco.getReclassificacao(),
-            poco.getTipodePoco(),
-            poco.getCategoria(),
-            poco.getPocoOperador(),
-            poco.getCadastro()
-        );
+                poco.getId(),
+                poco.getNome(),
+                poco.getCampo().getBloco().getNome(),
+                poco.getCampo().getNome(),
+                poco.getCampo().getBloco().getBacia().getNome(),
+                poco.getLatitude(),
+                poco.getLongitude(),
+                poco.getCampo().getBloco().getBacia().getEstado(),
+                poco.getSituacao(),
+                poco.getInicio(),
+                poco.getTermino(),
+                poco.getConclusao(),
+                poco.getReclassificacao(),
+                poco.getTipodePoco(),
+                poco.getCategoria(),
+                poco.getPocoOperador(),
+                poco.getCadastro());
     }
 
     /**
@@ -97,17 +99,17 @@ public class SearchService {
      * Se o campo for "Estado", busca os estados distintos da tabela.
      * 
      * @param tabela Nome da tabela
-     * @param campo Nome do campo
-     * @param page Página solicitada
-     * @param size Tamanho da página
+     * @param campo  Nome do campo
+     * @param page   Página solicitada
+     * @param size   Tamanho da página
      * @return Lista de mapas com os valores encontrados
      */
-    public List<Map<String, Object>> subFiltros(String tabela, String campo){
+    public List<Map<String, Object>> subFiltros(String tabela, String campo) {
         // Se o campo for "Estado", busca estados distintos
-        if(campo.equalsIgnoreCase("estado")){
+        if (campo.equalsIgnoreCase("estado")) {
             return buscarEstadosPorTabela(tabela);
         }
-        
+
         // Monta e executa a query para buscar valores distintos do campo
         String query = String.format("SELECT DISTINCT %s FROM %s", campo, tabela);
         return jdbcTemplate.queryForList(query);
@@ -123,36 +125,50 @@ public class SearchService {
         List<String> estados;
         // Seleciona o repositório correto conforme a tabela
         switch (tabela.toLowerCase()) {
-            case "bacia": estados = baciaRepository.findDistinctEstados(); break;
-            case "bloco": estados = blocoRepository.findDistinctEstados(); break;
-            case "campo": estados = campoRepository.findDistinctEstados(); break;
-            case "poco": estados = pocoRepository.findDistinctEstados(); break;
-            default: throw new IllegalArgumentException("Tabela invalida para filtro de estado");
+            case "bacia":
+                estados = baciaRepository.findDistinctEstados();
+                break;
+            case "bloco":
+                estados = blocoRepository.findDistinctEstados();
+                break;
+            case "campo":
+                estados = campoRepository.findDistinctEstados();
+                break;
+            case "poco":
+                estados = pocoRepository.findDistinctEstados();
+                break;
+            default:
+                throw new IllegalArgumentException("Tabela invalida para filtro de estado");
         }
         // Mapeia os estados para o formato de resposta
         return estados.stream()
-            .map(estado -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("estado", estado);
-                return map;
-            })
-            .collect(Collectors.toList());
+                .map(estado -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("estado", estado);
+                    return map;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
      * Filtra dados de acordo com o nome e categoria informados.
      * 
-     * @param nome Nome a ser buscado
+     * @param nome      Nome a ser buscado
      * @param categoria Categoria (bacias, blocos, campos, pocos)
      * @return Lista de mapas com os resultados encontrados
      */
-    public List<Map<String, Object>> filtrarDados(String nome, String categoria){
-        switch (categoria.toLowerCase()){
-            case "bacias": return searchBacias(nome);
-            case "blocos": return searchBlocos(nome);
-            case "campos": return searchCampos(nome);
-            case "pocos": return searchPocos(nome);
-            default: throw  new IllegalArgumentException("Categoria inválida");
+    public List<Map<String, Object>> filtrarDados(String nome, String categoria) {
+        switch (categoria.toLowerCase()) {
+            case "bacias":
+                return searchBacias(nome);
+            case "blocos":
+                return searchBlocos(nome);
+            case "campos":
+                return searchCampos(nome);
+            case "pocos":
+                return searchPocos(nome);
+            default:
+                throw new IllegalArgumentException("Categoria inválida");
         }
     }
 
@@ -162,14 +178,14 @@ public class SearchService {
      * @param nome Nome da bacia
      * @return Lista de mapas com nome e estado
      */
-    private List<Map<String, Object>> searchBacias(String nome){
+    private List<Map<String, Object>> searchBacias(String nome) {
         return baciaRepository.findDistinctByNome(nome).stream()
-            .map(obj -> {
-                String nomeBacia = (String) obj[0];
-                String estado = obj.length > 1 ? (String) obj[1]: "Desconhecido";
-                return Map.of("nome", (Object) nomeBacia, "estado", estado);
-            })
-            .collect(Collectors.toList());
+                .map(obj -> {
+                    String nomeBacia = (String) obj[0];
+                    String estado = obj.length > 1 ? (String) obj[1] : "Desconhecido";
+                    return Map.of("nome", (Object) nomeBacia, "estado", estado);
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -178,17 +194,17 @@ public class SearchService {
      * @param nome Nome do bloco
      * @return Lista de mapas com bloco e estado
      */
-    private List<Map<String, Object>> searchBlocos(String nome){
+    private List<Map<String, Object>> searchBlocos(String nome) {
         return blocoRepository.findByNome(nome).stream()
-            .map(bloco -> {
-                Map<String, Object> response = new HashMap<>();
-                response.put("bloco", bloco);
-                if(bloco.getBacia() != null){
-                    response.put("estado", bloco.getBacia().getEstado());
-                }
-                return response;
-            })
-            .collect(Collectors.toList());
+                .map(bloco -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("bloco", bloco);
+                    if (bloco.getBacia() != null) {
+                        response.put("estado", bloco.getBacia().getEstado());
+                    }
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -197,17 +213,17 @@ public class SearchService {
      * @param nome Nome do campo
      * @return Lista de mapas com campo e estado
      */
-    private List<Map<String, Object>> searchCampos(String nome){
+    private List<Map<String, Object>> searchCampos(String nome) {
         return campoRepository.findByNome(nome).stream()
-            .map(campo -> {
-                Map<String, Object> response = new HashMap<>();
-                response.put("campo", campo);
-                if(campo.getBloco().getBacia() != null){
-                    response.put("estado", campo.getBloco().getBacia().getEstado());
-                }
-                return response;
-            })
-            .collect(Collectors.toList());
+                .map(campo -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("campo", campo);
+                    if (campo.getBloco().getBacia() != null) {
+                        response.put("estado", campo.getBloco().getBacia().getEstado());
+                    }
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -216,16 +232,16 @@ public class SearchService {
      * @param nome Nome do poço
      * @return Lista de mapas com poço e estado
      */
-    private List<Map<String, Object>> searchPocos(String nome){
+    private List<Map<String, Object>> searchPocos(String nome) {
         return pocoRepository.findByNome(nome).stream()
-        .map(poco -> {
-            Map<String, Object> response = new HashMap<>();
-            response.put("poco", poco);
-            if(poco.getCampo().getBloco().getBacia() != null){
-                response.put("estado", poco.getCampo().getBloco().getBacia().getEstado());
-            }
-            return response;
-        })
-        .collect(Collectors.toList());
+                .map(poco -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("poco", poco);
+                    if (poco.getCampo().getBloco().getBacia() != null) {
+                        response.put("estado", poco.getCampo().getBloco().getBacia().getEstado());
+                    }
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }

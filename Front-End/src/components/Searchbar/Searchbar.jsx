@@ -31,8 +31,8 @@ function Searchbar({
   const [showFilters, setShowFilters] = useState(false);
   const [filtros, setFiltros] = useState({});
   const [podeRemoverFiltro, setPodeRemoverFiltro] = useState(true);
-  const [dadosBrutos, setDadosBrutos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [dados, setDados] = useState([]);
 
   const categorias = useMemo(() => ["Bacias", "Blocos", "Campos", "Poços"], []);
 
@@ -46,6 +46,13 @@ function Searchbar({
   useEffect(() => {
     mudarCategoria();
   }, [categoriasBloqueadas]);
+
+  // Dentro do Searchbar
+  const buscarMaisDados = async (filtro, categoria, pagina) => {
+    setIsLoading(true);
+    // Use os filtros atuais, mas mude a página
+    handleSelecionarFiltro(filtro, categoria, pagina);
+  };
 
   const mudarCategoria = useCallback(() => {
     console.log("categorias para serem marcadas: ", categorias);
@@ -82,6 +89,58 @@ function Searchbar({
       console.error("Erro ao buscar favoritos:", err);
       return [];
     }
+  };
+
+  const [pagina, setPagina] = useState(0);
+  const [ultimoFiltro, setUltimoFiltro] = useState("");
+  const [ultimaCategoria, setUltimaCategoria] = useState("");
+
+  useEffect(() => {
+    if (ultimoFiltro && ultimaCategoria) {
+      handleSelecionarFiltro(ultimoFiltro, ultimaCategoria, pagina);
+    }
+    // eslint-disable-next-line
+  }, [pagina, ultimoFiltro, ultimaCategoria]);
+
+  const handleSelecionarFiltro = (filtro, categoria, pagina) => {
+    setUltimoFiltro(filtro);
+    setUltimaCategoria(categoria);
+    if (pagina === 0) {
+      setIsLoading(true);
+    }
+    const filtroParam = filtro.toLowerCase();
+    const categoriaParam = categoria.toLowerCase();
+    console.log("Filtros enviados:", filtros);
+    console.log("pagina enviada:", pagina);
+    function normalizeKeysToLower(obj) {
+      if (typeof obj !== "object" || obj === null) return obj;
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [
+          k.toLowerCase(),
+          normalizeKeysToLower(v),
+        ])
+      );
+    }
+
+    // Antes de enviar:
+    const filtrosLower = normalizeKeysToLower(filtros);
+    fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/filters/valores-unicos?campoAlvo=${filtroParam}&entidadeAlvo=${categoriaParam}&page=${pagina}&size=20`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filtrosLower),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Resultado da busca:", data);
+        console.log("Resultado da busca:", data.content);
+        setDados(data);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const acumularFiltrosERealizarBusca = async (
@@ -140,35 +199,32 @@ function Searchbar({
         },
         body: JSON.stringify(filtrosLimpos),
       });
-      
+
       console.log("Response status:", response.status);
       if (!response.ok) throw new Error("Erro ao buscar dados");
-      
+
       const data = await response.json();
       console.log("Dados retornados da API:", data);
-      
+
       if (!data || !Array.isArray(data.content)) {
         console.error("Erro: 'data.content' não é um array!", data);
         setShowError(true);
         return;
       }
-      
+      console.log("Nova pagina:", novaPagina);
       const content = data.content; // Acessando os dados dentro de "content"
-      if(!subfiltro) {
-        setDadosBrutos(content);
-        setIsLoading(false);
-      }else{
+
       if (content.length === 0) {
         console.warn("Nenhum dado retornado da API");
-        
+
         // Só mostra erro se for a primeira página
         if (novaPagina === 0) {
           setShowError(true);
         }
-        
+
         return;
       }
-      
+
       setShowError(false);
       setDadosPaginados(data);
 
@@ -182,61 +238,60 @@ function Searchbar({
         markerLayerRef.current.clearLayers();
         mapRef.current.removeLayer(markerLayerRef.current);
       }
-      
+
       // Cria novo layer
       let markerLayer = L.layerGroup().addTo(mapRef.current);
       markerLayerRef.current = markerLayer;
-      
+
       let favoritosIds = [];
       const user = auth.currentUser;
       if (user) {
         favoritosIds = await buscarPocosFavoritados(user.uid);
       }
-      
+
       content.forEach((poco) => {
         let { latitude, longitude, nome, id } = poco;
         latitude = parseFloat(latitude.toString().replace(",", "."));
         longitude = parseFloat(longitude.toString().replace(",", "."));
-        
+
         if (isNaN(latitude) || isNaN(longitude)) {
           console.error(
             `Coordenadas inválidas para o poço ${nome}: lat=${latitude}, lon=${longitude}`
           );
           return;
         }
-        
+
         const icon = favoritosIds.includes(id.toString())
-        ? iconFavorito
-        : customIcon;
-        
+          ? iconFavorito
+          : customIcon;
+
         const marker = L.marker([latitude, longitude], {
           icon: icon,
         }).addTo(markerLayer);
-        
+
         marker.bindPopup(`
           <b>Poço:</b> ${poco.nomePoco || "Sem nome"}<br>
           `);
-          marker.on("click", () => {
-            setPocoSelecionado(poco);
-          });
+        marker.on("click", () => {
+          setPocoSelecionado(poco);
         });
+      });
 
-        // Marca os estados no mapa
-        const estadosUnicos = [...new Set(content.map((item) => item.estado))];
-        console.log("estado para ser maarcado: ", estadosUnicos);
-        marcarEstadosnoMapa(estadosUnicos);
-        
-        setShowPagControl(true);
-      }
-      } catch (error) {
-        console.error("Error: ", error);
-      }
-    };
-    
-    const pesquisar = async () => {
-      const input = document.getElementById("search-input");
-      const filtro = input.value;
-      
+      // Marca os estados no mapa
+      const estadosUnicos = [...new Set(content.map((item) => item.estado))];
+      console.log("estado para ser maarcado: ", estadosUnicos);
+      marcarEstadosnoMapa(estadosUnicos);
+
+      setShowPagControl(true);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const pesquisar = async () => {
+    const input = document.getElementById("search-input");
+    const filtro = input.value;
+
     if (!filtro) return;
 
     await acumularFiltrosERealizarBusca("nome", filtro);
@@ -245,9 +300,9 @@ function Searchbar({
 
   const removerFiltro = (subfiltroParaRemover) => {
     if (!podeRemoverFiltro) return; // se não pode remover ainda, ignora
-    
+
     setPodeRemoverFiltro(false); // trava a remoção
-    
+
     // Remove o filtro da lista de selecionados
     const novosFiltrosSelecionados = filtrosSelecionados.filter(
       (f) => f !== subfiltroParaRemover
@@ -412,8 +467,14 @@ function Searchbar({
           selecionarSubFiltro={selecionarSubFiltro}
           onClose={() => setShowFilters(false)}
           darkMode={darkMode}
-          dadosBrutos={dadosBrutos}
           isLoading={isLoading}
+          buscarMaisDados={buscarMaisDados}
+          handleSelecionarFiltro={handleSelecionarFiltro}
+          dados={dados.content || []}
+          pagina={pagina}
+          setPagina={setPagina}
+          setUltimoFiltro={setUltimoFiltro}
+          setUltimaCategoria={setUltimaCategoria}
         />
       )}
     </div>

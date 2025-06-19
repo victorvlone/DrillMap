@@ -3,7 +3,21 @@ import "./Filters.css";
 import Subfilters from "../SubFilters/SubFilters";
 import { useEffect, useState } from "react";
 
-function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMode, dadosBrutos, isLoading }) {
+function Filters({
+  categoria,
+  showFilters,
+  selecionarSubFiltro,
+  onClose,
+  darkMode,
+  isLoading,
+  buscarMaisDados,
+  handleSelecionarFiltro,
+  dados,
+  pagina,
+  setPagina,
+  setUltimoFiltro, 
+  setUltimaCategoria, 
+}) {
   const [filtroSelecionado, setFiltroSelecionado] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -40,9 +54,11 @@ function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMod
 
   const handleFiltroClick = (filtro) => {
     setFiltroSelecionado(filtro);
-    if (selecionarSubFiltro) {
-    selecionarSubFiltro(filtro, ""); // Passa o filtro e subfiltro vazio
-  }
+    let filtroParam = filtro
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    handleSelecionarFiltro(filtroParam, categoria, 0);
   };
 
   const handleSubfiltroClick = (subfiltro) => {
@@ -52,6 +68,12 @@ function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMod
     }
   };
 
+  const handleFiltroOuCategoria = (novoFiltro, novaCategoria) => {
+    setUltimoFiltro(novoFiltro);
+    setUltimaCategoria(novaCategoria);
+    setPagina(0); // Isso vai disparar o useEffect acima
+  };
+
   return (
     <div className={`filters ${isVisible ? "show" : ""}`}>
       {opcoesFiltros[categoria] ? (
@@ -59,7 +81,10 @@ function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMod
           <p
             key={index}
             className="filtro-item"
-            onClick={() => handleFiltroClick(filtro)} // Atualiza o estado ao clicar
+            onClick={() => {
+              handleFiltroClick(filtro);
+              handleFiltroOuCategoria(filtro, categoria);
+            }}
           >
             {filtro}
           </p>
@@ -76,8 +101,11 @@ function Filters({ categoria, showFilters, selecionarSubFiltro, onClose, darkMod
           onSubfiltroClick={handleSubfiltroClick}
           onClose={onClose}
           darkMode={darkMode}
-          dadosBrutos={dadosBrutos}
-          isLoading={isLoading} 
+          isLoading={isLoading}
+          buscarMaisDados={buscarMaisDados}
+          dados={dados}
+          pagina={pagina}
+          setPagina={setPagina}
         />
       )}
     </div>
@@ -90,8 +118,14 @@ Filters.propTypes = {
   selecionarSubFiltro: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   darkMode: PropTypes.bool,
-  dadosBrutos: PropTypes.arrayOf(PropTypes.object).isRequired,
   isLoading: PropTypes.bool,
+  buscarMaisDados: PropTypes.func,
+  handleSelecionarFiltro: PropTypes.func,
+  dados: PropTypes.array,
+  pagina: PropTypes.number,
+  setPagina: PropTypes.func,
+  setUltimoFiltro: PropTypes.func,
+  setUltimaCategoria: PropTypes.func,
 };
 
 export default Filters;

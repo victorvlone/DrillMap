@@ -1,7 +1,7 @@
 .subFilters {
   width: 15rem;
   height: fit-content;
-  max-height: 30rem;
+  max-height: 40rem;
   background-color: white;
   position: absolute;
   z-index: 10;
@@ -21,6 +21,24 @@
 }
 .subFilters::-webkit-scrollbar {
   display: none;
+}
+.btns-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.next-button{
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  width: fit-content;
+  margin-bottom: -10px;
+  cursor: pointer;
+}
+.next-icon{
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 @media (max-width: 450px) {
   .subFilters {
